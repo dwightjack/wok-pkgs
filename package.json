@@ -1,0 +1,24 @@
+{
+  "name": "wok-pkgs",
+  "version": "1.0.0",
+  "description": "Wok Packages Repo",
+  "main": "index.js",
+  "repository": "git@github.com:fevrcoding/wok-pkgs.git",
+  "bugs": "https://github.com/fevrcoding/wok-pkgs/issues",
+  "author": "Marco Solazzi <marco.solazzi@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=8.9.0"
+  },
+  "devDependencies": {
+    "eslint": "~5.16.0",
+    "eslint-config-prettier": "~4.1.0",
+    "eslint-plugin-node": "~8.0.1",
+    "eslint-plugin-prettier": "~3.0.1",
+    "prettier": "^1.16.4"
+  }
+}

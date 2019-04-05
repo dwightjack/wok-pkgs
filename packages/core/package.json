@@ -1,0 +1,19 @@
+{
+  "name": "wok-core",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "repository": "git@github.com:fevrcoding/wok-pkgs.git",
+  "author": "Marco Solazzi <marco.solazzi@gmail.com>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=8.9.0"
+  },
+  "dependencies": {
+    "ansi-colors": "^3.2.4",
+    "fancy-log": "^1.3.3",
+    "globby": "^9.2.0",
+    "read-pkg-up": "^5.0.0",
+    "yargs": "^13.2.2"
+  }
+}
