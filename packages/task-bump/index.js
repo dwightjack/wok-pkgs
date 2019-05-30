@@ -2,6 +2,7 @@ module.exports = (gulp, { src = ['package.json'], dest = './' }, env) => {
   const { pkg, argv } = env;
 
   return async function bump() {
+    const { resolvePatterns, resolvePath } = require('wok-core/utils');
     const semver = require('semver');
     const gulpBump = require('gulp-bump');
     const prompts = require('prompts');
@@ -29,9 +30,9 @@ module.exports = (gulp, { src = ['package.json'], dest = './' }, env) => {
 
     return new Promise((resolve, reject) => {
       gulp
-        .src(src)
+        .src(resolvePatterns(src, env))
         .pipe(gulpBump({ type }))
-        .pipe(gulp.dest(dest))
+        .pipe(gulp.dest(resolvePath(dest, env)))
         .on('end', (err) => {
           if (err) {
             reject(err);

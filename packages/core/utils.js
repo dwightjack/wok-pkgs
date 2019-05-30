@@ -1,6 +1,8 @@
 const log = require('fancy-log');
 const { red, yellow } = require('ansi-colors');
 const template = require('lodash/template');
+const through2 = require('through2');
+const lazypipe = require('lazypipe');
 
 const logger = {
   msg: (str) => log(red(str)),
@@ -15,4 +17,15 @@ const resolvePatterns = (patterns, data) => {
   return [].concat(patterns).map(tmpl);
 };
 
-module.exports = { logger, resolvePatterns, resolveTemplate };
+const noopStream = () => through2.obj();
+
+const pipeChain = () => lazypipe().pipe(noopStream);
+
+module.exports = {
+  logger,
+  resolvePatterns,
+  resolveTemplate,
+  resolvePath: resolveTemplate,
+  noopStream,
+  pipeChain,
+};

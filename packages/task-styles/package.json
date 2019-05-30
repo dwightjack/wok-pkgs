@@ -1,5 +1,5 @@
 {
-  "name": "plugin-rev",
+  "name": "task-styles",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -10,10 +10,8 @@
     "node": ">=8.9.0"
   },
   "dependencies": {
-    "gulp-rev": "^9.0.0"
   },
   "peerDependencies": {
-    "wok-core": "*",
-    "gulp": "*"
+    "wok-core": "*"
   }
 }

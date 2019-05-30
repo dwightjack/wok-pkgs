@@ -1,39 +1,31 @@
 module.exports = (gulp, { pattern = [], dest = '' }, env) => {
   const size = require('gulp-size');
-  const { SyncWaterfallHook } = require('tapable');
-  const identity = require('lodash/identity');
-  const { resolvePatterns, resolveTemplate, logger } = require('../utils');
+  const {
+    resolvePatterns,
+    resolvePath,
+    logger,
+    noopStream,
+  } = require('../utils');
   const folders = resolvePatterns(pattern, env);
   let destFolder;
 
   try {
-    destFolder = resolveTemplate(dest, env);
+    destFolder = resolvePath(dest, env);
   } catch (e) {
     logger.error(`Destination folder not available`, e);
     return;
   }
 
-  const before = new SyncWaterfallHook(['stream', 'env']);
-  const after = new SyncWaterfallHook(['stream', 'env']);
-
-  before.tap('default', identity);
-  after.tap('default', identity);
-
-  function copy() {
-    const stream = gulp.src(folders, {
-      dot: true,
-      since: gulp.lastRun(copy),
-    });
-
-    const result = before
-      .call(stream, env)
+  return function copy() {
+    return gulp
+      .src(folders, {
+        dot: true,
+        since: gulp.lastRun(copy),
+      })
+      .pipe(env.hooks.call('copy:beforeWrite', env))
       .pipe(size({ title: 'Copy' }))
-      .pipe(gulp.dest(destFolder));
-
-    return after.call(result, env);
-  }
-
-  copy.hooks = { after, before };
-
-  return copy;
+      .pipe(gulp.dest(destFolder))
+      .pipe(env.hooks.call('copy:complete', env))
+      .pipe(noopStream()); // adds a noop stream to fix this error: https://stackoverflow.com/questions/40098156/what-about-this-combination-of-gulp-concat-and-lazypipe-is-causing-an-error-usin/40101404#40101404
+  };
 };

@@ -1,7 +1,7 @@
 module.exports = (gulp, { pattern = [] }, env) => {
-  const { resolvePatterns } = require('../utils');
+  const { resolvePath } = require('../utils');
 
-  const folders = resolvePatterns(pattern, env);
+  const folders = resolvePath(pattern, env);
 
   return function clean() {
     const del = require('del');
