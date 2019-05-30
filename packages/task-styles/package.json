@@ -10,6 +10,9 @@
     "node": ">=8.9.0"
   },
   "dependencies": {
+    "autoprefixer": "^9.5.1",
+    "cssnano": "^4.1.10",
+    "gulp-postcss": "^8.0.0"
   },
   "peerDependencies": {
     "wok-core": "*"

@@ -17,13 +17,13 @@ module.exports = class Hooks {
   call(id, ...params) {
     return this.callWith(id, pipeChain(), ...params);
   }
-
   callWith(id, initial, ...params) {
-    if (!this.$hooks.has(id)) {
-      return initial;
+    let result = initial;
+    if (this.$hooks.has(id)) {
+      const hookFns = [...this.get(id).values()];
+      result = hookFns.reduce((acc, fn) => fn(acc, ...params), initial);
     }
-    const hookFns = [...this.get(id).values()];
-    const result = hookFns.reduce((acc, fn) => fn(acc, ...params), initial);
+
     if (result.pipe) {
       // it's a stream-like interface
       // let's execute it right await
@@ -33,5 +33,22 @@ module.exports = class Hooks {
   }
   tap(id, name, fn) {
     return this.get(id).set(name, fn);
+  }
+
+  tapBefore(id, name, fn, before) {
+    const pairs = [...this.get(id)];
+    if (before) {
+      const idx = pairs.findIndex((pair) => pair[0] === before);
+      if (idx === -1) {
+        console.log(`Unable to find hook "${name}" inside "${id}"`);
+        return this;
+      }
+      pairs.splice(idx, 0, [name, fn]);
+    } else {
+      pairs.unshift([name, fn]);
+    }
+
+    this.$hooks.set(id, new Map(pairs));
+    return this;
   }
 };

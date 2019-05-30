@@ -24,6 +24,12 @@ class Config {
     this.$store.set(key, value);
     return this;
   }
+  extend(obj) {
+    Object.entries(obj).forEach(([key, value]) => {
+      this.set(key, value);
+    });
+    return this;
+  }
 
   toObject() {
     return [...this.$store.entries()].reduce((acc, [key, value]) => {
@@ -66,7 +72,7 @@ class PresetConfig extends Config {
     return this;
   }
 
-  params(key) {
+  params(key, obj) {
     const task = this.get(key);
     if (!task) {
       throw new Error(`Task ${key} not registered!`);
@@ -74,7 +80,12 @@ class PresetConfig extends Config {
     if (!task.has('params')) {
       task.set('params', new Config(this));
     }
-    return task.get('params');
+    const params = task.get('params');
+    if (obj) {
+      params.extend(obj);
+      return this;
+    }
+    return params;
   }
 
   hook(...params) {

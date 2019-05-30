@@ -10,11 +10,17 @@
     "node": ">=8.9.0"
   },
   "dependencies": {
-    "task-bump": "*",
+    "datauri": "^2.0.0",
+    "gulp-rename": "^1.4.0",
+    "gulp-sass": "^4.0.2",
+    "image-size": "^0.7.4",
     "plugin-imagemin": "*",
-    "plugin-rev": "*"
+    "plugin-rev": "*",
+    "task-bump": "*",
+    "task-styles": "*"
   },
   "peerDependencies": {
+    "node-sass": "^4.12.0",
     "wok-core": "*"
   }
 }
