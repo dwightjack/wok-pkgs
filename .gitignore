@@ -95,5 +95,5 @@ log
 
 node_modules
 coverage
-examples
+examples/**/public
 dist
