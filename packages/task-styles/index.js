@@ -28,8 +28,8 @@ module.exports = (gulp, { src = '', dest = '', postcssPlugins }, env) => {
   return function styles() {
     return gulp
       .src(srcFolder, { sourcemaps: production })
-      .pipe(env.hooks.call('styles:pre', env))
-      .pipe(env.hooks.call('styles:post', env))
+      .pipe(hooks.call('styles:pre', env))
+      .pipe(hooks.call('styles:post', env))
       .pipe(gulp.dest(destFolder, { sourcemaps: production && '.' }));
   };
 };

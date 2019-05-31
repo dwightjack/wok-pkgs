@@ -30,4 +30,11 @@ function stylesRename(stream, env) {
   return stream;
 }
 
-module.exports = { sass, stylesRename };
+function babel(stream, { babel }) {
+  return stream.pipe(
+    require('gulp-babel'),
+    babel,
+  );
+}
+
+module.exports = { sass, stylesRename, babel };

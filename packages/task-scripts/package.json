@@ -1,0 +1,17 @@
+{
+  "name": "task-scripts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "repository": "git@github.com:fevrcoding/wok-pkgs.git",
+  "author": "Marco Solazzi <marco.solazzi@gmail.com>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=8.9.0"
+  },
+  "dependencies": {
+  },
+  "peerDependencies": {
+    "wok-core": "*"
+  }
+}
