@@ -1,0 +1,14 @@
+{
+  "name": "preset-wok-example",
+  "version": "1.0.0",
+  "license": "MIT",
+  "engines": {
+    "node": ">=8.9.0"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "gulp": "^4.0.0",
+    "preset-wok": "*",
+    "wok-core": "*"
+  }
+}
