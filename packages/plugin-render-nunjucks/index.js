@@ -39,17 +39,11 @@ const nunjucksEnv = (viewPath, options) => {
   return env;
 };
 
-module.exports = (conf = {}) => (engines, env) => {
-  const { resolvePatterns } = require('wok-core/utils');
-  const { views } = env;
+module.exports = () => (engines, { nunjucks, pattern }) => {
   return engines.set('nunjucks', function createRenderer() {
     let _env;
 
-    const { root, helpers, ...options } = Object.assign(
-      {},
-      views.nunjucks,
-      conf,
-    );
+    const { root, helpers, ...options } = Object.assign({}, nunjucks);
 
     return {
       name: 'nunjucks',
@@ -58,7 +52,7 @@ module.exports = (conf = {}) => (engines, env) => {
         try {
           // lazy load renderer
           if (!_env) {
-            _env = nunjucksEnv(root && resolvePatterns(root, env), options);
+            _env = nunjucksEnv(root && pattern(root), options);
             _env.addGlobal(
               'helpers',
               typeof helpers === 'function' ? helpers(options) : {},

@@ -1,8 +1,7 @@
 module.exports = ({ pattern = '**/*.{png,jpg,gif,svg,webp}' } = {}) => {
   return (lazypipe, env) => {
-    const { resolvePatterns } = require('wok-core/utils');
     const filter = require('gulp-filter');
-    const f = filter(resolvePatterns(pattern, env), { restore: true });
+    const f = filter(env.pattern(pattern), { restore: true });
     const imagemin = require('gulp-imagemin');
 
     const plugins = [

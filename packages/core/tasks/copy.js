@@ -1,16 +1,11 @@
 module.exports = (gulp, { pattern = [], dest = '' }, env) => {
   const size = require('gulp-size');
-  const {
-    resolvePatterns,
-    resolvePath,
-    logger,
-    noopStream,
-  } = require('../utils');
-  const folders = resolvePatterns(pattern, env);
+  const { logger, noopStream } = require('../utils');
+  const folders = env.pattern(pattern);
   let destFolder;
 
   try {
-    destFolder = resolvePath(dest, env);
+    destFolder = env.resolve(dest);
   } catch (e) {
     logger.error(`Destination folder not available`, e);
     return;

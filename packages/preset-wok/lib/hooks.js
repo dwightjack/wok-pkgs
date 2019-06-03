@@ -1,7 +1,7 @@
 const rename = require('gulp-rename');
 
-function stylesRename(stream, env) {
-  if (env.production) {
+function stylesRename(stream, { production }) {
+  if (production) {
     return stream.pipe(
       rename,
       { suffix: '.min' },

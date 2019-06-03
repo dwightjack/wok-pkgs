@@ -1,8 +1,7 @@
-module.exports = (gulp, { src = '', dest = '', postcssPlugins }, env) => {
-  const { resolvePatterns, resolvePath } = require('wok-core/utils');
+module.exports = (gulp, { src = '', dest = '' }, env) => {
   const postcss = require('gulp-postcss');
-  const srcFolder = resolvePatterns(src, env);
-  const destFolder = resolvePath(dest, env);
+  const srcFolder = env.pattern(src);
+  const destFolder = env.resolve(dest);
   const { production, hooks } = env;
 
   function defaultPlugins() {
@@ -17,8 +16,8 @@ module.exports = (gulp, { src = '', dest = '', postcssPlugins }, env) => {
     return plugins;
   }
 
-  hooks.tap('styles:post', 'postcss', (chain) => {
-    const plugins = postcssPlugins || defaultPlugins();
+  hooks.tap('styles:post', 'postcss', (chain, env) => {
+    const plugins = env.postcss || defaultPlugins();
     return chain.pipe(
       postcss,
       plugins,

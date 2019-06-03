@@ -1,12 +1,12 @@
 module.exports = (gulp, { src = '', dest = '', data = '' }, env) => {
   const { extname } = require('path');
   const rename = require('gulp-rename');
-  const { resolvePatterns, resolvePath, map } = require('wok-core/utils');
+  const { map } = require('wok-core/utils');
 
   const dataReader = require('./lib/data-reader');
   const { matchParser, matchEngine } = require('./lib/utils');
-  const srcFolder = resolvePatterns(src, env);
-  const destFolder = resolvePath(dest, env);
+  const srcFolder = env.pattern(src);
+  const destFolder = env.resolve(dest);
   const { production, hooks } = env;
 
   hooks.tap('views:data:parsers', 'json', (parsers) => {
@@ -34,7 +34,7 @@ module.exports = (gulp, { src = '', dest = '', data = '' }, env) => {
 
     if (data) {
       parsers = hooks.callWith('views:data:parsers', new Map(), env);
-      dataPattern = resolvePatterns(data, env);
+      dataPattern = env.pattern(data);
     }
 
     const engineMatcher = matchEngine(

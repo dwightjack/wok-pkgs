@@ -2,6 +2,7 @@ const { join, basename } = require('path');
 const glob = require('globby');
 const { camelCase, merge } = require('lodash');
 const Hooks = require('./hooks');
+const { resolvePath, resolvePatterns } = require('./utils');
 
 function loadProjectConfigs(pattern, cwd) {
   const files = glob.sync(pattern, { cwd });
@@ -46,15 +47,19 @@ function config(gulp, params = {}) {
   const env = {
     //unique build identifier
     buildHash: `buildhash${Date.now()}`,
-    pkg,
     production,
     command,
     target: target || (production ? 'production' : 'development'),
     ...params,
+    ...loadProjectConfigs(configFiles, cwd),
+    pkg,
     argv,
     hooks: new Hooks(),
-    ...loadProjectConfigs(configFiles, cwd),
   };
+
+  // utility methods
+  env.resolve = (src) => resolvePath(src, env);
+  env.pattern = (patterns) => resolvePatterns(patterns, env);
 
   //force production env
   if (env.production) {
