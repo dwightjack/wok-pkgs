@@ -43,7 +43,6 @@ class PresetConfig extends Config {
   constructor(parent) {
     super(parent);
     this.$cbs = [];
-    this.$hooks = new Map();
     this.$config = {};
   }
 
@@ -91,6 +90,12 @@ class PresetConfig extends Config {
   hook(...params) {
     const { env } = this.config();
     env.hooks.tap(...params);
+    return this;
+  }
+
+  deleteHook(id, name) {
+    const { env } = this.config();
+    env.hooks.delete(id, name);
     return this;
   }
 

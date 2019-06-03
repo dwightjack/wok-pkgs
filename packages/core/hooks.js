@@ -14,6 +14,17 @@ module.exports = class Hooks {
     this.$hooks.set(id, new Map());
     return this;
   }
+  delete(id, name) {
+    if (!this.$hooks.has(id)) {
+      return this;
+    }
+    if (!name) {
+      this.$hooks.delete(id);
+      return this;
+    }
+    this.get(id).delete(name);
+    return this;
+  }
   call(id, ...params) {
     return this.callWith(id, pipeChain(), ...params);
   }
