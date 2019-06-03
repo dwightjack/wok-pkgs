@@ -1,0 +1,15 @@
+{% extends 'templates/_default.njk' %}
+
+
+{% block main %}
+
+    {% include 'partials/_readme.html' %}
+
+    <h3>{{ example._comment }}</h3>
+    <p>{{ faker.lorem.words(2) }}</p>
+
+    {% markdown %}
+      {% include '../fixtures/readme.md' %}
+    {% endmarkdown %}
+
+{% endblock %}

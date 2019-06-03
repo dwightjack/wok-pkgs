@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html class="no-js" lang="">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>{{ pageTitle }}</title>
+    <meta name="description" content="{{ metaDescription }}" />
+    {% block meta %}{% endblock %}
+
+    <!-- This could be needed in some layouts
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
+    -->
+    <!-- mobile meta (hooray!) -->
+    <meta name="HandheldFriendly" content="True" />
+    <meta name="MobileOptimized" content="320" />
+    <meta name="format-detection" content="telephone=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <!-- build:css /assets/stylesheets/application.min.css -->
+    <link rel="stylesheet" href="/assets/stylesheets/application.css" />
+    <!-- endbuild -->
+
+    <!-- build:replace /assets/vendors/modernizr/modernizr.min.js defer -->
+    <script defer src="/assets/vendors/modernizr/modernizr.js"></script>
+    <!-- endbuild -->
+
+
+    {% block head %}
+    {% endblock %}
+
+</head>
+<body class="{{ bodyClass if bodyClass | safe }}">
+
+    <h1>Hello World!</h1>
+
+    {% block main %}
+    {% endblock %}
+
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/6.26.0/polyfill.min.js"></script>
+
+    <!-- build:js /assets/javascripts/application.min.js defer -->
+    <script defer src="/assets/javascripts/base/plugins.js"></script>
+    <script defer src="/assets/javascripts/application.js"></script>
+    <!-- endbuild -->
+
+</body>
+</html>

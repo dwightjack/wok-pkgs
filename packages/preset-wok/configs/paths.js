@@ -2,6 +2,8 @@ module.exports = {
   src: {
     root: 'application',
     vendors: 'application/vendors',
+    views: 'application/views',
+    fixtures: 'application/fixtures',
   },
   static: 'static',
   styles: 'assets/stylesheets',

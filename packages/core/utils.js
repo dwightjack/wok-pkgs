@@ -3,6 +3,7 @@ const { red, yellow } = require('ansi-colors');
 const template = require('lodash/template');
 const through2 = require('through2');
 const lazypipe = require('lazypipe');
+const PluginError = require('plugin-error');
 
 const logger = {
   msg: (str) => log(red(str)),
@@ -21,6 +22,36 @@ const noopStream = () => through2.obj();
 
 const pipeChain = () => lazypipe().pipe(noopStream);
 
+const map = (fn) => {
+  const mapFn = typeof fn === 'function' ? fn : (val) => val;
+
+  return through2.obj(function mapIterator(file, enc, cb) {
+    if (file.isNull()) {
+      this.push(file);
+      cb();
+      return;
+    }
+    if (file.isStream()) {
+      this.emit(
+        'error',
+        new PluginError('wok-core/map', 'Streaming not supported'),
+      );
+    }
+
+    try {
+      file.contents = Buffer.from(
+        mapFn(file.contents.toString(), file.path, file),
+      ); //eslint-disable-line no-param-reassign
+    } catch (err) {
+      this.emit('error', new PluginError('wok-core/map', err.toString()));
+    }
+
+    this.push(file);
+
+    cb();
+  });
+};
+
 module.exports = {
   logger,
   resolvePatterns,
@@ -28,4 +59,6 @@ module.exports = {
   resolvePath: resolveTemplate,
   noopStream,
   pipeChain,
+  map,
+  camelCase: require('lodash/camelCase'),
 };
