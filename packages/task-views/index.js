@@ -64,7 +64,7 @@ module.exports = (gulp, { src = '', dest = '', data = '' }, env) => {
       )
       .pipe(
         rename({
-          extname: env.views.outputExt || '.html',
+          extname: (env.views && env.views.outputExt) || '.html',
         }),
       )
       .pipe(hooks.call('views:post', env))
