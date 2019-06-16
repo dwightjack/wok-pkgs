@@ -1,44 +1,62 @@
-const { join, basename } = require('path');
-const glob = require('globby');
-const { camelCase, merge } = require('lodash');
+const { join } = require('path');
+const fs = require('fs');
+const { merge } = require('lodash');
 const Hooks = require('./hooks');
-const { resolvePath, resolvePatterns } = require('./utils');
+const { resolvePath, resolvePatterns, logger } = require('./utils');
 
-function loadProjectConfigs(pattern, cwd) {
-  const files = glob.sync(pattern, { cwd });
+function loadProjectConfig(pattern, cwd) {
+  const basePath = join(cwd, pattern);
+  const localPath = basePath.replace(/\.js/, '.local.js');
 
-  const { locals, globals } = files.reduce(
-    (acc, file) => {
-      const mod = require(join(cwd, file));
-      const key = basename(file, '.js');
-      if (key.endsWith('.local')) {
-        acc.locals[camelCase(key.replace('.local', ''))] = mod;
-      } else {
-        acc.globals[camelCase(key)] = mod;
+  if (!fs.existsSync(basePath)) {
+    logger.warn(`Configuration file not found: ${basePath}`);
+  }
+  try {
+    const base = require(basePath);
+    if (fs.existsSync(localPath)) {
+      const local = require(localPath);
+      if (typeof local === 'function') {
+        return local(base);
       }
-      return acc;
-    },
-    {
-      locals: {},
-      globals: {},
-    },
-  );
+      return merge({}, base, local);
+    }
+    return base;
+  } catch (e) {
+    logger.error(e);
+  }
 
-  return Object.entries(globals).reduce((acc, [key, globalConf]) => {
-    const localConf = locals[key] || {};
-    const conf =
-      typeof localConf === 'function'
-        ? localConf(globalConf)
-        : merge({}, globalConf, localConf);
-    acc[key] = conf;
+  // const { locals, globals } = files.reduce(
+  //   (acc, file) => {
+  //     const mod = require(join(cwd, file));
+  //     const key = basename(file, '.js');
+  //     if (key.endsWith('.local')) {
+  //       acc.locals[camelCase(key.replace('.local', ''))] = mod;
+  //     } else {
+  //       acc.globals[camelCase(key)] = mod;
+  //     }
+  //     return acc;
+  //   },
+  //   {
+  //     locals: {},
+  //     globals: {},
+  //   },
+  // );
 
-    return acc;
-  }, {});
+  // return Object.entries(globals).reduce((acc, [key, globalConf]) => {
+  //   const localConf = locals[key] || {};
+  //   const conf =
+  //     typeof localConf === 'function'
+  //       ? localConf(globalConf)
+  //       : merge({}, globalConf, localConf);
+  //   acc[key] = conf;
+
+  //   return acc;
+  // }, {});
 }
 
 function config(gulp, params = {}) {
   const readPkgUp = require('read-pkg-up');
-  const { cwd = process.cwd(), configFiles = ['build/config/*.js'] } = params;
+  const { cwd = process.cwd(), configFile = 'wok.config.js' } = params;
   const { pkg } = readPkgUp.sync({ cwd });
 
   const { argv } = require('yargs');
@@ -51,7 +69,7 @@ function config(gulp, params = {}) {
     command,
     target: target || (production ? 'production' : 'development'),
     ...params,
-    ...loadProjectConfigs(configFiles, cwd),
+    ...loadProjectConfig(configFile, cwd),
     pkg,
     argv,
     hooks: new Hooks(),
