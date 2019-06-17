@@ -7,10 +7,10 @@
   "author": "Marco Solazzi <marco.solazzi@gmail.com>",
   "license": "MIT",
   "engines": {
-    "node": ">=8.9.0"
+    "node": ">=8.12.0"
   },
   "dependencies": {
-    "autoprefixer": "^9.5.1",
+    "autoprefixer": "^9.6.0",
     "cssnano": "^4.1.10",
     "gulp-postcss": "^8.0.0"
   },
