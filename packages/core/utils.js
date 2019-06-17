@@ -59,7 +59,7 @@ const createPlugin = ({ name, plugin, productionOnly = false }) => {
       return stream;
     }
 
-    return plugin(stream, env, api, opts[name] || {});
+    return plugin(stream, env, api, opts[name] !== undefined ? opts[name] : {});
   };
 };
 
