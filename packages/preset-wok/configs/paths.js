@@ -10,6 +10,7 @@ module.exports = {
   scripts: 'assets/javascripts',
   dist: {
     root: 'public',
+    vendors: 'vendors',
     revmap: 'assets/assets-map.json',
   },
   tmp: 'var/tmp',

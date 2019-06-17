@@ -8,7 +8,7 @@ const { createPreset } = require('wok-core/preset');
 const imagemin = require('plugin-imagemin');
 const sass = require('plugin-sass');
 const rev = require('plugin-rev');
-const { stylesRename, babel, eslint, stylelint } = require('./lib/hooks');
+const { babel, eslint, stylelint } = require('./lib/hooks');
 
 // passed-in config object
 module.exports = (config) => {
@@ -18,7 +18,7 @@ module.exports = (config) => {
     .set('bump', bump)
     .set('clean', clean)
     .params('clean', {
-      pattern: '<%= paths.dist.root %>/**/*',
+      pattern: ['<%= paths.dist.root %>/**/*', '<%= paths.tmp %>'],
     })
     .set('copy', copy)
     .hook('copy:beforeWrite', 'imagemin', imagemin)
@@ -50,7 +50,6 @@ module.exports = (config) => {
         },
       },
     })
-    .hook('styles:post', 'rename', stylesRename)
     .set('scripts', scripts)
     .params('scripts', {
       src: ['<%= paths.src.root %>/<%= paths.scripts %>/**/*.js'],
@@ -64,7 +63,7 @@ module.exports = (config) => {
         '<%= paths.src.root %>/<%= paths.scripts %>/**/*.js',
         '<%= paths.src.root %>/<%= paths.styles %>/**/*.{sass,scss}',
       ],
-      dest: '<%= paths.dist.root %>/<%= paths.scripts %>',
+      dest: '<%= paths.dist.root %>/<%= paths.dist.vendors %>/modernizr/',
       options: ['setClasses', 'addTest', 'testProp'],
     })
     .set('views', views)
@@ -85,12 +84,28 @@ module.exports = (config) => {
         },
       },
     })
-    .default(({ clean, copy, styles, scripts, modernizr, views }) =>
+    .set('cleanup', clean)
+    .params('cleanup', {
+      pattern: ['<%= paths.tmp %>'],
+    })
+    .default(({ clean, copy, styles, scripts, modernizr, views, cleanup }) =>
       config.series(
         clean,
-        config.parallel(copy, styles, scripts, modernizr, views),
+        config.parallel(copy, styles, scripts, modernizr),
+        views,
+        cleanup,
       ),
     );
+
+  if (config.env.production) {
+    preset
+      .params('scripts')
+      .set('dest', '<%= paths.tmp %>/<%= paths.scripts %>');
+    preset
+      .params('modernizr')
+      .set('dest', '<%= paths.tmp %>/<%= paths.dist.vendors %>/modernizr');
+    preset.params('styles').set('dest', '<%= paths.tmp %>/<%= paths.styles %>');
+  }
 
   return preset;
 };

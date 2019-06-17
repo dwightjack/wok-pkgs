@@ -1,7 +1,7 @@
 const rename = require('gulp-rename');
 const { noopStream } = require('wok-core/utils');
 
-function stylesRename(stream, { production }) {
+function minPrefix(stream, { production }) {
   if (production) {
     return stream.pipe(
       rename,
@@ -43,4 +43,4 @@ function stylelint(stream, env) {
     },
   );
 }
-module.exports = { stylesRename, babel, eslint, stylelint };
+module.exports = { minPrefix, babel, eslint, stylelint };
