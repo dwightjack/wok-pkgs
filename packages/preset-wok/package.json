@@ -15,22 +15,25 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
     "gulp-babel": "^8.0.0",
+    "gulp-eslint": "^5.0.0",
     "gulp-rename": "^1.4.0",
+    "gulp-stylelint": "^9.0.0",
+    "marked": "^0.6.2",
+    "node-sass": "^4.12.0",
+    "nunjucks": "^3.2.0",
+    "nunjucks-markdown": "^2.0.0",
     "plugin-imagemin": "^1.0.0",
+    "plugin-render-nunjucks": "^1.0.0",
     "plugin-rev": "^1.0.0",
     "plugin-sass": "^1.0.0",
     "task-bump": "^1.0.0",
     "task-modernizr": "^1.0.0",
     "task-scripts": "^1.0.0",
     "task-styles": "^1.0.0",
-    "task-views": "^1.0.0",
-    "plugin-render-nunjucks": "^1.0.0",
-    "node-sass": "^4.12.0",
-    "marked": "^0.6.2",
-    "nunjucks": "^3.2.0",
-    "nunjucks-markdown": "^2.0.0"
+    "task-views": "^1.0.0"
   },
   "peerDependencies": {
+    "prettier": "^1.18.2",
     "wok-core": "^1.0.0"
   }
 }

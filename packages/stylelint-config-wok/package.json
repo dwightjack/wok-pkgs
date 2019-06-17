@@ -1,0 +1,19 @@
+{
+  "name": "stylelint-config-wok",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "repository": "git@github.com:fevrcoding/wok-pkgs.git",
+  "author": "Marco Solazzi <marco.solazzi@gmail.com>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=8.12.0"
+  },
+  "dependencies": {
+    "stylelint-config-standard": "^18.3.0",
+    "stylelint-scss": "^3.8.0"
+  },
+  "peerDependencies": {
+    "stylelint": ">=10.0.0"
+  }
+}

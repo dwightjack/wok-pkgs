@@ -1,0 +1,25 @@
+{
+  "name": "eslint-config-wok",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "repository": "git@github.com:fevrcoding/wok-pkgs.git",
+  "author": "Marco Solazzi <marco.solazzi@gmail.com>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=8.12.0"
+  },
+  "dependencies": {
+    "babel-eslint": "^10.0.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-config-prettier": "^4.3.0",
+    "eslint-import-resolver-webpack": "^0.11.1",
+    "eslint-plugin-import": "^2.17.2",
+    "eslint-plugin-node": "^9.0.1",
+    "eslint-plugin-prettier": "^3.1.0"
+  },
+  "peerDependencies": {
+    "@babel/core": "*",
+    "eslint": ">=5.0.0"
+  }
+}

@@ -7,8 +7,14 @@
   },
   "dependencies": {},
   "devDependencies": {
+    "@babel/core": "^7.0.0",
     "gulp": "^4.0.0",
     "preset-wok": "*",
+    "eslint-config-wok": "^1.0.0",
+    "stylelint-config-wok": "^1.0.0",
+    "stylelint": "^10.0.0",
+    "eslint": ">=5.0.0",
+    "prettier": "^1.18.2",
     "wok-core": "*"
   },
   "browserslist": [

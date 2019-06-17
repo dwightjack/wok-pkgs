@@ -8,7 +8,7 @@ const { createPreset } = require('wok-core/preset');
 const imagemin = require('plugin-imagemin');
 const sass = require('plugin-sass');
 const rev = require('plugin-rev');
-const { stylesRename, babel } = require('./lib/hooks');
+const { stylesRename, babel, eslint, stylelint } = require('./lib/hooks');
 
 // passed-in config object
 module.exports = (config) => {
@@ -36,6 +36,7 @@ module.exports = (config) => {
       src: ['<%= paths.src.root %>/<%= paths.styles %>/**/*.{sass,scss}'],
       dest: '<%= paths.dist.root %>/<%= paths.styles %>',
     })
+    .hook('styles:pre', 'stylelint', stylelint)
     .hook('styles:pre', 'sass', sass())
     .hook('styles:post', 'rename', stylesRename)
     .set('scripts', scripts)
@@ -43,6 +44,7 @@ module.exports = (config) => {
       src: ['<%= paths.src.root %>/<%= paths.scripts %>/**/*.js'],
       dest: '<%= paths.dist.root %>/<%= paths.scripts %>',
     })
+    .hook('scripts:pre', 'eslint', eslint)
     .hook('scripts:transform', 'babel', babel)
     .set('modernizr', modernizr)
     .params('modernizr', {
