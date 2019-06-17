@@ -4,26 +4,29 @@ const { merge } = require('lodash');
 const Hooks = require('./hooks');
 const { resolvePath, resolvePatterns, logger } = require('./utils');
 
-function loadProjectConfig(pattern, cwd) {
-  const basePath = join(cwd, pattern);
+function loadProjectConfig(basePath, target) {
   const localPath = basePath.replace(/\.js/, '.local.js');
 
   if (!fs.existsSync(basePath)) {
     logger.warn(`Configuration file not found: ${basePath}`);
+    return {};
   }
-  try {
-    const base = require(basePath);
-    if (fs.existsSync(localPath)) {
-      const local = require(localPath);
-      if (typeof local === 'function') {
-        return local(base);
+
+  return [basePath, localPath].reduce((acc, filepath) => {
+    try {
+      if (!fs.existsSync(filepath)) {
+        return acc;
       }
-      return merge({}, base, local);
+      const config = require(filepath);
+      if (typeof config === 'function') {
+        return config(acc, target);
+      }
+      return merge(acc, config);
+    } catch (e) {
+      logger.error(e);
+      return acc;
     }
-    return base;
-  } catch (e) {
-    logger.error(e);
-  }
+  }, {});
 
   // const { locals, globals } = files.reduce(
   //   (acc, file) => {
@@ -60,16 +63,17 @@ function config(gulp, params = {}) {
   const { pkg } = readPkgUp.sync({ cwd });
 
   const { argv } = require('yargs');
-  const { production = false, command = null, target = null } = argv;
+  const { production = false, command = null } = argv;
+  const { target = production ? 'production' : 'development' } = argv;
 
   const env = {
     //unique build identifier
     buildHash: `buildhash${Date.now()}`,
     production,
     command,
-    target: target || (production ? 'production' : 'development'),
+    target,
+    ...loadProjectConfig(join(cwd, configFile), target),
     ...params,
-    ...loadProjectConfig(configFile, cwd),
     pkg,
     argv,
     hooks: new Hooks(),

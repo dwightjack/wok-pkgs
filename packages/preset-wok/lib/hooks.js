@@ -10,10 +10,10 @@ function stylesRename(stream, { production }) {
   return stream;
 }
 
-function babel(stream, { babel }) {
+function babel(stream, env) {
   return stream.pipe(
     require('gulp-babel'),
-    babel,
+    env.babel,
   );
 }
 
