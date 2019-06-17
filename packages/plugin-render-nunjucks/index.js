@@ -1,6 +1,4 @@
-/**
- * View Compilation Helpers
- */
+const { createPlugin } = require('wok-core/utils');
 
 const nunjucksEnv = (viewPath, options) => {
   const nunjucks = require('nunjucks');
@@ -39,11 +37,11 @@ const nunjucksEnv = (viewPath, options) => {
   return env;
 };
 
-module.exports = () => (engines, { nunjucks, pattern }) => {
+function nunjucks(engines, env, api, opts) {
   return engines.set('nunjucks', function createRenderer() {
     let _env;
 
-    const { root, helpers, ...options } = Object.assign({}, nunjucks);
+    const { root, helpers, ...options } = opts;
 
     return {
       name: 'nunjucks',
@@ -52,7 +50,7 @@ module.exports = () => (engines, { nunjucks, pattern }) => {
         try {
           // lazy load renderer
           if (!_env) {
-            _env = nunjucksEnv(root && pattern(root), options);
+            _env = nunjucksEnv(root && api.pattern(root), options);
             _env.addGlobal(
               'helpers',
               typeof helpers === 'function' ? helpers(options) : {},
@@ -67,4 +65,9 @@ module.exports = () => (engines, { nunjucks, pattern }) => {
       },
     };
   });
-};
+}
+
+module.exports = createPlugin({
+  name: 'nunjucks',
+  plugin: nunjucks,
+});

@@ -12,4 +12,6 @@ module.exports = {
     root: 'public',
     revmap: 'assets/assets-map.json',
   },
+  tmp: 'var/tmp',
+  backup: 'var/backups',
 };

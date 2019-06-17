@@ -76,12 +76,17 @@ function config(gulp, params = {}) {
     ...params,
     pkg,
     argv,
-    hooks: new Hooks(),
   };
 
+  const api = {
+    hooks: new Hooks(),
+    resolve: (src) => resolvePath(src, env),
+    pattern: (patterns) => resolvePatterns(patterns, env),
+  };
+
+  api.hooks.bind(env, api);
+
   // utility methods
-  env.resolve = (src) => resolvePath(src, env);
-  env.pattern = (patterns) => resolvePatterns(patterns, env);
 
   //force production env
   if (env.production) {
@@ -91,8 +96,9 @@ function config(gulp, params = {}) {
   return {
     env,
     task(fn, options = {}) {
-      return fn(gulp, options, env);
+      return fn(gulp, options, env, api);
     },
+    api,
     series: gulp.series,
     parallel: gulp.parallel,
   };

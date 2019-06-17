@@ -1,7 +1,7 @@
-module.exports = (gulp, { pattern = [] }, env) => {
+module.exports = (gulp, { pattern = [] }, env, api) => {
   return function clean() {
     const del = require('del');
 
-    return del(env.pattern(pattern), { dot: true, allowEmpty: true });
+    return del(api.pattern(pattern), { dot: true, allowEmpty: true });
   };
 };

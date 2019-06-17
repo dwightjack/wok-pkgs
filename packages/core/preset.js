@@ -88,14 +88,14 @@ class PresetConfig extends Config {
   }
 
   hook(...params) {
-    const { env } = this.config();
-    env.hooks.tap(...params);
+    const { api } = this.config();
+    api.hooks.tap(...params);
     return this;
   }
 
   deleteHook(id, name) {
-    const { env } = this.config();
-    env.hooks.delete(id, name);
+    const { api } = this.config();
+    api.hooks.delete(id, name);
     return this;
   }
 

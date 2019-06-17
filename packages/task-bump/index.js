@@ -1,4 +1,4 @@
-module.exports = (gulp, { src = ['package.json'], dest = './' }, env) => {
+module.exports = (gulp, { src = ['package.json'], dest = './' }, env, api) => {
   const { pkg, argv } = env;
 
   return async function bump() {
@@ -29,9 +29,9 @@ module.exports = (gulp, { src = ['package.json'], dest = './' }, env) => {
 
     return new Promise((resolve, reject) => {
       gulp
-        .src(env.pattern(src))
+        .src(api.pattern(src))
         .pipe(gulpBump({ type }))
-        .pipe(gulp.dest(env.resolve(dest)))
+        .pipe(gulp.dest(api.resolve(dest)))
         .on('end', (err) => {
           if (err) {
             reject(err);

@@ -1,13 +1,19 @@
-module.exports = (gulp, { src = '', dest = '', data = '' }, env) => {
+module.exports = (
+  gulp,
+  { src = '', dest = '', data = '', ...params },
+  env,
+  api,
+) => {
   const { extname } = require('path');
   const rename = require('gulp-rename');
   const { map } = require('wok-core/utils');
 
   const dataReader = require('./lib/data-reader');
   const { matchParser, matchEngine } = require('./lib/utils');
-  const srcFolder = env.pattern(src);
-  const destFolder = env.resolve(dest);
-  const { production, hooks } = env;
+  const srcFolder = api.pattern(src);
+  const destFolder = api.resolve(dest);
+  const { production } = env;
+  const { hooks } = api;
 
   hooks.tap('views:data:parsers', 'json', (parsers) => {
     return parsers.set('json', {
@@ -19,7 +25,7 @@ module.exports = (gulp, { src = '', dest = '', data = '' }, env) => {
   hooks.tap(
     'views:data',
     'global',
-    (stream, dataPatter, parsersMatcher, env) => {
+    (stream, env, api, dataPatter, parsersMatcher) => {
       const readerPromise = dataReader(dataPatter, parsersMatcher, env);
       return stream.pipe(
         require('gulp-data'),
@@ -33,17 +39,28 @@ module.exports = (gulp, { src = '', dest = '', data = '' }, env) => {
     let dataPattern;
 
     if (data) {
-      parsers = hooks.callWith('views:data:parsers', new Map(), env);
-      dataPattern = env.pattern(data);
+      parsers = hooks.callWith(
+        'views:data:parsers',
+        new Map(),
+        params['hooks:data:parsers'],
+      );
+      dataPattern = api.pattern(data);
     }
 
     const engineMatcher = matchEngine(
-      hooks.callWith('views:engines', new Map(), env),
+      hooks.callWith('views:engines', new Map(), params['hooks:engines']),
     );
 
     return gulp
       .src(srcFolder)
-      .pipe(hooks.call('views:data', dataPattern, matchParser(parsers), env))
+      .pipe(
+        hooks.call(
+          'views:data',
+          dataPattern,
+          matchParser(parsers),
+          params['hooks:data'],
+        ),
+      )
       .pipe(
         map((code, filepath, { data = {} }) => {
           const engine = engineMatcher(extname(filepath));
@@ -67,7 +84,7 @@ module.exports = (gulp, { src = '', dest = '', data = '' }, env) => {
           extname: (env.views && env.views.outputExt) || '.html',
         }),
       )
-      .pipe(hooks.call('views:post', env))
+      .pipe(hooks.call('views:post', params['hooks:post']))
       .pipe(gulp.dest(destFolder));
   };
 };

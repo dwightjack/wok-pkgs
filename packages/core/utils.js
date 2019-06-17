@@ -4,6 +4,7 @@ const template = require('lodash/template');
 const through2 = require('through2');
 const lazypipe = require('lazypipe');
 const PluginError = require('plugin-error');
+const gulp = require('gulp');
 
 const logger = {
   msg: (str) => log(red(str)),
@@ -52,6 +53,16 @@ const map = (fn) => {
   });
 };
 
+const createPlugin = ({ name, plugin, productionOnly = false }) => {
+  return (stream, env, api, opts = {}) => {
+    if (productionOnly && !env.production) {
+      return stream;
+    }
+
+    return plugin(stream, env, api, opts[name] || {});
+  };
+};
+
 module.exports = {
   logger,
   resolvePatterns,
@@ -60,5 +71,8 @@ module.exports = {
   noopStream,
   pipeChain,
   map,
+  dest: gulp.dest,
+  src: gulp.src,
+  createPlugin,
   camelCase: require('lodash/camelCase'),
 };

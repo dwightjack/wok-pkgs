@@ -1,4 +1,8 @@
-module.exports = ({ publicPath = '/', basePath = '', production }) => {
+module.exports = (
+  { production },
+  { resolve },
+  { publicPath = '/', basePath = '' },
+) => {
   const { join } = require('path');
   const fs = require('fs');
   const sizeOf = require('image-size');
@@ -17,7 +21,7 @@ module.exports = ({ publicPath = '/', basePath = '', production }) => {
   function imageUrlFn(filepath) {
     const imagePath = getFilePath(filepath);
     if (imagePath) {
-      let imageUrl = imagePath.replace(basePath, publicPath);
+      let imageUrl = imagePath.replace(resolve(basePath), publicPath);
 
       if (!production) {
         imageUrl += '?' + Date.now();

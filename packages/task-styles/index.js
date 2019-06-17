@@ -1,8 +1,9 @@
-module.exports = (gulp, { src = '', dest = '' }, env) => {
+module.exports = (gulp, { src = '', dest = '', ...params }, env, api) => {
   const postcss = require('gulp-postcss');
-  const srcFolder = env.pattern(src);
-  const destFolder = env.resolve(dest);
-  const { production, hooks } = env;
+  const srcFolder = api.pattern(src);
+  const destFolder = api.resolve(dest);
+  const { production } = env;
+  const { hooks } = api;
 
   function defaultPlugins() {
     const plugins = [require('autoprefixer')()];
@@ -27,8 +28,8 @@ module.exports = (gulp, { src = '', dest = '' }, env) => {
   return function styles() {
     return gulp
       .src(srcFolder, { sourcemaps: production })
-      .pipe(hooks.call('styles:pre', env))
-      .pipe(hooks.call('styles:post', env))
+      .pipe(hooks.call('styles:pre', params['hooks:pre']))
+      .pipe(hooks.call('styles:post', params['hooks:post']))
       .pipe(gulp.dest(destFolder, { sourcemaps: production && '.' }));
   };
 };

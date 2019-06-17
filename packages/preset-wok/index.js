@@ -12,9 +12,6 @@ const { stylesRename, babel, eslint, stylelint } = require('./lib/hooks');
 
 // passed-in config object
 module.exports = (config) => {
-  const revImgs = rev({
-    manifest: '<%= paths.dist.root %>/<%= paths.dist.revmap %>',
-  });
   const preset = createPreset(config);
 
   preset
@@ -24,20 +21,35 @@ module.exports = (config) => {
       pattern: '<%= paths.dist.root %>/**/*',
     })
     .set('copy', copy)
+    .hook('copy:beforeWrite', 'imagemin', imagemin)
+    .hook('copy:beforeWrite', 'revImgs', rev.apply)
+    .hook('copy:complete', 'revManifest', rev.write)
     .params('copy', {
       pattern: ['<%= paths.static %>/**/*'],
       dest: '<%= paths.dist.root %>',
+      'hooks:complete': {
+        'rev:write': {
+          manifest: '<%= paths.dist.root %>/<%= paths.dist.revmap %>',
+        },
+      },
     })
-    .hook('copy:beforeWrite', 'imagemin', imagemin())
-    .hook('copy:beforeWrite', 'revImgs', revImgs.apply)
-    .hook('copy:complete', 'revManifest', revImgs.write)
+
     .set('styles', styles)
     .params('styles', {
       src: ['<%= paths.src.root %>/<%= paths.styles %>/**/*.{sass,scss}'],
       dest: '<%= paths.dist.root %>/<%= paths.styles %>',
     })
     .hook('styles:pre', 'stylelint', stylelint)
-    .hook('styles:pre', 'sass', sass())
+    .hook('styles:pre', 'sass', sass)
+    .params('styles', {
+      'hooks:pre': {
+        sass: {
+          includePaths: ['<%= paths.src.vendors %>', 'node_modules'],
+          publicPath: '/assets',
+          basePath: '<%= paths.src.root %>/assets',
+        },
+      },
+    })
     .hook('styles:post', 'rename', stylesRename)
     .set('scripts', scripts)
     .params('scripts', {
@@ -53,14 +65,26 @@ module.exports = (config) => {
         '<%= paths.src.root %>/<%= paths.styles %>/**/*.{sass,scss}',
       ],
       dest: '<%= paths.dist.root %>/<%= paths.scripts %>',
+      options: ['setClasses', 'addTest', 'testProp'],
     })
     .set('views', views)
+    .hook('views:engines', 'nunjucks', require('plugin-render-nunjucks'))
+    .hook('views:post', 'useref', require('plugin-useref'))
     .params('views', {
       src: ['<%= paths.src.views %>/**/*.*', '!<%= paths.src.views %>/**/_*.*'],
       dest: '<%= paths.dist.root %>',
       data: '<%= paths.src.fixtures %>/**/*.*',
+      'hooks:engines': {
+        nunjucks: {
+          root: ['<%= paths.src.views %>', '<%= paths.src.fixtures %>'],
+        },
+      },
+      'hooks:post': {
+        useref: {
+          searchPath: ['<%= paths.dist.root %>', '<%= paths.tmp %>'],
+        },
+      },
     })
-    .hook('views:engines', 'nunjucks', require('plugin-render-nunjucks')())
     .default(({ clean, copy, styles, scripts, modernizr, views }) =>
       config.series(
         clean,

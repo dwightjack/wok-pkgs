@@ -1,29 +1,25 @@
-module.exports = ({ manifest = '' } = {}) => {
-  const { resolveTemplate } = require('wok-core/utils');
-  const { dest } = require('gulp');
-  const rev = require('gulp-rev');
+const { createPlugin, dest } = require('wok-core/utils');
+const rev = require('gulp-rev');
 
-  return {
-    apply(lazypipe, env) {
-      if (!env.production) {
-        return lazypipe;
-      }
-      return lazypipe.pipe(rev);
-    },
-    write(lazypipe, env) {
-      if (!env.production) {
-        return lazypipe;
-      }
-      return lazypipe
-        .pipe(
-          rev.manifest,
-          resolveTemplate(manifest, env),
-          { merge: true },
-        )
-        .pipe(
-          dest,
-          '.',
-        );
-    },
-  };
-};
+module.exports.apply = createPlugin({
+  name: 'rev:apply',
+  productionOnly: true,
+  plugin: (stream) => stream.pipe(rev),
+});
+
+module.exports.write = createPlugin({
+  name: 'rev:write',
+  productionOnly: true,
+  plugin(stream, env, api, { manifest }) {
+    return stream
+      .pipe(
+        rev.manifest,
+        api.resolve(manifest),
+        { merge: true },
+      )
+      .pipe(
+        dest,
+        '.',
+      );
+  },
+});

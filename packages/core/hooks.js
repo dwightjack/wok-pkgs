@@ -4,6 +4,10 @@ module.exports = class Hooks {
   constructor() {
     this.$hooks = new Map();
   }
+  bind(env, ctx) {
+    this.$env = env;
+    this.$ctx = ctx;
+  }
   get(id) {
     if (!this.$hooks.has(id)) {
       this.set(id);
@@ -30,9 +34,13 @@ module.exports = class Hooks {
   }
   callWith(id, initial, ...params) {
     let result = initial;
+    const { $env, $ctx } = this;
     if (this.$hooks.has(id)) {
       const hookFns = [...this.get(id).values()];
-      result = hookFns.reduce((acc, fn) => fn(acc, ...params), initial);
+      result = hookFns.reduce(
+        (acc, fn) => fn(acc, $env, $ctx, ...params),
+        initial,
+      );
     }
 
     if (result.pipe) {
@@ -43,7 +51,8 @@ module.exports = class Hooks {
     return result;
   }
   tap(id, name, fn) {
-    return this.get(id).set(name, fn);
+    this.get(id).set(name, fn);
+    return this;
   }
 
   tapBefore(id, name, fn, before) {
