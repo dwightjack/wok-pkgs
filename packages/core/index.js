@@ -1,7 +1,7 @@
 const { join } = require('path');
 const fs = require('fs');
 const { merge } = require('lodash');
-const Hooks = require('./hooks');
+const Hooks = require('./lib/hooks');
 const { resolvePath, resolvePatterns, logger } = require('./utils');
 
 function loadProjectConfig(basePath, target) {
@@ -78,10 +78,25 @@ function config(gulp, params = {}) {
     argv,
   };
 
+  // const $callCache = new Map();
+
   const api = {
     hooks: new Hooks(),
     resolve: (src) => resolvePath(src, env),
     pattern: (patterns) => resolvePatterns(patterns, env),
+    // cachable(fn) {
+    //   const cached = (...args) => {
+    //     const ret = fn(...args);
+    //     $callCache.set(fn.name, ret);
+    //     return ret;
+    //   };
+
+    //   Object.defineProperty(cached, 'name', { value: fn.name });
+    //   return cached;
+    // },
+    // cache(id) {
+    //   return $callCache.get(id);
+    // },
   };
 
   api.hooks.bind(env, api);

@@ -6,33 +6,17 @@ module.exports = (
 ) => {
   const { extname } = require('path');
   const rename = require('gulp-rename');
-  const { map } = require('wok-core/utils');
+  const { map, noopStream } = require('wok-core/utils');
 
-  const dataReader = require('./lib/data-reader');
+  const { json, dataExtract } = require('./lib/plugins');
   const { matchParser, matchEngine } = require('./lib/utils');
   const srcFolder = api.pattern(src);
   const destFolder = api.resolve(dest);
   const { production } = env;
   const { hooks } = api;
 
-  hooks.tap('views:data:parsers', 'json', (parsers) => {
-    return parsers.set('json', {
-      test: /\.json$/,
-      parse: (raw) => JSON.parse(raw),
-    });
-  });
-
-  hooks.tap(
-    'views:data',
-    'global',
-    (stream, env, api, dataPatter, parsersMatcher) => {
-      const readerPromise = dataReader(dataPatter, parsersMatcher, env);
-      return stream.pipe(
-        require('gulp-data'),
-        () => readerPromise,
-      );
-    },
-  );
+  hooks.tap('views:data:parsers', 'json', json);
+  hooks.tap('views:data', 'global', dataExtract);
 
   return function views() {
     let parsers;
@@ -54,12 +38,14 @@ module.exports = (
     return gulp
       .src(srcFolder)
       .pipe(
-        hooks.call(
-          'views:data',
-          dataPattern,
-          matchParser(parsers),
-          params['hooks:data'],
-        ),
+        dataPattern
+          ? hooks.call(
+              'views:data',
+              params['hooks:data'],
+              dataPattern,
+              matchParser(parsers),
+            )
+          : noopStream,
       )
       .pipe(
         map((code, filepath, { data = {} }) => {
@@ -85,6 +71,8 @@ module.exports = (
         }),
       )
       .pipe(hooks.call('views:post', params['hooks:post']))
-      .pipe(gulp.dest(destFolder));
+      .pipe(gulp.dest(destFolder))
+      .pipe(api.hooks.call('views:complete', params['hooks:complete']))
+      .pipe(noopStream()); // adds a noop stream to fix this error: https://stackoverflow.com/questions/40098156/what-about-this-combination-of-gulp-concat-and-lazypipe-is-causing-an-error-usin/40101404#40101404
   };
 };

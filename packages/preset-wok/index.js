@@ -7,41 +7,31 @@ const views = require('task-views');
 const { createPreset } = require('wok-core/preset');
 const imagemin = require('plugin-imagemin');
 const sass = require('plugin-sass');
-const rev = require('plugin-rev');
-const { babel, eslint, stylelint } = require('./lib/hooks');
+const rev = require('task-rev');
+const { babel, eslint, stylelint, minifyJS } = require('./lib/hooks');
 
 // passed-in config object
 module.exports = (config) => {
   const preset = createPreset(config);
 
+  const { api, env } = config;
+
   preset
     .set('bump', bump)
-    .set('clean', clean)
-    .params('clean', {
+    .set('clean', clean, {
       pattern: ['<%= paths.dist.root %>/**/*', '<%= paths.tmp %>'],
     })
-    .set('copy', copy)
-    .hook('copy:beforeWrite', 'imagemin', imagemin)
-    .hook('copy:beforeWrite', 'revImgs', rev.apply)
-    .hook('copy:complete', 'revManifest', rev.write)
-    .params('copy', {
+    .set('copy', copy, {
       pattern: ['<%= paths.static %>/**/*'],
       dest: '<%= paths.dist.root %>',
-      'hooks:complete': {
-        'rev:write': {
-          manifest: '<%= paths.dist.root %>/<%= paths.dist.revmap %>',
-        },
-      },
     })
-
+    .hook('copy:beforeWrite', 'imagemin', imagemin)
     .set('styles', styles)
-    .params('styles', {
-      src: ['<%= paths.src.root %>/<%= paths.styles %>/**/*.{sass,scss}'],
-      dest: '<%= paths.dist.root %>/<%= paths.styles %>',
-    })
     .hook('styles:pre', 'stylelint', stylelint)
     .hook('styles:pre', 'sass', sass)
     .params('styles', {
+      src: ['<%= paths.src.root %>/<%= paths.styles %>/**/*.{sass,scss}'],
+      dest: '<%= paths.dist.root %>/<%= paths.styles %>',
       'hooks:pre': {
         sass: {
           includePaths: ['<%= paths.src.vendors %>', 'node_modules'],
@@ -50,15 +40,13 @@ module.exports = (config) => {
         },
       },
     })
-    .set('scripts', scripts)
-    .params('scripts', {
+    .set('scripts', scripts, {
       src: ['<%= paths.src.root %>/<%= paths.scripts %>/**/*.js'],
       dest: '<%= paths.dist.root %>/<%= paths.scripts %>',
     })
     .hook('scripts:pre', 'eslint', eslint)
     .hook('scripts:transform', 'babel', babel)
-    .set('modernizr', modernizr)
-    .params('modernizr', {
+    .set('modernizr', modernizr, {
       src: [
         '<%= paths.src.root %>/<%= paths.scripts %>/**/*.js',
         '<%= paths.src.root %>/<%= paths.styles %>/**/*.{sass,scss}',
@@ -84,20 +72,30 @@ module.exports = (config) => {
         },
       },
     })
-    .set('cleanup', clean)
-    .params('cleanup', {
+    .set('rev', rev, {
+      pattern: [
+        '<%= paths.dist.root %>/assets/**/*',
+        '<%= paths.dist.root %>/<%= paths.dist.vendors %>/modernizr/*.*',
+      ],
+      dest: '<%= paths.dist.root %>',
+      manifest: '<%= paths.dist.root %>/<%= paths.dist.revmap %>',
+    })
+    // .hook('rev:before', 'minify', minifyJS)
+    .set('cleanup', clean, {
       pattern: ['<%= paths.tmp %>'],
     })
-    .default(({ clean, copy, styles, scripts, modernizr, views, cleanup }) =>
-      config.series(
-        clean,
-        config.parallel(copy, styles, scripts, modernizr),
-        views,
-        cleanup,
-      ),
+    .default(
+      ({ clean, copy, styles, scripts, modernizr, views, cleanup, rev }) =>
+        config.series(
+          clean,
+          config.parallel(copy, styles, scripts, modernizr),
+          views,
+          rev,
+          cleanup,
+        ),
     );
 
-  if (config.env.production) {
+  if (env.production) {
     preset
       .params('scripts')
       .set('dest', '<%= paths.tmp %>/<%= paths.scripts %>');

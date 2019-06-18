@@ -1,5 +1,5 @@
 const log = require('fancy-log');
-const { red, yellow } = require('ansi-colors');
+const { red, yellow, blue } = require('ansi-colors');
 const template = require('lodash/template');
 const through2 = require('through2');
 const lazypipe = require('lazypipe');
@@ -7,12 +7,17 @@ const PluginError = require('plugin-error');
 const gulp = require('gulp');
 
 const logger = {
-  msg: (str) => log(red(str)),
+  msg: (str) => log(blue(str)),
   error: (str) => log(red(str)),
   warn: (str) => log(yellow(str)),
 };
 
-const resolveTemplate = (str, data) => template(str)(data);
+const resolveTemplate = (v, data) => {
+  if (typeof v !== 'string') {
+    return v;
+  }
+  return template(v)(data);
+};
 
 const resolvePatterns = (patterns, data) => {
   const tmpl = (p) => resolveTemplate(p, data);
@@ -22,6 +27,12 @@ const resolvePatterns = (patterns, data) => {
 const noopStream = () => through2.obj();
 
 const pipeChain = () => lazypipe().pipe(noopStream);
+
+const tap = (fn) =>
+  through2.obj((file, enc, cb) => {
+    fn(file);
+    cb(null, file);
+  });
 
 const map = (fn) => {
   const mapFn = typeof fn === 'function' ? fn : (val) => val;
@@ -53,13 +64,19 @@ const map = (fn) => {
   });
 };
 
-const createPlugin = ({ name, plugin, productionOnly = false }) => {
-  return (stream, env, api, opts = {}) => {
+const createPlugin = ({ name, plugin, productionOnly = false, test }) => {
+  return (stream, env, api, opts, ...rest) => {
     if (productionOnly && !env.production) {
       return stream;
     }
 
-    return plugin(stream, env, api, opts[name] !== undefined ? opts[name] : {});
+    const pluginOpts = opts && opts[name] !== undefined ? opts[name] : {};
+
+    if (typeof test === 'function' && test(env, pluginOpts) === false) {
+      return stream;
+    }
+
+    return plugin(stream, env, api, pluginOpts, ...rest);
   };
 };
 
@@ -71,6 +88,7 @@ module.exports = {
   noopStream,
   pipeChain,
   map,
+  tap,
   dest: gulp.dest,
   src: gulp.src,
   createPlugin,

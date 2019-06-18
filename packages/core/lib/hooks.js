@@ -1,4 +1,4 @@
-const { pipeChain } = require('./utils');
+const { pipeChain } = require('../utils');
 
 module.exports = class Hooks {
   constructor() {

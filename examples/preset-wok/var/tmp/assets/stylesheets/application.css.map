@@ -1,0 +1,1 @@
+{"version":3,"sources":["application.scss","application.css"],"names":[],"mappings":"AAEA,KACE,cCDF","file":"application.css","sourcesContent":["$demo: 1rem;\n\nhtml {\n  font-size: $demo;\n}\n","html {\n  font-size: 1rem;\n}\n"]}

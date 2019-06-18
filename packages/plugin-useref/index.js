@@ -8,14 +8,14 @@ function userefPlugin(stream, env, api, opts) {
 
   conf.searchPath = conf.searchPath && api.pattern(conf.searchPath);
   conf.base = conf.base && api.resolve(conf.base);
-
   return stream
     .pipe(
       useref,
       conf,
     )
-    .pipe(() => gulpif('*.js', api.hooks.call('useref:js')))
-    .pipe(() => gulpif('*.css', api.hooks.call('useref:css')));
+    .pipe(() => gulpif(/\.(css|js)/, api.hooks.call('useref:assets', conf)))
+    .pipe(() => gulpif('*.js', api.hooks.call('useref:js', conf)))
+    .pipe(() => gulpif('*.css', api.hooks.call('useref:css', conf)));
 }
 
 userefPlugin.transforms = {
