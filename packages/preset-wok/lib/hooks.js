@@ -53,7 +53,11 @@ const minifyJS = createPlugin({
   plugin(stream, env, api, opts) {
     const minify = require('gulp-minify');
     const gulpif = require('gulp-if');
-    const options = Object.assign({ preserveComments: 'some', ext: '' }, opts);
+    const options = Object.assign(
+      { preserveComments: 'some', ext: '.js', noSource: true },
+      opts,
+    );
+
     return stream.pipe(() => gulpif('*.js', minify(options)));
   },
 });
