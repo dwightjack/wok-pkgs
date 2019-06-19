@@ -1,1 +1,0 @@
-{"version":3,"sources":["application.js"],"names":["console","log"],"mappings":";;;;AAAA;AAAA;AAAA,wBAAC;AAAA;AAAA;AAAA;AAAA;AACC;AACAA,UAAAA,OAAO,CAACC,GAAR,CAAY,MAAZ;;AAFD;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA,CAAD","sourcesContent":["(async () => {\n  // eslint-disable-next-line no-console\n  console.log('xxxx');\n})();\n"],"file":"application.js"}
