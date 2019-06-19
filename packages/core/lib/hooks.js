@@ -43,7 +43,7 @@ module.exports = class Hooks {
       );
     }
 
-    if (result.pipe) {
+    if (result && result.pipe) {
       // it's a stream-like interface
       // let's execute it right await
       return result();

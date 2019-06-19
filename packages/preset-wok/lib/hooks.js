@@ -22,7 +22,7 @@ const babel = createPlugin({
 
 const eslint = createPlugin({
   name: 'eslint',
-  test: (env) => !!env.babel,
+  test: (env) => env.lint !== false,
   plugin(stream, env) {
     const glint = require('gulp-eslint');
     return stream
@@ -37,6 +37,7 @@ const eslint = createPlugin({
 
 const stylelint = createPlugin({
   name: 'stylelint',
+  test: (env) => env.lint !== false,
   plugin(stream, env) {
     return stream.pipe(
       require('gulp-stylelint'),

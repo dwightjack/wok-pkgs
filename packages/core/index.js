@@ -116,6 +116,7 @@ function config(gulp, params = {}) {
     api,
     series: gulp.series,
     parallel: gulp.parallel,
+    watch: gulp.watch,
   };
 }
 

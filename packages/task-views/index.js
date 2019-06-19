@@ -45,7 +45,7 @@ module.exports = (
               dataPattern,
               matchParser(parsers),
             )
-          : noopStream,
+          : noopStream(),
       )
       .pipe(
         map((code, filepath, { data = {} }) => {

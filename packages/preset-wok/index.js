@@ -1,20 +1,22 @@
-const { copy, clean } = require('wok-core/tasks');
+const { copy, clean, noop } = require('wok-core/tasks');
 const bump = require('task-bump');
 const styles = require('task-styles');
 const scripts = require('task-scripts');
 const modernizr = require('task-modernizr');
 const views = require('task-views');
 const { createPreset } = require('wok-core/preset');
+const { runif } = require('wok-core/utils');
 const imagemin = require('plugin-imagemin');
 const sass = require('plugin-sass');
 const rev = require('task-rev');
+const serve = require('task-serve');
 const { babel, eslint, stylelint, minifyJS } = require('./lib/hooks');
 
 // passed-in config object
 module.exports = (config) => {
   const preset = createPreset(config);
 
-  const { env } = config;
+  const { env, api } = config;
 
   preset
     .set('bump', bump)
@@ -82,26 +84,72 @@ module.exports = (config) => {
       dest: '<%= paths.dist.root %>',
       manifest: '<%= paths.dist.root %>/<%= paths.dist.revmap %>',
     })
-    // .hook('rev:before', 'minify', minifyJS)
+    .hook('rev:before', 'minify', minifyJS)
     .set('cleanup', clean, {
       pattern: ['<%= paths.tmp %>'],
     })
+    .set('server', serve, {
+      baseDir: ['<%= paths.dist.root %>', '<%= paths.static %>'],
+    })
     .default(
-      ({ clean, copy, styles, scripts, modernizr, views, cleanup, rev }) =>
-        config.series(
+      ({ clean, copy, styles, scripts, modernizr, views, cleanup, rev }) => {
+        return config.series(
           clean,
-          config.parallel(copy, styles, scripts, modernizr),
+          config.parallel(
+            runif(() => !env.$$isServe, copy),
+            styles,
+            scripts,
+            modernizr,
+          ),
           views,
-          rev,
+          runif(() => env.production, rev),
           cleanup,
-        ),
+        );
+      },
+    )
+    .hook('styles:complete', 'reload', (stream, env) => {
+      if (env.$$isServe && env.livereload !== false) {
+        const bs = serve.getServer(env);
+        return stream.pipe(
+          bs.stream,
+          { match: '**/*.css' },
+        );
+      }
+      return stream;
+    })
+    .compose(
+      'watch',
+      ({ styles, scripts, server, views }) => {
+        const options = {
+          delay: 50,
+        };
+        return function watch(done) {
+          const styleWatch = api.pattern(preset.params('styles').get('src'));
+          const scriptWatch = api.pattern(preset.params('scripts').get('src'));
+          const viewWatch = api.pattern([
+            '<%= paths.src.views %>/**/*.*',
+            '<%= paths.src.fixtures %>/**/*.*',
+          ]);
+          const reload = server.reload();
+          config.watch(styleWatch, options, styles);
+          config.watch(scriptWatch, options, config.series(scripts, reload));
+          config.watch(viewWatch, options, config.series(views, reload));
+          config.watch(
+            api.resolve('<%= paths.static %>/**/*'),
+            options,
+            reload,
+          );
+          done();
+        };
+      },
+    )
+    .compose(
+      'serve',
+      ({ default: def, server, watch }) => {
+        env.$$isServe = true;
+        return config.series(def, config.parallel(server, watch));
+      },
     );
-  .compose(
-    'serve',
-    ({ default: def, server, watch }) => {
-      return config.series(def, config.parallel(server, watch));
-    },
-  );
 
   if (env.production) {
     preset
@@ -111,6 +159,8 @@ module.exports = (config) => {
       .params('modernizr')
       .set('dest', '<%= paths.tmp %>/<%= paths.dist.vendors %>/modernizr');
     preset.params('styles').set('dest', '<%= paths.tmp %>/<%= paths.styles %>');
+
+    preset.params('server').set('baseDir', ['<%= paths.dist.root %>']);
   }
 
   return preset;

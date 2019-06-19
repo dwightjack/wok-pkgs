@@ -65,19 +65,26 @@ const map = (fn) => {
 };
 
 const createPlugin = ({ name, plugin, productionOnly = false, test }) => {
-  return (stream, env, api, opts, ...rest) => {
+  return (prev, env, api, opts, ...rest) => {
     if (productionOnly && !env.production) {
-      return stream;
+      return prev;
     }
 
     const pluginOpts = opts && opts[name] !== undefined ? opts[name] : {};
 
     if (typeof test === 'function' && test(env, pluginOpts) === false) {
-      return stream;
+      return prev;
     }
 
-    return plugin(stream, env, api, pluginOpts, ...rest);
+    return plugin(prev, env, api, pluginOpts, ...rest);
   };
+};
+
+const runif = (cond, task) => {
+  const wrapFn = (...args) =>
+    cond() === true ? task(...args) : Promise.resolve();
+  Object.defineProperty(wrapFn, 'name', { value: task.name });
+  return wrapFn;
 };
 
 module.exports = {
@@ -92,5 +99,6 @@ module.exports = {
   dest: gulp.dest,
   src: gulp.src,
   createPlugin,
+  runif,
   camelCase: require('lodash/camelCase'),
 };

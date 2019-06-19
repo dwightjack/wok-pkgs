@@ -31,7 +31,7 @@ function userefPlugin(stream, env, api, opts) {
             sourcemaps.write(
               typeof conf.sourcemaps === 'string' ? conf.sourcemaps : undefined,
             )
-        : () => noopStream,
+        : noopStream,
     );
 }
 

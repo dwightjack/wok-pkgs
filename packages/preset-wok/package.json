@@ -32,6 +32,7 @@
     "task-modernizr": "^1.0.0",
     "task-rev": "^1.0.0",
     "task-scripts": "^1.0.0",
+    "task-serve": "^1.0.0",
     "task-styles": "^1.0.0",
     "task-views": "^1.0.0"
   },
