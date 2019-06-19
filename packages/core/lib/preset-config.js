@@ -15,8 +15,13 @@ module.exports = class PresetConfig extends Config {
     return this;
   }
 
-  callback(fn) {
+  onResolve(fn) {
     this.$cbs.push(fn);
+    return this;
+  }
+
+  compose(name, fn) {
+    this.$cbs.push([name, fn]);
     return this;
   }
 
@@ -86,7 +91,13 @@ module.exports = class PresetConfig extends Config {
       tasks.default = this.$default(tasks);
     }
 
-    this.$cbs.forEach((fn) => fn(tasks, cfg));
+    this.$cbs.forEach((cb) => {
+      if (Array.isArray(cb)) {
+        tasks[cb[0]] = cb[1](tasks, cfg);
+        return;
+      }
+      cb(tasks, cfg);
+    });
 
     return tasks;
   }

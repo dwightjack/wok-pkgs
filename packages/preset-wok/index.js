@@ -14,7 +14,7 @@ const { babel, eslint, stylelint, minifyJS } = require('./lib/hooks');
 module.exports = (config) => {
   const preset = createPreset(config);
 
-  const { api, env } = config;
+  const { env } = config;
 
   preset
     .set('bump', bump)
@@ -69,6 +69,8 @@ module.exports = (config) => {
       'hooks:post': {
         useref: {
           searchPath: ['<%= paths.dist.root %>', '<%= paths.tmp %>'],
+          // we need this to be inline to prevent the generation of multiple map files
+          sourcemaps: true,
         },
       },
     })
@@ -94,6 +96,12 @@ module.exports = (config) => {
           cleanup,
         ),
     );
+  .compose(
+    'serve',
+    ({ default: def, server, watch }) => {
+      return config.series(def, config.parallel(server, watch));
+    },
+  );
 
   if (env.production) {
     preset

@@ -1,6 +1,6 @@
 module.exports = (
   gulp,
-  { pattern = '', dest = '', manifest, ...opts },
+  { pattern = '', dest = '', manifest, sourcemaps = '.', ...opts },
   env,
   api,
 ) => {
@@ -8,18 +8,18 @@ module.exports = (
   const del = require('gulp-rev-delete-original');
   const rewrite = require('gulp-rev-rewrite');
   const { logger } = require('wok-core/utils');
-  const src = api.pattern(pattern);
+  const src = api.pattern(pattern).concat(['!**/*.map']);
   const dist = api.resolve(dest);
   const man = manifest && api.resolve(manifest);
 
   function revFiles() {
     return gulp
-      .src(src, { base: dist, sourcemaps: true })
+      .src(src, { base: dist, sourcemaps: !!sourcemaps })
       .pipe(api.hooks.call('rev:before', opts['hooks:before']))
       .pipe(gRev())
       .pipe(del())
       .pipe(api.hooks.call('rev:after', opts['hooks:after']))
-      .pipe(gulp.dest(dist, { sourcemaps: '.' }))
+      .pipe(gulp.dest(dist, { sourcemaps }))
       .pipe(gRev.manifest(man, { merge: true }))
       .pipe(gulp.dest('.'));
   }

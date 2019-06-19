@@ -1,4 +1,9 @@
-module.exports = (gulp, { src = '', dest = '', ...params }, env, api) => {
+module.exports = (
+  gulp,
+  { src = '', dest = '', sourcemaps = '.', ...params },
+  env,
+  api,
+) => {
   const srcFolder = api.pattern(src);
   const destFolder = api.resolve(dest);
   const postcssHook = require('./lib/postcss');
@@ -8,9 +13,9 @@ module.exports = (gulp, { src = '', dest = '', ...params }, env, api) => {
 
   return function styles() {
     return gulp
-      .src(srcFolder, { sourcemaps: true })
+      .src(srcFolder, { sourcemaps: !!sourcemaps })
       .pipe(hooks.call('styles:pre', params['hooks:pre']))
       .pipe(hooks.call('styles:post', params['hooks:post']))
-      .pipe(gulp.dest(destFolder, { sourcemaps: '.' }));
+      .pipe(gulp.dest(destFolder, { sourcemaps }));
   };
 };

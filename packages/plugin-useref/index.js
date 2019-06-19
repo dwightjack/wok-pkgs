@@ -1,10 +1,14 @@
-const { createPlugin, pipeChain } = require('wok-core/utils');
+const { createPlugin, pipeChain, noopStream } = require('wok-core/utils');
 
 function userefPlugin(stream, env, api, opts) {
   const useref = require('gulp-useref');
   const gulpif = require('gulp-if');
   const sourcemaps = require('gulp-sourcemaps');
-  const conf = Object.assign({}, userefPlugin.transforms, opts);
+  const conf = Object.assign(
+    { sourcemaps: true },
+    userefPlugin.transforms,
+    opts,
+  );
 
   conf.searchPath = conf.searchPath && api.pattern(conf.searchPath);
   conf.base = conf.base && api.resolve(conf.base);
@@ -12,17 +16,22 @@ function userefPlugin(stream, env, api, opts) {
     .pipe(
       useref,
       conf,
-      pipeChain().pipe(
-        sourcemaps.init,
-        { loadMaps: true },
-      ),
+      conf.sourcemaps &&
+        pipeChain().pipe(
+          sourcemaps.init,
+          { loadMaps: true },
+        ),
     )
     .pipe(() => gulpif(/\.(css|js)/, api.hooks.call('useref:assets', conf)))
     .pipe(() => gulpif('*.js', api.hooks.call('useref:js', conf)))
     .pipe(() => gulpif('*.css', api.hooks.call('useref:css', conf)))
     .pipe(
-      sourcemaps.write,
-      '.',
+      conf.sourcemaps
+        ? () =>
+            sourcemaps.write(
+              typeof conf.sourcemaps === 'string' ? conf.sourcemaps : undefined,
+            )
+        : () => noopStream,
     );
 }
 
