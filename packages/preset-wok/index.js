@@ -91,7 +91,7 @@ module.exports = (config) => {
           config.parallel(copy, styles, scripts, modernizr),
           views,
           rev,
-          // cleanup,
+          cleanup,
         ),
     );
 
