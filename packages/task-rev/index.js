@@ -19,9 +19,9 @@ module.exports = (
       .pipe(gRev())
       .pipe(del())
       .pipe(api.hooks.call('rev:after', opts['hooks:after']))
-      .pipe(gulp.dest(dist))
+      .pipe(gulp.dest(dist, { sourcemaps: '.' }))
       .pipe(gRev.manifest(man, { merge: true }))
-      .pipe(gulp.dest('.', { sourcemaps: '.' }));
+      .pipe(gulp.dest('.'));
   }
 
   function revRewrite() {
