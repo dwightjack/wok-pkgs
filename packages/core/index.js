@@ -89,8 +89,25 @@ function config(gulp, params = {}) {
     series: gulp.series,
     parallel: gulp.parallel,
     watch: gulp.watch,
-    watcher({ patterns, task, options = { delay: 50 } }) {
-      return gulp.watch(api.pattern(patterns), options, task);
+    watcher({ id, patterns, task }, options) {
+      const taskList = [task];
+
+      if (api.hooks.count('watcher') > 0) {
+        taskList.push(function watchComplete() {
+          return api.hooks.callWith(
+            'watcher',
+            Promise.resolve(),
+            options,
+            id || task.name,
+          );
+        });
+      }
+
+      return gulp.watch(
+        api.pattern(patterns),
+        Object.assign({ delay: 50 }, options),
+        gulp.series(...taskList),
+      );
     },
   };
 }
