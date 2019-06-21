@@ -4,4 +4,12 @@ const preset = require('preset-wok');
 
 const $ = config(gulp);
 
-module.exports = preset($).resolve();
+const wok = preset($);
+
+wok.hook('watcher', 'notifier', require('plugin-notifier')).params('watch', {
+  notifier: {
+    message: 'Updated!',
+  },
+});
+
+module.exports = wok.resolve();

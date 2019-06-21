@@ -10,6 +10,7 @@
     "@babel/core": "^7.0.0",
     "gulp": "^4.0.0",
     "preset-wok": "*",
+    "plugin-notifier": "*",
     "eslint-config-wok": "^1.0.0",
     "stylelint-config-wok": "^1.0.0",
     "stylelint": "^10.0.0",
