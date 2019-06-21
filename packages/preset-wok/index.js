@@ -1,4 +1,4 @@
-const { copy, clean, noop } = require('wok-core/tasks');
+const { copy, clean } = require('wok-core/tasks');
 const bump = require('task-bump');
 const styles = require('task-styles');
 const scripts = require('task-scripts');
@@ -16,7 +16,7 @@ const { babel, eslint, stylelint, minifyJS } = require('./lib/hooks');
 module.exports = (config) => {
   const preset = createPreset(config);
 
-  const { env, api } = config;
+  const { env } = config;
 
   preset
     .set('bump', bump)
@@ -120,25 +120,27 @@ module.exports = (config) => {
     .compose(
       'watch',
       ({ styles, scripts, server, views }) => {
-        const options = {
-          delay: 50,
-        };
         return function watch(done) {
-          const styleWatch = api.pattern(preset.params('styles').get('src'));
-          const scriptWatch = api.pattern(preset.params('scripts').get('src'));
-          const viewWatch = api.pattern([
-            '<%= paths.src.views %>/**/*.*',
-            '<%= paths.src.fixtures %>/**/*.*',
-          ]);
           const reload = server.reload();
-          config.watch(styleWatch, options, styles);
-          config.watch(scriptWatch, options, config.series(scripts, reload));
-          config.watch(viewWatch, options, config.series(views, reload));
-          config.watch(
-            api.resolve('<%= paths.static %>/**/*'),
-            options,
-            reload,
-          );
+
+          [
+            { patterns: preset.params('styles').get('src'), task: styles },
+            {
+              patterns: preset.params('scripts').get('src'),
+              task: config.series(scripts, reload),
+            },
+            {
+              patterns: [
+                '<%= paths.src.views %>/**/*.*',
+                '<%= paths.src.fixtures %>/**/*.*',
+              ],
+              task: config.series(views, reload),
+            },
+            {
+              patterns: ['<%= paths.static %>/**/*'],
+              task: reload,
+            },
+          ].map(config.watcher);
           done();
         };
       },
