@@ -1,4 +1,4 @@
-const { pipeChain } = require('../utils');
+const { pipeChain, logger } = require('../utils');
 
 module.exports = class Hooks {
   constructor() {
@@ -55,12 +55,16 @@ module.exports = class Hooks {
     return this;
   }
 
+  count(id) {
+    return this.get(id).size;
+  }
+
   tapBefore(id, name, fn, before) {
     const pairs = [...this.get(id)];
     if (before) {
       const idx = pairs.findIndex((pair) => pair[0] === before);
       if (idx === -1) {
-        console.log(`Unable to find hook "${name}" inside "${id}"`);
+        logger.warn(`Unable to find hook "${name}" inside "${id}"`);
         return this;
       }
       pairs.splice(idx, 0, [name, fn]);
