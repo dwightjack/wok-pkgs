@@ -119,12 +119,15 @@ module.exports = (config) => {
     })
     .compose(
       'watch',
-      ({ styles, scripts, server, views }) => {
+      ({ styles, scripts, server, views }, _, params) => {
         return function watch(done) {
           const reload = server.reload();
 
           [
-            { patterns: preset.params('styles').get('src'), task: styles },
+            {
+              patterns: preset.params('styles').get('src'),
+              task: styles,
+            },
             {
               patterns: preset.params('scripts').get('src'),
               task: config.series(scripts, reload),
@@ -137,10 +140,11 @@ module.exports = (config) => {
               task: config.series(views, reload),
             },
             {
+              id: 'static',
               patterns: ['<%= paths.static %>/**/*'],
               task: reload,
             },
-          ].map(config.watcher);
+          ].map((cfg) => config.watcher(cfg, params));
           done();
         };
       },

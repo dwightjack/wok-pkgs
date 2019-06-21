@@ -1,5 +1,7 @@
 const Config = require('./config');
 
+const $composedTaskSym = Symbol('composedTask');
+
 module.exports = class PresetConfig extends Config {
   constructor(parent) {
     super(parent);
@@ -22,6 +24,7 @@ module.exports = class PresetConfig extends Config {
 
   compose(name, fn) {
     this.$cbs.push([name, fn]);
+    this.set(name, $composedTaskSym);
     return this;
   }
 
@@ -79,11 +82,19 @@ module.exports = class PresetConfig extends Config {
       throw new Error('Task wrapper function not provided');
     }
 
+    const composed = {};
+
     this.$store.forEach((taskCfg, name) => {
       const taskFn = taskCfg.get('task');
       const params = taskCfg.has('params')
         ? taskCfg.get('params').toObject()
         : {};
+
+      if (taskFn === $composedTaskSym) {
+        composed[name] = params;
+        return;
+      }
+
       tasks[name] = task(taskFn, params);
     });
 
@@ -93,7 +104,7 @@ module.exports = class PresetConfig extends Config {
 
     this.$cbs.forEach((cb) => {
       if (Array.isArray(cb)) {
-        tasks[cb[0]] = cb[1](tasks, cfg);
+        tasks[cb[0]] = cb[1](tasks, cfg, composed[cb[0]]);
         return;
       }
       cb(tasks, cfg);
