@@ -27,34 +27,6 @@ function loadProjectConfig(basePath, target) {
       return acc;
     }
   }, {});
-
-  // const { locals, globals } = files.reduce(
-  //   (acc, file) => {
-  //     const mod = require(join(cwd, file));
-  //     const key = basename(file, '.js');
-  //     if (key.endsWith('.local')) {
-  //       acc.locals[camelCase(key.replace('.local', ''))] = mod;
-  //     } else {
-  //       acc.globals[camelCase(key)] = mod;
-  //     }
-  //     return acc;
-  //   },
-  //   {
-  //     locals: {},
-  //     globals: {},
-  //   },
-  // );
-
-  // return Object.entries(globals).reduce((acc, [key, globalConf]) => {
-  //   const localConf = locals[key] || {};
-  //   const conf =
-  //     typeof localConf === 'function'
-  //       ? localConf(globalConf)
-  //       : merge({}, globalConf, localConf);
-  //   acc[key] = conf;
-
-  //   return acc;
-  // }, {});
 }
 
 function config(gulp, params = {}) {
@@ -117,6 +89,9 @@ function config(gulp, params = {}) {
     series: gulp.series,
     parallel: gulp.parallel,
     watch: gulp.watch,
+    watcher({ patterns, task, options = { delay: 50 } }) {
+      return gulp.watch(api.pattern(patterns), options, task);
+    },
   };
 }
 
