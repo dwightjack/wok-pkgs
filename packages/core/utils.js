@@ -72,7 +72,10 @@ const createPlugin = ({ name, plugin, productionOnly = false, test }) => {
 
     const pluginOpts = opts && opts[name] !== undefined ? opts[name] : {};
 
-    if (typeof test === 'function' && test(env, pluginOpts) === false) {
+    if (
+      pluginOpts === false ||
+      (typeof test === 'function' && test(env, pluginOpts) === false)
+    ) {
       return prev;
     }
 
@@ -83,8 +86,21 @@ const createPlugin = ({ name, plugin, productionOnly = false, test }) => {
 const runif = (cond, task) => {
   const wrapFn = (...args) =>
     cond() === true ? task(...args) : Promise.resolve();
+
   Object.defineProperty(wrapFn, 'name', { value: task.name });
   return wrapFn;
+};
+
+const getEnvTarget = ({ target, hosts }) => {
+  const targets = Object.keys(hosts).filter((host) => !!hosts[host].host);
+  if (!target || targets.includes(target) === false) {
+    logger.error(
+      'ERROR: Remote target unavailable. Specify it via `--target` argument. Allowed targets are: ' +
+        targets.join(', '),
+    );
+    return false;
+  }
+  return hosts[target];
 };
 
 module.exports = {
@@ -100,5 +116,6 @@ module.exports = {
   src: gulp.src,
   createPlugin,
   runif,
+  getEnvTarget,
   camelCase: require('lodash/camelCase'),
 };

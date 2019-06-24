@@ -82,8 +82,19 @@ function config(gulp, params = {}) {
 
   return {
     env,
-    task(fn, options = {}) {
-      return fn(gulp, options, env, api);
+    task(fn, params = {}, hooks) {
+      const $hooks = hooks instanceof Hooks ? hooks : new Hooks();
+      $hooks.bind(env, api);
+      const ctx = {
+        getHooks: () => $hooks,
+      };
+      return Object.defineProperty(
+        fn.call(ctx, gulp, params, env, api),
+        '$hooks',
+        {
+          value: $hooks,
+        },
+      );
     },
     api,
     series: gulp.series,

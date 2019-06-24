@@ -1,6 +1,5 @@
 const Config = require('./config');
-
-const $composedTaskSym = Symbol('composedTask');
+const Task = require('./task');
 
 module.exports = class PresetConfig extends Config {
   constructor(parent) {
@@ -22,9 +21,9 @@ module.exports = class PresetConfig extends Config {
     return this;
   }
 
-  compose(name, fn) {
-    this.$cbs.push([name, fn]);
-    this.set(name, $composedTaskSym);
+  compose(key, fn) {
+    const task = this.set(key);
+    task.compose(fn);
     return this;
   }
 
@@ -34,15 +33,18 @@ module.exports = class PresetConfig extends Config {
   }
 
   set(key, value, params) {
-    const conf = new Config(this);
-    conf.set('task', value);
+    const conf = new Task(this);
     this.$store.set(key, conf);
+    if (value) {
+      conf.task(value);
 
-    if (params) {
-      this.params(key, params);
+      if (params) {
+        conf.params(params);
+      }
+
+      return this;
     }
-
-    return this;
+    return conf;
   }
 
   params(key, obj) {
@@ -50,15 +52,11 @@ module.exports = class PresetConfig extends Config {
     if (!task) {
       throw new Error(`Task ${key} not registered!`);
     }
-    if (!task.has('params')) {
-      task.set('params', new Config(this));
-    }
-    const params = task.get('params');
     if (obj) {
-      params.extend(obj);
+      task.params(obj);
       return this;
     }
-    return params;
+    return task.params();
   }
 
   hook(...params) {
@@ -82,31 +80,31 @@ module.exports = class PresetConfig extends Config {
       throw new Error('Task wrapper function not provided');
     }
 
-    const composed = {};
+    const composed = [];
 
     this.$store.forEach((taskCfg, name) => {
       const taskFn = taskCfg.get('task');
       const params = taskCfg.has('params')
-        ? taskCfg.get('params').toObject()
+        ? taskCfg.get('params').serialize()
         : {};
 
-      if (taskFn === $composedTaskSym) {
-        composed[name] = params;
+      if (taskFn && taskCfg.isComposed) {
+        composed.push({ name, fn: taskFn, params });
         return;
       }
 
-      tasks[name] = task(taskFn, params);
+      tasks[name] = task(taskFn, params, taskCfg.get('hooks'));
     });
 
     if (typeof this.$default === 'function') {
       tasks.default = this.$default(tasks);
     }
 
+    composed.forEach(({ name, fn, params }) => {
+      tasks[name] = fn(tasks, cfg, params);
+    });
+
     this.$cbs.forEach((cb) => {
-      if (Array.isArray(cb)) {
-        tasks[cb[0]] = cb[1](tasks, cfg, composed[cb[0]]);
-        return;
-      }
       cb(tasks, cfg);
     });
 

@@ -11,6 +11,8 @@
     "gulp": "^4.0.0",
     "preset-wok": "*",
     "plugin-notifier": "*",
+    "task-ssh": "*",
+    "plugin-deploy-rsync": "*",
     "eslint-config-wok": "^1.0.0",
     "stylelint-config-wok": "^1.0.0",
     "stylelint": "^10.0.0",

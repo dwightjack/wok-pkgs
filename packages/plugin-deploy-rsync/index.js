@@ -4,18 +4,17 @@ function rsyncPlugin(
   promise,
   env,
   api,
-  { src, exclude = [], ...options },
-  cfg,
+  { src, exclude = [], strategy, target, ...options },
 ) {
-  if (cfg.strategy !== 'rsync') {
+  if (strategy !== 'rsync') {
     return promise;
   }
 
   const rsync = require('rsyncwrapper');
-  const { username, port = 22, path, host } = cfg.target;
+  const { username, port = 22, path, host } = target;
 
   const config = {
-    src: api.resolve(src),
+    src,
     dest: api.resolve(path),
     host: `${username}@${host}`,
     recursive: true,

@@ -1,5 +1,5 @@
 {
-  "name": "plugin-deploy-rsync",
+  "name": "task-ssh",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",

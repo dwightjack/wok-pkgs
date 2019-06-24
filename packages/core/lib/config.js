@@ -1,8 +1,21 @@
 module.exports = class Config {
-  constructor(parent) {
+  static toObject(store) {
+    return [...store.entries()].reduce((acc, [key, value]) => {
+      acc[key] = value instanceof Config ? value.toObject() : value;
+      return acc;
+    }, {});
+  }
+
+  static toArray(store) {
+    return [...store.values()];
+  }
+
+  constructor(parent, serializer = Config.toObject) {
+    this.$serializer = serializer;
     this.parent = parent;
     this.$store = new Map();
   }
+
   end() {
     return this.parent;
   }
@@ -31,10 +44,12 @@ module.exports = class Config {
     return this;
   }
 
-  toObject() {
-    return [...this.$store.entries()].reduce((acc, [key, value]) => {
-      acc[key] = value;
-      return acc;
-    }, {});
+  fromPairs(pairs) {
+    this.$store = new Map(pairs);
+    return this;
+  }
+
+  serialize() {
+    return this.$serializer(this.$store);
   }
 };

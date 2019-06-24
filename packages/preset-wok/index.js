@@ -23,11 +23,15 @@ module.exports = (config) => {
     .set('clean', clean, {
       pattern: ['<%= paths.dist.root %>/**/*', '<%= paths.tmp %>'],
     })
-    .set('copy', copy, {
+    .set('copy')
+    .task(copy)
+    .params({
       pattern: ['<%= paths.static %>/**/*'],
       dest: '<%= paths.dist.root %>',
     })
-    .hook('copy:beforeWrite', 'imagemin', imagemin)
+    .hook('beforeWrite', 'imagemin', imagemin)
+    .end()
+
     .set('styles', styles)
     .hook('styles:pre', 'stylelint', stylelint)
     .hook('styles:pre', 'sass', sass)
@@ -96,7 +100,7 @@ module.exports = (config) => {
         return config.series(
           clean,
           config.parallel(
-            runif(() => !env.$$isServe, copy),
+            // runif(() => env.$$isServe !== true, copy),
             styles,
             scripts,
             modernizr,
@@ -152,8 +156,11 @@ module.exports = (config) => {
     .compose(
       'serve',
       ({ default: def, server, watch }) => {
-        env.$$isServe = true;
-        return config.series(def, config.parallel(server, watch));
+        function setup() {
+          env.$$isServe = true;
+          return Promise.resolve();
+        }
+        return config.series(setup, def, config.parallel(server, watch));
       },
     );
 

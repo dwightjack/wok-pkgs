@@ -1,30 +1,24 @@
 const { pipeChain, logger } = require('../utils');
+const Config = require('./config');
 
-module.exports = class Hooks {
-  constructor() {
-    this.$hooks = new Map();
-  }
+module.exports = class Hooks extends Config {
   bind(env, ctx) {
     this.$env = env;
     this.$ctx = ctx;
   }
   get(id) {
-    if (!this.$hooks.has(id)) {
+    if (!this.has(id)) {
       this.set(id);
     }
-    return this.$hooks.get(id);
+    return this.$store.get(id);
   }
   set(id) {
-    this.$hooks.set(id, new Map());
+    this.$store.set(id, new Map());
     return this;
   }
   delete(id, name) {
-    if (!this.$hooks.has(id)) {
-      return this;
-    }
     if (!name) {
-      this.$hooks.delete(id);
-      return this;
+      return this.delete(id);
     }
     this.get(id).delete(name);
     return this;
@@ -35,7 +29,7 @@ module.exports = class Hooks {
   callWith(id, initial, ...params) {
     let result = initial;
     const { $env, $ctx } = this;
-    if (this.$hooks.has(id)) {
+    if (this.has(id)) {
       const hookFns = [...this.get(id).values()];
       result = hookFns.reduce(
         (acc, fn) => fn(acc, $env, $ctx, ...params),
@@ -71,8 +65,10 @@ module.exports = class Hooks {
     } else {
       pairs.unshift([name, fn]);
     }
+    this.set(id, pairs);
 
-    this.$hooks.set(id, new Map(pairs));
     return this;
   }
+
+  serialize() {}
 };
