@@ -45,5 +45,6 @@ function rsyncPlugin(
 
 module.exports = createPlugin({
   name: 'rsync',
+  params: (opts) => opts,
   plugin: rsyncPlugin,
 });

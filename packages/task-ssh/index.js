@@ -23,9 +23,10 @@ module.exports = (gulp, params, env, api) => {
     }
 
     const parsed = resolveTemplate(commands[command], {
+      env,
       src: api.resolve(params.src),
       target,
-      ...env,
+      excludes: params.excludes || [],
     });
 
     return exec(parsed, target);

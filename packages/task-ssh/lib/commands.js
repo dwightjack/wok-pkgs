@@ -7,17 +7,17 @@ module.exports.backup =
   'printf "Removing old backup file $file";' +
   'done;' +
   'fi;' +
-  'if [ -d <%= src %> ]; then ' +
-  'printf "Backup folder <%= src %> in <%= target.backup %>/backup-<%= new Date().getTime() %>.tgz";' +
+  'if [ -d <%= target.path %> ]; then ' +
+  'printf "Backup folder <%= target.path %> in <%= target.backup %>/backup-<%= new Date().getTime() %>.tgz";' +
   'tar -cpzf <%= target.backup %>/backup-<%= new Date().getTime() %>.tgz ' +
-  '<%= excludes.map(function (exc) { return " --exclude=\'" + exc + "\'";}).join(" ") %> <%= src %>;' +
+  '<%= excludes.map(function (exc) { return " --exclude=\'" + exc + "\'";}).join(" ") %> <%= target.path %>;' +
   'printf "Backup completed";' +
   'fi;';
 
 module.exports.rollback =
   'if [ -d <%= target.backup %> ];then ' +
-  'rm -rf <%= src %>/;' +
+  'rm -rf <%= target.path %>/*;' +
   'for file in $(ls -tr <%= target.backup %> | tail -n 1);' +
-  'do tar -xzpf <%= target.backup %>/$file;' +
+  'do tar -xzpf <%= target.backup %>/$file -C /;' +
   'done;' +
   'fi;';

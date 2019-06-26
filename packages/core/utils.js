@@ -67,13 +67,25 @@ const map = (fn) => {
   });
 };
 
-const createPlugin = ({ name, plugin, productionOnly = false, test }) => {
+const createPlugin = ({
+  name,
+  plugin,
+  productionOnly = false,
+  test,
+  params,
+}) => {
   return (prev, env, api, opts, ...rest) => {
     if (productionOnly && !env.production) {
       return prev;
     }
 
-    const pluginOpts = opts && opts[name] !== undefined ? opts[name] : {};
+    let pluginOpts;
+
+    if (typeof params === 'function') {
+      pluginOpts = params(opts);
+    } else {
+      pluginOpts = opts && opts[name] !== undefined ? opts[name] : {};
+    }
 
     if (
       pluginOpts === false ||
