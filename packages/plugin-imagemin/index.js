@@ -4,7 +4,7 @@ function imageMinPlugin(
   lazypipe,
   { production },
   api,
-  { pattern = '**/*.{png,jpg,gif,svg,webp}', ...opts },
+  { pattern = '**/*.{png,jpg,gif,svg,webp}' },
 ) {
   const filter = require('gulp-filter');
   const imagemin = require('gulp-imagemin');
@@ -30,7 +30,6 @@ function imageMinPlugin(
       imagemin,
       plugins,
     )
-    .pipe(() => api.hooks.call('imagemin:after', opts))
     .pipe(() => f.restore);
 }
 

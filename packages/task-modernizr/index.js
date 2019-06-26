@@ -1,18 +1,19 @@
-module.exports = (
+module.exports = function(
   gulp,
-  { src = '', dest = '', filename = 'modernizr.js', ...options },
+  { src = '', dest = '', filename = 'modernizr.js', ...params },
   env,
   api,
-) => {
-  const customizr = require('gulp-modernizr');
+) {
   const srcPattern = api.pattern(src);
   const destFolder = api.resolve(dest);
+  const $hooks = this.getHooks();
 
   return function modernizr() {
+    const customizr = require('gulp-modernizr');
     return gulp
       .src(srcPattern)
-      .pipe(customizr(filename, options))
-      .pipe(api.hooks.call('modernizr:after', options['hooks:after']))
+      .pipe(customizr(filename, params))
+      .pipe($hooks.call('generated', params['hooks:generated']))
       .pipe(gulp.dest(destFolder));
   };
 };

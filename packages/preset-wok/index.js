@@ -26,16 +26,17 @@ module.exports = (config) => {
     .set('copy')
     .task(copy)
     .params({
-      pattern: ['<%= paths.static %>/**/*'],
+      src: ['<%= paths.static %>/**/*'],
       dest: '<%= paths.dist.root %>',
     })
-    .hook('beforeWrite', 'imagemin', imagemin)
+    .hook('process', 'imagemin', imagemin)
     .end()
 
-    .set('styles', styles)
-    .hook('styles:pre', 'stylelint', stylelint)
-    .hook('styles:pre', 'sass', sass)
-    .params('styles', {
+    .set('styles')
+    .task(styles)
+    .hook('pre', 'stylelint', stylelint)
+    .hook('pre', 'sass', sass)
+    .params({
       src: ['<%= paths.src.root %>/<%= paths.styles %>/**/*.{sass,scss}'],
       dest: '<%= paths.dist.root %>/<%= paths.styles %>',
       'hooks:pre': {
@@ -46,12 +47,18 @@ module.exports = (config) => {
         },
       },
     })
-    .set('scripts', scripts, {
+    .end()
+
+    .set('scripts')
+    .task(scripts)
+    .params({
       src: ['<%= paths.src.root %>/<%= paths.scripts %>/**/*.js'],
       dest: '<%= paths.dist.root %>/<%= paths.scripts %>',
     })
-    .hook('scripts:pre', 'eslint', eslint)
-    .hook('scripts:transform', 'babel', babel)
+    .hook('pre', 'eslint', eslint)
+    .hook('transform', 'babel', babel)
+    .end()
+
     .set('modernizr', modernizr, {
       src: [
         '<%= paths.src.root %>/<%= paths.scripts %>/**/*.js',
@@ -60,10 +67,11 @@ module.exports = (config) => {
       dest: '<%= paths.dist.root %>/<%= paths.dist.vendors %>/modernizr/',
       options: ['setClasses', 'addTest', 'testProp'],
     })
-    .set('views', views)
-    .hook('views:engines', 'nunjucks', require('plugin-render-nunjucks'))
-    .hook('views:post', 'useref', require('plugin-useref'))
-    .params('views', {
+    .set('views')
+    .task(views)
+    .hook('engines', 'nunjucks', require('plugin-render-nunjucks'))
+    .hook('post', 'useref', require('plugin-useref'))
+    .params({
       src: ['<%= paths.src.views %>/**/*.*', '!<%= paths.src.views %>/**/_*.*'],
       dest: '<%= paths.dist.root %>',
       data: '<%= paths.src.fixtures %>/**/*.*',
@@ -80,7 +88,10 @@ module.exports = (config) => {
         },
       },
     })
-    .set('rev', rev, {
+    .end()
+    .set('rev')
+    .task(rev)
+    .params({
       pattern: [
         '<%= paths.dist.root %>/assets/**/*',
         '<%= paths.dist.root %>/<%= paths.dist.vendors %>/modernizr/*.*',
@@ -88,7 +99,9 @@ module.exports = (config) => {
       dest: '<%= paths.dist.root %>',
       manifest: '<%= paths.dist.root %>/<%= paths.dist.revmap %>',
     })
-    .hook('rev:before', 'minify', minifyJS)
+    .hook('before', 'minify', minifyJS)
+    .end()
+
     .set('cleanup', clean, {
       pattern: ['<%= paths.tmp %>'],
     })
@@ -100,7 +113,7 @@ module.exports = (config) => {
         return config.series(
           clean,
           config.parallel(
-            // runif(() => env.$$isServe !== true, copy),
+            runif(() => env.$$isServe !== true, copy),
             styles,
             scripts,
             modernizr,
@@ -111,7 +124,8 @@ module.exports = (config) => {
         );
       },
     )
-    .hook('styles:complete', 'reload', (stream, env) => {
+    .get('styles')
+    .hook('complete', 'reload', (stream, env) => {
       if (env.$$isServe && env.livereload !== false) {
         const bs = serve.getServer(env);
         return stream.pipe(
@@ -121,6 +135,7 @@ module.exports = (config) => {
       }
       return stream;
     })
+    .end()
     .compose(
       'watch',
       ({ styles, scripts, server, views }, _, params) => {

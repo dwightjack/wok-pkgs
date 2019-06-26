@@ -1,6 +1,8 @@
 const { getEnvTarget } = require('../utils');
 
-module.exports = (gulp, { src = '', ...params }, env, api) => {
+module.exports = function(gulp, { src = '', ...params }, env, api) {
+  const $hooks = this.getHooks();
+
   return function deploy() {
     const target = getEnvTarget(env);
     if (target === false) {
@@ -11,7 +13,7 @@ module.exports = (gulp, { src = '', ...params }, env, api) => {
 
     const { deployStrategy = env.deployStrategy } = target;
 
-    return api.hooks.callWith('deploy:strategy', Promise.resolve(), {
+    return $hooks.callWith('strategy', Promise.resolve(), {
       ...params,
       src: api.resolve(src),
       strategy: deployStrategy,

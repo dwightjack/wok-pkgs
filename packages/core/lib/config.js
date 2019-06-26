@@ -16,6 +16,12 @@ module.exports = class Config {
     this.$store = new Map();
   }
 
+  shorthands(keys) {
+    keys.forEach((key) => {
+      this[key] = (value) => this.set(key, value);
+    });
+  }
+
   end() {
     return this.parent;
   }
@@ -37,15 +43,11 @@ module.exports = class Config {
     this.$store.set(key, value);
     return this;
   }
+
   extend(obj) {
     Object.entries(obj).forEach(([key, value]) => {
       this.set(key, value);
     });
-    return this;
-  }
-
-  fromPairs(pairs) {
-    this.$store = new Map(pairs);
     return this;
   }
 

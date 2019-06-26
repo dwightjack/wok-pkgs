@@ -1,10 +1,13 @@
+const fs = require('fs');
 const log = require('fancy-log');
 const { red, yellow, blue } = require('ansi-colors');
 const template = require('lodash/template');
+const merge = require('lodash/merge');
 const through2 = require('through2');
 const lazypipe = require('lazypipe');
 const PluginError = require('plugin-error');
 const gulp = require('gulp');
+const base = require('./tasks/base');
 
 const logger = {
   msg: (str) => log(blue(str)),
@@ -83,6 +86,12 @@ const createPlugin = ({ name, plugin, productionOnly = false, test }) => {
   };
 };
 
+const createTask = (name, defs) => {
+  return function(gulp, params = {}, ...args) {
+    return base.call(this, gulp, { ...params, ...defs, name }, ...args);
+  };
+};
+
 const runif = (cond, task) => {
   const wrapFn = (...args) =>
     cond() === true ? task(...args) : Promise.resolve();
@@ -103,6 +112,31 @@ const getEnvTarget = ({ target, hosts }) => {
   return hosts[target];
 };
 
+function loadProjectConfig(basePath, target) {
+  const localPath = basePath.replace(/\.js/, '.local.js');
+
+  if (!fs.existsSync(basePath)) {
+    logger.warn(`Configuration file not found: ${basePath}`);
+    return {};
+  }
+
+  return [basePath, localPath].reduce((acc, filepath) => {
+    try {
+      if (!fs.existsSync(filepath)) {
+        return acc;
+      }
+      const config = require(filepath);
+      if (typeof config === 'function') {
+        return config(acc, target);
+      }
+      return merge(acc, config);
+    } catch (e) {
+      logger.error(e);
+      return acc;
+    }
+  }, {});
+}
+
 module.exports = {
   logger,
   resolvePatterns,
@@ -110,11 +144,13 @@ module.exports = {
   resolvePath: resolveTemplate,
   noopStream,
   pipeChain,
+  loadProjectConfig,
   map,
   tap,
   dest: gulp.dest,
   src: gulp.src,
   createPlugin,
+  createTask,
   runif,
   getEnvTarget,
   camelCase: require('lodash/camelCase'),

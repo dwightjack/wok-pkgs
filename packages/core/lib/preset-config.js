@@ -2,8 +2,8 @@ const Config = require('./config');
 const Task = require('./task');
 
 module.exports = class PresetConfig extends Config {
-  constructor(parent) {
-    super(parent);
+  constructor(...args) {
+    super(...args);
     this.$cbs = [];
     this.$config = {};
   }
@@ -59,15 +59,15 @@ module.exports = class PresetConfig extends Config {
     return task.params();
   }
 
-  hook(...params) {
+  globalHook(...params) {
     const { api } = this.config();
-    api.hooks.tap(...params);
+    api.globalHooks.tap(...params);
     return this;
   }
 
-  deleteHook(id, name) {
+  deleteGlobalHook(id, name) {
     const { api } = this.config();
-    api.hooks.delete(id, name);
+    api.globalHooks.delete(id, name);
     return this;
   }
 

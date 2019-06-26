@@ -1,34 +1,36 @@
-module.exports = (
+module.exports = function(
   gulp,
   { pattern = '', dest = '', manifest, sourcemaps = '.', ...opts },
   env,
   api,
-) => {
-  const gRev = require('gulp-rev');
-  const del = require('gulp-rev-delete-original');
-  const rewrite = require('gulp-rev-rewrite');
+) {
   const { logger } = require('wok-core/utils');
   const src = api.pattern(pattern).concat(['!**/*.map']);
   const dist = api.resolve(dest);
   const man = manifest && api.resolve(manifest);
+  const $hooks = this.getHooks();
 
   function revFiles() {
+    const gRev = require('gulp-rev');
+    const del = require('gulp-rev-delete-original');
+
     return gulp
       .src(src, { base: dist, sourcemaps: !!sourcemaps })
-      .pipe(api.hooks.call('rev:before', opts['hooks:before']))
+      .pipe($hooks.call('before', opts['hooks:before']))
       .pipe(gRev())
       .pipe(del())
-      .pipe(api.hooks.call('rev:after', opts['hooks:after']))
+      .pipe($hooks.call('after', opts['hooks:after']))
       .pipe(gulp.dest(dist, { sourcemaps }))
       .pipe(gRev.manifest(man, { merge: true }))
       .pipe(gulp.dest('.'));
   }
 
   function revRewrite() {
+    const rewrite = require('gulp-rev-rewrite');
     const manStream = gulp.src(man);
     return gulp
       .src(`${dist}/**/*.*`)
-      .pipe(api.hooks.call('rev:rewrite', opts['hooks:rewrite']))
+      .pipe($hooks.call('rewrite', opts['hooks:rewrite']))
       .pipe(rewrite({ manifest: manStream }))
       .pipe(gulp.dest(dist));
   }

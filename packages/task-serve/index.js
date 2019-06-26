@@ -1,15 +1,9 @@
-function getServer(hash) {
-  const BrowserSync = require('browser-sync');
-  if (!BrowserSync.has(hash)) {
-    return BrowserSync.create(hash);
-  }
-  return BrowserSync.get(hash);
-}
-
-module.exports = (gulp, opts, env, api) => {
+module.exports = function(gulp, opts, env, api) {
   const { compression } = require('./lib/middlewares');
+  const { getServer } = require('./lib/utils');
   const { development = {} } = env.hosts || {};
   const { baseDir = ['public'] } = opts;
+  const $hooks = this.getHooks();
 
   function createConfig(middlewares) {
     return {
@@ -39,20 +33,20 @@ module.exports = (gulp, opts, env, api) => {
 
   const { port = 8000 } = development;
 
-  api.hooks.set('serve:middlewares', 'compression', compression);
+  $hooks.set('middlewares', 'compression', compression);
 
   function serve() {
     const bs = getServer(env);
 
-    const middlewares = api.hooks.callWith(
-      'serve:middlewares',
+    const middlewares = $hooks.callWith(
+      'middlewares',
       new Map(),
       opts['hooks:middlewares'],
       bs,
     );
 
-    const cfg = api.hooks.callWith(
-      'serve:config',
+    const cfg = $hooks.callWith(
+      'config',
       createConfig(middlewares),
       opts['hooks:config'],
     );
@@ -68,7 +62,7 @@ module.exports = (gulp, opts, env, api) => {
           return;
         }
         resolve();
-        api.hooks.callWith('serve:running', server, opts['hooks:running']);
+        $hooks.callWith('running', server, opts['hooks:running']);
       });
     });
   }
@@ -84,5 +78,3 @@ module.exports = (gulp, opts, env, api) => {
 
   return serve;
 };
-
-module.exports.getServer = getServer;

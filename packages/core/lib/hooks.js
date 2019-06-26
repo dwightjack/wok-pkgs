@@ -18,9 +18,10 @@ module.exports = class Hooks extends Config {
   }
   delete(id, name) {
     if (!name) {
-      return this.delete(id);
+      this.$store.delete(id);
+    } else {
+      this.get(id).delete(name);
     }
-    this.get(id).delete(name);
     return this;
   }
   call(id, ...params) {
@@ -69,6 +70,4 @@ module.exports = class Hooks extends Config {
 
     return this;
   }
-
-  serialize() {}
 };
