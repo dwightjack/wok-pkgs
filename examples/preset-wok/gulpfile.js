@@ -9,18 +9,6 @@ const lftp = require('plugin-deploy-lftp');
 
 const $ = config(gulp);
 
-const wok = preset($);
-
-wok
-  .globalHook('watcher', 'notifier', require('plugin-notifier'))
-  .params('watch', {
-    notifier: {
-      message: 'Updated!',
-    },
-  });
-
-wok.set('remote', ssh);
-
 const backup = $.task(ssh, { command: 'backup' });
 const sync = $.task(deploy, {
   src: '<%= paths.dist.root %>/',
@@ -30,6 +18,17 @@ const sync = $.task(deploy, {
 sync.$hooks.tap('strategy', 'rsync', rsync);
 sync.$hooks.tap('strategy', 'lftp', lftp);
 
-wok.set('deploy').compose(() => $.series(backup, sync));
+const wok = preset($);
+
+wok
+  .globalHook('watcher', 'notifier', require('plugin-notifier'))
+  .params('watch', {
+    notifier: {
+      message: 'Updated!',
+    },
+  })
+  .set('remote', ssh)
+  .set('deploy')
+  .compose((tasks) => $.series(tasks.default, backup, sync));
 
 module.exports = wok.resolve();
