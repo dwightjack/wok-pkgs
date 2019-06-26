@@ -14,8 +14,9 @@ config.hosts = {
     host: '192.168.1.58',
     username: 'ftpuser',
     password: 'ftpuser',
-    path: '/home/ftpuser/ftp/files',
+    path: 'files',
     deployStrategy: 'ftp',
+    backup: false,
   },
 };
 

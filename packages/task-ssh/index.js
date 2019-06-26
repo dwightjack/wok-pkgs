@@ -1,4 +1,4 @@
-const { getEnvTarget, resolveTemplate } = require('wok-core/utils');
+const { getEnvTarget, resolveTemplate, logger } = require('wok-core/utils');
 const defaultCommands = require('./lib/commands');
 const exec = require('./lib/exec');
 
@@ -8,8 +8,15 @@ module.exports = (gulp, params, env, api) => {
     const { command } = Object.assign(params, env.argv);
     if (target === false) {
       throw new Error(
-        `[ssh]: Unable to retrieve an host for target ${env.target}`,
+        `[ssh]: Unable to retrieve an host for target "${env.target}"`,
       );
+    }
+
+    if (target[command] === false) {
+      logger.warn(
+        `[ssh]: Command ${command} not enabled on target "${env.target}"`,
+      );
+      return Promise.resolve();
     }
 
     if (!command) {

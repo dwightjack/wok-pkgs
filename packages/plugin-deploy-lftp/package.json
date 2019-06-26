@@ -1,0 +1,20 @@
+{
+  "name": "plugin-deploy-lftp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "repository": "git@github.com:fevrcoding/wok-pkgs.git",
+  "author": "Marco Solazzi <marco.solazzi@gmail.com>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=8.12.0"
+  },
+  "dependencies": {
+    "ftps": "^1.1.1",
+    "hasbin": "^1.2.3",
+    "rsyncwrapper": "^3.0.1"
+  },
+  "peerDependencies": {
+    "wok-core": "*"
+  }
+}
