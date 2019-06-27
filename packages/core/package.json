@@ -1,6 +1,5 @@
 {
-  "name": "@wok-cli/core",
-  "private": false,
+  "name": "wok-core",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",

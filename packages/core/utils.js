@@ -9,34 +9,113 @@ const PluginError = require('plugin-error');
 const gulp = require('gulp');
 const base = require('./tasks/base');
 
+/**
+ * Logger object.
+ *
+ * @type {object}
+ */
 const logger = {
+  /**
+   * Shows a normal message.
+   *
+   * @param {string} str Message
+   */
   msg: (str) => log(blue(str)),
+  /**
+   * Shows an error message.
+   *
+   * @param {string} str Message
+   */
   error: (str) => log(red(str)),
+  /**
+   * Shows a warning message.
+   *
+   * @param {string} str Message
+   */
   warn: (str) => log(yellow(str)),
 };
 
-const resolveTemplate = (v, data) => {
-  if (typeof v !== 'string') {
-    return v;
+/**
+ * Renders a lodash template with data.
+ *
+ * @see https://lodash.com/docs#template
+ * @param {string} tmpl lodash template
+ * @param {*} data template data
+ * @returns {string}
+ * @example
+ * const tmpl = 'src/<%= js %>'
+ * resolveTemplate(tmpl, { js: '*.js' }) === 'src/*.js'
+ */
+const resolveTemplate = (tmpl, data) => {
+  if (typeof tmpl !== 'string') {
+    return tmpl;
   }
-  return template(v)(data);
+  return template(tmpl)(data);
 };
 
+/**
+ * Resolves an array of lodash templates with data.
+ *
+ * @param {string[]|string} patterns Array of templates or a single template
+ * @param {*} data template data
+ * @returns {string[]}
+ * @example
+ * const patterns = ['src/<%= js %>', 'tmp/<%= js %>']
+ * resolvePatterns(patterns, { js: '*.js' }) === ['src/*.js', 'tmp/*.js']
+ */
 const resolvePatterns = (patterns, data) => {
   const tmpl = (p) => resolveTemplate(p, data);
   return [].concat(patterns).map(tmpl);
 };
 
+/**
+ * Returns an empty stream.
+ *
+ * @returns {stream}
+ */
 const noopStream = () => through2.obj();
 
+/**
+ * Returns an empty lazypipe.
+ *
+ * @see https://github.com/OverZealous/lazypipe
+ */
 const pipeChain = () => lazypipe().pipe(noopStream);
 
+/**
+ * Performs a side-effect onto a stream by executing `fn` with the current vinyl file instance.
+ *
+ * @param {function} fn
+ * @example
+ * const basename = (file) => console.log(file.basename)
+ *
+ * gulp
+ *  .src('*.js')
+ *  .pipe(tap(basename))
+ *  .pipe(gulp.dest('dist'))
+ *
+ * // will log "application.js", "..."
+ */
 const tap = (fn) =>
   through2.obj((file, enc, cb) => {
     fn(file);
     cb(null, file);
   });
 
+/**
+ * Executes a transformer function over the current vinyl file content
+ * and sets the returned string as the new file contents.
+ *
+ * @param {function} fn transformer function
+ * @returns {stream}
+ * @example
+ * const transform = (src) => src.toUpperCase()
+ *
+ * gulp
+ *  .src('*.js')
+ *  .pipe(map(transform))
+ *  .pipe(gulp.dest('dist'))
+ */
 const map = (fn) => {
   const mapFn = typeof fn === 'function' ? fn : (val) => val;
 
@@ -49,7 +128,7 @@ const map = (fn) => {
     if (file.isStream()) {
       this.emit(
         'error',
-        new PluginError('wok-core/map', 'Streaming not supported'),
+        new PluginError('@wok-cli/core/map', 'Streaming not supported'),
       );
     }
 
@@ -58,7 +137,7 @@ const map = (fn) => {
         mapFn(file.contents.toString(), file.path, file),
       ); //eslint-disable-line no-param-reassign
     } catch (err) {
-      this.emit('error', new PluginError('wok-core/map', err.toString()));
+      this.emit('error', new PluginError('@wok-cli/core/map', err.toString()));
     }
 
     this.push(file);
@@ -67,6 +146,15 @@ const map = (fn) => {
   });
 };
 
+/**
+ * Creates a task hook plugin with options.
+ *
+ * @param {Object} options
+ * @param {string} name Plugin internal name
+ * @param {boolean} [productionOnly=false] If `true` the plugin will be executed just when env.production is `true`
+ * @param {function} [test] A function receiving the task `env` object. If the function returns false the plugin will not be executed.
+ * @param {function} [params] A function that returns the plugin params from the task params
+ */
 const createPlugin = ({
   name,
   plugin,
@@ -98,12 +186,30 @@ const createPlugin = ({
   };
 };
 
+/**
+ * Creates a named task from the base task.
+ *
+ * @param {string} name Task name
+ * @param {object} [defs] Task default parameters
+ * @returns {function}
+ */
 const createTask = (name, defs) => {
   return function(gulp, params = {}, ...args) {
     return base.call(this, gulp, { ...params, ...defs, name }, ...args);
   };
 };
 
+/**
+ * Runs a task only if `cond` return `true`
+ * @param {function} cond Conditional function
+ * @param {function} task Task to run
+ * @returns {function}
+ * @example
+ *
+ * const taskIf = runIf(() => process.env.NODE_ENV === 'production', minify)
+ * exports.minify = taskIf
+ *
+ */
 const runif = (cond, task) => {
   const wrapFn = (...args) =>
     cond() === true ? task(...args) : Promise.resolve();
@@ -112,6 +218,14 @@ const runif = (cond, task) => {
   return wrapFn;
 };
 
+/**
+ * Returns a target host object based on the `--target` CLI flag and the `hosts` object set in the config.
+ *
+ * Returns `false` if a target is not found.
+ *
+ * @param {object} env Environment object
+ * @returns {object|false}
+ */
 const getEnvTarget = ({ target, hosts }) => {
   const targets = Object.keys(hosts).filter((host) => !!hosts[host].host);
   if (!target || targets.includes(target) === false) {
@@ -124,6 +238,17 @@ const getEnvTarget = ({ target, hosts }) => {
   return hosts[target];
 };
 
+/**
+ * Loads a configuration file. Will also try to load any `.local.js` file
+ * and merge it with the default configuration.
+ *
+ * If the configuration file exports a function it will be executed with the
+ * previous configuration and the current target as arguments
+ *
+ * @param {string} basePath Base configuration file path
+ * @param {string} target The current target
+ * @returns {object}
+ */
 function loadProjectConfig(basePath, target) {
   const localPath = basePath.replace(/\.js/, '.local.js');
 
@@ -153,17 +278,29 @@ module.exports = {
   logger,
   resolvePatterns,
   resolveTemplate,
+  /**
+   * @see resolveTemplate
+   */
   resolvePath: resolveTemplate,
   noopStream,
   pipeChain,
   loadProjectConfig,
   map,
   tap,
+  /**
+   * @see https://gulpjs.com/docs/en/api/dest
+   */
   dest: gulp.dest,
+  /**
+   * @see https://gulpjs.com/docs/en/api/src
+   */
   src: gulp.src,
   createPlugin,
   createTask,
   runif,
   getEnvTarget,
+  /**
+   * @see https://lodash.com/docs/4.17.11#camelCase
+   */
   camelCase: require('lodash/camelCase'),
 };
