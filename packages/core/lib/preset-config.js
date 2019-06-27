@@ -88,7 +88,7 @@ module.exports = class PresetConfig extends Config {
         ? taskCfg.get('params').serialize()
         : {};
 
-      if (taskFn && taskCfg.isComposed) {
+      if (taskFn && taskCfg.$isComposed) {
         composed.push({ name, fn: taskFn, params });
         return;
       }

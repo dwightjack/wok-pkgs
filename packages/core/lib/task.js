@@ -1,11 +1,44 @@
 const Config = require('./config');
 const Hooks = require('./hooks');
 
+/**
+ * Task configuration class
+ *
+ * @class
+ * @extends Config
+ */
 module.exports = class Task extends Config {
+  /**
+   * @constructor
+   * @see Config#constructor
+   * @param  {...any} args
+   */
   constructor(...args) {
     super(...args);
+
+    /**
+     * Shorthand method for this.set('task', fn).
+     *
+     * @name task
+     * @method
+     * @param {function} task Task function
+     * @returns {Task} This method is chainable
+     */
     this.shorthands(['task']);
   }
+
+  /**
+   * Sets or return the task params.
+   *
+   * If obj is not defined it will return the params configuration instance.
+   *
+   * @see Config#extend
+   * @param {object} [obj] key/value params to set
+   * @returns {Task|Params}
+   * @example
+   * task.params({ src: 'src/*.js'})
+   * task.params().get('src') === 'src/*.js'
+   */
   params(obj) {
     if (!this.has('params')) {
       this.set('params', new Config(this));
@@ -16,36 +49,76 @@ module.exports = class Task extends Config {
     }
     return this.get('params');
   }
-  hooks(name, pairs) {
+
+  /**
+   * Sets or returns the task hooks.
+   *
+   * Returned values:
+   *
+   * - Without parameters it will return the whole Hook configuration instance.
+   * - If just `id` is set it will return that specific hook map.
+   * - if `pairs` is set it will call `Hooks#tap` for every pair of [hookName, hookFn] and return `this`.
+   *
+   * @see Hooks
+   * @param {string} [id] Hook id
+   * @param {array[]} [pairs] An array of [hookName, hookFn] pairs
+   * @returns {Hooks|Map|Task}
+   * @example
+   * task.hooks() instanceof Hooks === true
+   * tasks.hooks('demo').count() === 0
+   * tasks.hooks('demo', ['add', (n) => n + 1]); // returns tasks
+   * tasks.hooks().callWith('demo', 1) === 2
+   */
+  hooks(id, pairs) {
     if (!this.has('hooks')) {
       this.set('hooks', new Hooks(this));
     }
     const hooks = this.get('hooks');
 
-    if (!name) {
+    if (!id) {
       return hooks;
     }
 
-    if (name) {
-      hooks.set(name);
+    if (id) {
+      hooks.set(id);
     }
     if (pairs === undefined) {
-      return hooks.get(name);
+      return hooks.get(id);
     }
 
     pairs.forEach((pair) => {
-      hooks.tap(name, ...pair);
+      hooks.tap(id, ...pair);
     });
     return this;
   }
+  /**
+   * Sets the task as _composed_.
+   *
+   * @param {*} fn
+   * @returns {Task} This method is chainable
+   */
   compose(fn) {
-    this.isComposed = true;
+    /**
+     * Flags a composed task.
+     *
+     * @type {boolean}
+     * @public
+     */
+    this.$isComposed = true;
     this.task(fn);
     return this;
   }
-  hook(name, id, fn) {
+  /**
+   * Shorthand to `this.hooks().tap(...)`.
+   *
+   * @param {string} id Hook map id
+   * @param {string} name Hook function name
+   * @param {function} fn Hook function
+   * @returns {Task} This method is chainable
+   */
+  hook(id, name, fn) {
     const hooks = this.hooks();
-    hooks.tap(name, id, fn);
+    hooks.tap(id, name, fn);
     return this;
   }
 };
