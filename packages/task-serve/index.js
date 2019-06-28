@@ -1,7 +1,7 @@
 module.exports = function(gulp, opts, env, api) {
   const { compression } = require('./lib/middlewares');
   const { getServer } = require('./lib/utils');
-  const { development = {} } = env.hosts || {};
+  const { development = {} } = env;
   const { baseDir = ['public'] } = opts;
   const $hooks = this.getHooks();
 
