@@ -97,4 +97,4 @@ node_modules
 coverage
 examples/**/public
 dist
-docs
+/docs
