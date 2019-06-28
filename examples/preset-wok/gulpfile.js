@@ -15,8 +15,8 @@ const sync = $.task(deploy, {
   exclude: ['.svn*', '.tmp*', '.idea*', '.sass-cache*', '*.sublime-*'],
 });
 
-sync.$hooks.tap('strategy', 'rsync', rsync);
-sync.$hooks.tap('strategy', 'lftp', lftp);
+sync.tap('strategy', 'rsync', rsync);
+sync.tap('strategy', 'lftp', lftp);
 
 const wok = preset($);
 
