@@ -16,7 +16,7 @@ function config(gulp, params = {}) {
 
   const { argv } = require('yargs');
   const { production = false, command = null } = argv;
-  const { target = production ? 'production' : 'development' } = argv;
+  const { target = production ? 'production' : null } = argv;
 
   const env = {
     /** `--production` CLI flag  */
@@ -117,13 +117,15 @@ function config(gulp, params = {}) {
     const ctx = {
       getHooks: () => $hooks,
     };
-    return Object.defineProperty(
-      fn.call(ctx, gulp, params, env, api),
-      '$hooks',
-      {
-        value: $hooks,
+    return Object.defineProperties(fn.call(ctx, gulp, params, env, api), {
+      $hooks: { value: $hooks },
+      tap: {
+        value(...args) {
+          $hooks.tap(...args);
+          return this;
+        },
       },
-    );
+    });
   }
 
   return {
