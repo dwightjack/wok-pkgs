@@ -4,6 +4,7 @@ const Config = require('./config');
 /**
  * Hook implementation class.
  *
+ * @name Hooks
  * @extends Config
  * @class
  */

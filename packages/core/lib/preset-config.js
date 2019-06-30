@@ -1,6 +1,12 @@
 const Config = require('./config');
 const Task = require('./task');
 
+/**
+ * Workflow Preset configuration
+ *
+ * @name PresetConfig
+ * @class
+ */
 module.exports = class PresetConfig extends Config {
   constructor(...args) {
     super(...args);

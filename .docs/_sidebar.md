@@ -7,4 +7,4 @@
 **API**
 
 - [wok-core](packages/core/api/)
-  <!-- core -->
+  <!-- wok-core -->

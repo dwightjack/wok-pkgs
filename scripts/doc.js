@@ -72,7 +72,8 @@ packages.forEach(async (package) => {
   const moduleLinks = files
     .map((f) => {
       const base = path.basename(f, '.js');
-      return ` - [${base}](packages/${package}/api/${base})`;
+      const dirname = path.relative(baseFolder, path.dirname(f));
+      return ` - [${dirname}/${base}](packages/${package}/api/${base})`;
     })
     .join('\n');
 
@@ -104,11 +105,20 @@ ${moduleLinks}
         shallow: true,
       });
 
-      if (raw[0] && raw[0].members) {
-        raw[0].members.static.forEach((m) => {
-          m.name = `<static> ${m.name}`;
-        });
-      }
+      raw.forEach((part) => {
+        if (part && part.members) {
+          part.members.static.forEach((m) => {
+            const params = m.params.map(({ name }) => name).join(',');
+            m.name = `<static> ${m.name}(${params})`;
+          });
+          part.members.instance.forEach((m) => {
+            if (m.kind === 'function') {
+              const params = m.params.map(({ name }) => name).join(',');
+              m.name += `(${params})`;
+            }
+          });
+        }
+      });
 
       let output = await documentation.formats.md(raw);
 

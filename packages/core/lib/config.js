@@ -1,10 +1,15 @@
 /**
- * Chainable configuration class
+ * Chainable configuration class.
+ *
+ * @name Config
  * @class
+ * @param {Config} [parent] Parent instance
+ * @param {function} [serializer=Config.toObject] A function used to serialize the instance.
  */
-module.exports = class Config {
+class Config {
   /**
    * Recursively serializes a config into an object.
+   *
    *
    * @static
    * @param {Config} config A config instance
@@ -28,12 +33,8 @@ module.exports = class Config {
     return [...store.values()];
   }
 
-  /**
-   * Config constructor
-   *
+  /**   *
    * @constructor
-   * @param {Config} [parent] Parent instance
-   * @param {function} [serializer=Config.toObject] A function used to serialize the instance.
    */
   constructor(parent, serializer = Config.toObject) {
     /**
@@ -158,7 +159,6 @@ module.exports = class Config {
    * Iterates over an object setting its key/value pairs into the internal store.
    *
    * @param {object} obj
-   * @param {*} value
    * @return {Config} This method is chainable
    * @example
    * config.extend({ name: 'John' })
@@ -180,4 +180,6 @@ module.exports = class Config {
   serialize() {
     return this.$serializer(this);
   }
-};
+}
+
+module.exports = Config;

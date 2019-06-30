@@ -4,6 +4,7 @@ const Hooks = require('./hooks');
 /**
  * Task configuration class
  *
+ * @name Task
  * @class
  * @extends Config
  */
