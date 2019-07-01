@@ -12,15 +12,15 @@ module.exports = class Hooks extends Config {
   /**
    * Sets internal references for the environment and context.
    *
-   * @param {object} env WOK-cli environment
-   * @param {object} ctx A context object
+   * @param {object<string,*>} env WOK-cli environment
+   * @param {object<string,*>} ctx A context object
    * @returns {Hooks} This method is chainable
    */
   bind(env, ctx) {
     /**
      * Internal environment reference.
      *
-     * @type {object}
+     * @type {object<string,*>}
      * @property
      * @protected
      */
@@ -28,7 +28,7 @@ module.exports = class Hooks extends Config {
     /**
      * Internal context reference.
      *
-     * @type {object}
+     * @type {object<string,*>}
      * @property
      * @protected
      */
@@ -129,7 +129,7 @@ module.exports = class Hooks extends Config {
    *
    * @param {string} id Hook name
    * @param {string} name Hook function name
-   * @param {*} fn Hook function
+   * @param {function} fn Hook function
    * @returns {Hooks} This method is chainable
    * @example
    *

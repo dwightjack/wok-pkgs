@@ -17,6 +17,14 @@ const packages = fs
   .readdirSync(root)
   .filter((item) => fs.lstatSync(path.join(root, item)).isDirectory());
 
+function printParams(params) {
+  return params
+    .map(({ name, type = {} }) =>
+      type.type === 'OptionalType' ? `${name}?` : name,
+    )
+    .join(', ');
+}
+
 packages.forEach(async (package) => {
   const baseFolder = path.join(root, package);
   const docsFolder = path.join(baseFolder, 'docs');
@@ -64,7 +72,7 @@ packages.forEach(async (package) => {
   );
 
   // generate API
-  const files = await glob('{lib,tasks,}/*.js', {
+  const files = await glob('{lib/,tasks/,}*.js', {
     cwd: baseFolder,
     absolute: true,
   });
@@ -72,8 +80,11 @@ packages.forEach(async (package) => {
   const moduleLinks = files
     .map((f) => {
       const base = path.basename(f, '.js');
-      const dirname = path.relative(baseFolder, path.dirname(f));
-      return ` - [${dirname}/${base}](packages/${package}/api/${base})`;
+      let dirname = path.relative(baseFolder, path.dirname(f));
+      if (dirname.length > 0) {
+        dirname += '/';
+      }
+      return ` - [${dirname}${base}](packages/${package}/api/${base})`;
     })
     .join('\n');
 
@@ -106,14 +117,17 @@ ${moduleLinks}
       });
 
       raw.forEach((part) => {
-        if (part && part.members) {
-          part.members.static.forEach((m) => {
-            const params = m.params.map(({ name }) => name).join(',');
-            m.name = `<static> ${m.name}(${params})`;
-          });
-          part.members.instance.forEach((m) => {
+        if (part.scope === 'static') {
+          part.name = `<static> ${part.name}`;
+        }
+        if (part.kind === 'function') {
+          const params = printParams(part.params);
+          part.name += `(${params})`;
+        }
+        if (part.members) {
+          part.members.static.concat(part.members.instance).forEach((m) => {
             if (m.kind === 'function') {
-              const params = m.params.map(({ name }) => name).join(',');
+              const params = printParams(m.params);
               m.name += `(${params})`;
             }
           });
@@ -122,7 +136,7 @@ ${moduleLinks}
 
       let output = await documentation.formats.md(raw);
 
-      output = output.replace(/^##/gm, '#');
+      // output = output.replace(/^##/gm, '#');
       output = output.replace(/^## Parameters/gm, '### Parameters');
 
       await writeAsync(filepath, output);

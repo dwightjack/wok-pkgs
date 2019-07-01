@@ -4,10 +4,13 @@ const Hooks = require('./lib/hooks');
 const { resolvePath, resolvePatterns, loadProjectConfig } = require('./utils');
 
 /**
- * Creates a configuration object reading the project config and environment.
+ * Creates a WOK configuration object reading the project config and environment.
  *
  * @param {Gulp} gulp a Gulp instance
  * @param {object} [params] Optional configuration parameters
+ * @param {string} [params.cwd=process.cwd()] Working directory
+ * @param {string} [params.configFile='Worker.config.js'] Path to a wok config file, relative to `cwd`.
+ * @returns {WokConfig}
  */
 function config(gulp, params = {}) {
   const readPkgUp = require('read-pkg-up');
@@ -17,53 +20,47 @@ function config(gulp, params = {}) {
   const { argv } = require('yargs');
   const { production = false, command = null } = argv;
   const { target = production ? 'production' : null } = argv;
+  const { src, dest, parallel, series, watch } = gulp;
 
+  /**
+   * Environment object.
+   *
+   * @memberof WokConfig
+   * @property {boolean} production `--production` CLI flag.
+   * @property {string} command `--command` CLI option.
+   * @property {string} target `--target` CLI option. Defaults to `development` or to `production` if `--production` is set.
+   * @property {object<string,*>} pkg `package.json` as an object.
+   * @property {object} argv Parsed CLI arguments {@link https://github.com/yargs/yargs/blob/master/docs/api.md#argv}.
+   * @property {*} Other properties defined into the `wok.config.js` object.
+   */
   const env = {
-    /** `--production` CLI flag  */
     production,
-    /** `--command`  */
     command,
-    /**
-     * `--target` CLI option. Defaults to `development` or to `production` if `--production` is set
-     */
     target,
-    /** unique build identifier */
     buildHash: `buildhash${Date.now()}`,
     ...loadProjectConfig(join(cwd, configFile), target),
     ...params,
-    /** package.json object */
     pkg,
-    /** @see https://github.com/yargs/yargs/blob/master/docs/api.md#argv */
     argv,
   };
 
   const globalHooks = new Hooks();
 
   /**
-   * Internal api
-   * @type {object}
+   * Internal api.
+   *
+   * @memberof WokConfig
+   * @property {function} src See {@link https://gulpjs.com/docs/en/api/src}.
+   * @property {function} dest See {@link https://gulpjs.com/docs/en/api/dest}.
+   * @property {Hooks} globalHooks A global instance of Hooks bound to the current configuration environment.
+   * @property {function} resolve `resolvePath` bound to the current configuration environment.
+   * @property {function} pattern `resolvePatterns` bound to the current configuration environment.
    */
   const api = {
-    /**
-     * @deprecated
-     */
-    hooks: globalHooks,
-    /**
-     * configuration-wide hooks instance.
-     * @type {Hook}
-     */
+    src,
+    dest,
     globalHooks,
-    /**
-     * Resolves a lodash template using the environment as data.
-     *
-     * @see resolvePath
-     */
     resolve: (src) => resolvePath(src, env),
-    /**
-     * Resolves an array of lodash template using the environment as data.
-     *
-     * @see resolvePatterns
-     */
     pattern: (patterns) => resolvePatterns(patterns, env),
   };
 
@@ -75,13 +72,14 @@ function config(gulp, params = {}) {
   }
 
   /**
-   * Returns a gulp watcher. Will execute the `watcher` hook on the `globalHooks` object.
+   * Returns a gulp watcher. Will execute the `watcher` hook on the `api.globalHooks` object.
    *
+   * @memberof WokConfig
    * @param {object} params
    * @param {function} params.task Task function
    * @param {string} [params.id=task.name] Watcher id
    * @param {string[]} [params.patterns] Glob patterns to watch
-   * @param {*} options
+   * @param {object} [options={ delay: 50 }] watch [options](https://gulpjs.com/docs/en/api/watch#options)
    */
   function watcher({ id, patterns, task }, options) {
     const taskList = [task];
@@ -107,8 +105,9 @@ function config(gulp, params = {}) {
   /**
    * Higher order function to setup a task with parameters and hooks.
    *
+   * @memberof WokConfig
    * @param {function} fn Task function
-   * @param {object} [params] task parameters
+   * @param {object<string,*>} [params] task parameters
    * @param {Hook} [hooks] Hooks instance
    */
   function task(fn, params = {}, hooks) {
@@ -134,18 +133,34 @@ function config(gulp, params = {}) {
     watcher,
     task,
     /**
-     * @see https://gulpjs.com/docs/en/api/series
-     */
-    series: gulp.series,
-    /**
+     * Exposes the `series` method from the passed-in gulp instance.
+     *
+     * @function
+     * @memberof WokConfig
      * @see https://gulpjs.com/docs/en/api/parallel
      */
-    parallel: gulp.parallel,
+    series,
     /**
+     * Exposes the `parallel` method from the passed-in gulp instance.
+     *
+     * @function
+     * @memberof WokConfig
+     * @see https://gulpjs.com/docs/en/api/parallel
+     */
+    parallel,
+    /**
+     * Exposes the `watch` method from the passed-in gulp instance.
+     *
+     * @function
+     * @memberof WokConfig
      * @see https://gulpjs.com/docs/en/api/watch
      */
-    watch: gulp.watch,
+    watch,
   };
 }
+
+/**
+ * @namespace WokConfig
+ */
 
 module.exports = config;

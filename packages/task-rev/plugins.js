@@ -1,4 +1,4 @@
-const { createPlugin, dest } = require('wok-core/utils');
+const { createPlugin } = require('wok-core/utils');
 const rev = require('gulp-rev');
 
 module.exports.apply = createPlugin({
@@ -18,7 +18,7 @@ module.exports.write = createPlugin({
         { merge: true },
       )
       .pipe(
-        dest,
+        api.dest,
         '.',
       );
   },

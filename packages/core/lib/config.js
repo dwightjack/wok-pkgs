@@ -6,14 +6,14 @@
  * @param {Config} [parent] Parent instance
  * @param {function} [serializer=Config.toObject] A function used to serialize the instance.
  */
-class Config {
+module.exports = class Config {
   /**
    * Recursively serializes a config into an object.
    *
    *
    * @static
    * @param {Config} config A config instance
-   * @returns {object}
+   * @returns {object<string,*>}
    */
   static toObject(config) {
     return [...config.$store.entries()].reduce((acc, [key, value]) => {
@@ -27,7 +27,7 @@ class Config {
    *
    * @static
    * @param {Config} config A config instance
-   * @returns {array}
+   * @returns {any[]}
    */
   static toArray(store) {
     return [...store.values()];
@@ -158,7 +158,7 @@ class Config {
   /**
    * Iterates over an object setting its key/value pairs into the internal store.
    *
-   * @param {object} obj
+   * @param {object<string,*>} obj
    * @return {Config} This method is chainable
    * @example
    * config.extend({ name: 'John' })
@@ -180,6 +180,4 @@ class Config {
   serialize() {
     return this.$serializer(this);
   }
-}
-
-module.exports = Config;
+};

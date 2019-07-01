@@ -6,12 +6,25 @@ const merge = require('lodash/merge');
 const through2 = require('through2');
 const lazypipe = require('lazypipe');
 const PluginError = require('plugin-error');
-const gulp = require('gulp');
 const base = require('./tasks/base');
+
+/**
+ * @module Utils
+ */
+
+/**
+ * Converts a string to camel case.
+ *
+ * @see https://lodash.com/docs/4.17.11#camelCase
+ * @params {string} str
+ * @function
+ */
+const camelCase = require('lodash/camelCase');
 
 /**
  * Logger object.
  *
+ * @namespace
  * @type {object}
  */
 const logger = {
@@ -20,19 +33,25 @@ const logger = {
    *
    * @param {string} str Message
    */
-  msg: (str) => log(blue(str)),
+  msg(str) {
+    log(blue(str));
+  },
   /**
    * Shows an error message.
    *
    * @param {string} str Message
    */
-  error: (str) => log(red(str)),
+  error(str) {
+    log(red(str));
+  },
   /**
    * Shows a warning message.
    *
    * @param {string} str Message
    */
-  warn: (str) => log(yellow(str)),
+  warn(str) {
+    log(yellow(str));
+  },
 };
 
 /**
@@ -46,12 +65,20 @@ const logger = {
  * const tmpl = 'src/<%= js %>'
  * resolveTemplate(tmpl, { js: '*.js' }) === 'src/*.js'
  */
-const resolveTemplate = (tmpl, data) => {
+function resolveTemplate(tmpl, data) {
   if (typeof tmpl !== 'string') {
     return tmpl;
   }
   return template(tmpl)(data);
-};
+}
+
+/**
+ * Alias for {@link resolveTemplate}.
+ *
+ * @name resolvePath
+ * @function
+ */
+const resolvePath = resolveTemplate;
 
 /**
  * Resolves an array of lodash templates with data.
@@ -63,14 +90,15 @@ const resolveTemplate = (tmpl, data) => {
  * const patterns = ['src/<%= js %>', 'tmp/<%= js %>']
  * resolvePatterns(patterns, { js: '*.js' }) === ['src/*.js', 'tmp/*.js']
  */
-const resolvePatterns = (patterns, data) => {
+function resolvePatterns(patterns, data) {
   const tmpl = (p) => resolveTemplate(p, data);
   return [].concat(patterns).map(tmpl);
-};
+}
 
 /**
  * Returns an empty stream.
  *
+ * @function
  * @returns {stream}
  */
 const noopStream = () => through2.obj();
@@ -78,6 +106,7 @@ const noopStream = () => through2.obj();
 /**
  * Returns an empty lazypipe.
  *
+ * @function
  * @see https://github.com/OverZealous/lazypipe
  */
 const pipeChain = () => lazypipe().pipe(noopStream);
@@ -96,11 +125,12 @@ const pipeChain = () => lazypipe().pipe(noopStream);
  *
  * // will log "application.js", "..."
  */
-const tap = (fn) =>
-  through2.obj((file, enc, cb) => {
+function tap(fn) {
+  return through2.obj((file, enc, cb) => {
     fn(file);
     cb(null, file);
   });
+}
 
 /**
  * Executes a transformer function over the current vinyl file content
@@ -116,7 +146,7 @@ const tap = (fn) =>
  *  .pipe(map(transform))
  *  .pipe(gulp.dest('dist'))
  */
-const map = (fn) => {
+function map(fn) {
   const mapFn = typeof fn === 'function' ? fn : (val) => val;
 
   return through2.obj(function mapIterator(file, enc, cb) {
@@ -144,24 +174,18 @@ const map = (fn) => {
 
     cb();
   });
-};
+}
 
 /**
  * Creates a task hook plugin with options.
  *
- * @param {Object} options
- * @param {string} name Plugin internal name
- * @param {boolean} [productionOnly=false] If `true` the plugin will be executed just when env.production is `true`
- * @param {function} [test] A function receiving the task `env` object. If the function returns false the plugin will not be executed.
- * @param {function} [params] A function that returns the plugin params from the task params
+ * @param {object} options
+ * @param {string} options.name Plugin internal name
+ * @param {boolean} [options.productionOnly=false] If `true` the plugin will be executed just when env.production is `true`
+ * @param {function} [options.test] A function receiving the task `env` object. If the function returns false the plugin will not be executed.
+ * @param {function} [options.params] A function that returns the plugin params from the task params
  */
-const createPlugin = ({
-  name,
-  plugin,
-  productionOnly = false,
-  test,
-  params,
-}) => {
+function createPlugin({ name, plugin, productionOnly = false, test, params }) {
   return (prev, env, api, opts, ...rest) => {
     if (productionOnly && !env.production) {
       return prev;
@@ -184,20 +208,20 @@ const createPlugin = ({
 
     return plugin(prev, env, api, pluginOpts, ...rest);
   };
-};
+}
 
 /**
  * Creates a named task from the base task.
  *
  * @param {string} name Task name
- * @param {object} [defs] Task default parameters
+ * @param {object<string,*>} [defs] Task default parameters
  * @returns {function}
  */
-const createTask = (name, defs) => {
+function createTask(name, defs) {
   return function(gulp, params = {}, ...args) {
     return base.call(this, gulp, { ...params, ...defs, name }, ...args);
   };
-};
+}
 
 /**
  * Runs a task only if `cond` return `true`
@@ -210,13 +234,15 @@ const createTask = (name, defs) => {
  * exports.minify = taskIf
  *
  */
-const runif = (cond, task) => {
-  const wrapFn = (...args) =>
-    cond() === true ? task(...args) : Promise.resolve();
-
-  Object.defineProperty(wrapFn, 'name', { value: task.name });
-  return wrapFn;
-};
+function runif(cond, task) {
+  return Object.defineProperty(
+    function(...args) {
+      return cond() === true ? task(...args) : Promise.resolve();
+    },
+    'name',
+    { value: task.name },
+  );
+}
 
 /**
  * Returns a target host object based on the `--target` CLI flag and the `hosts` object set in the config.
@@ -224,9 +250,11 @@ const runif = (cond, task) => {
  * Returns `false` if a target is not found.
  *
  * @param {object} env Environment object
+ * @param {string} env.target Current target
+ * @param {object<string,object>} env.hosts Configured hosts
  * @returns {object|false}
  */
-const getEnvTarget = ({ target, hosts }) => {
+function getEnvTarget({ target, hosts }) {
   const targets = Object.keys(hosts).filter((host) => !!hosts[host].host);
   if (!target || targets.includes(target) === false) {
     logger.error(
@@ -236,7 +264,7 @@ const getEnvTarget = ({ target, hosts }) => {
     return false;
   }
   return hosts[target];
-};
+}
 
 /**
  * Loads a configuration file. Will also try to load any `.local.js` file
@@ -278,29 +306,15 @@ module.exports = {
   logger,
   resolvePatterns,
   resolveTemplate,
-  /**
-   * @see resolveTemplate
-   */
-  resolvePath: resolveTemplate,
+  resolvePath,
   noopStream,
   pipeChain,
   loadProjectConfig,
   map,
   tap,
-  /**
-   * @see https://gulpjs.com/docs/en/api/dest
-   */
-  dest: gulp.dest,
-  /**
-   * @see https://gulpjs.com/docs/en/api/src
-   */
-  src: gulp.src,
   createPlugin,
   createTask,
   runif,
   getEnvTarget,
-  /**
-   * @see https://lodash.com/docs/4.17.11#camelCase
-   */
-  camelCase: require('lodash/camelCase'),
+  camelCase,
 };

@@ -8,21 +8,19 @@ const Hooks = require('./hooks');
  * @class
  * @extends Config
  */
+
 module.exports = class Task extends Config {
-  /**
-   * @constructor
-   * @see Config#constructor
-   * @param  {...any} args
-   */
   constructor(...args) {
     super(...args);
 
     /**
-     * Shorthand method for this.set('task', fn).
+     * Shorthand method for `this.set('task', fn)`.
      *
      * @name task
-     * @method
-     * @param {function} task Task function
+     * @memberof Task
+     * @function
+     * @instance
+     * @param {function} fn Task function
      * @returns {Task} This method is chainable
      */
     this.shorthands(['task']);
@@ -34,7 +32,7 @@ module.exports = class Task extends Config {
    * If obj is not defined it will return the params configuration instance.
    *
    * @see Config#extend
-   * @param {object} [obj] key/value params to set
+   * @param {object<string,*>} [obj] key/value params to set
    * @returns {Task|Params}
    * @example
    * task.params({ src: 'src/*.js'})
@@ -95,14 +93,14 @@ module.exports = class Task extends Config {
   /**
    * Sets the task as _composed_.
    *
-   * @param {*} fn
+   * @param {function} fn
    * @returns {Task} This method is chainable
    */
   compose(fn) {
     /**
      * Flags a composed task.
      *
-     * @type {boolean}
+     * @property {boolean}
      * @public
      */
     this.$isComposed = true;
