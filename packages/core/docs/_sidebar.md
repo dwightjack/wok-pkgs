@@ -6,6 +6,7 @@
   - [tasks/clean](packages/core/tasks/clean)
   - [tasks/copy](packages/core/tasks/copy)
   - [tasks/deploy](packages/core/tasks/deploy)
+  - [hooks](packages/core/hooks)
 
 ---
 
