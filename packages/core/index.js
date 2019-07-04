@@ -47,7 +47,7 @@ function config(gulp, params = {}) {
   const globalHooks = new Hooks();
 
   /**
-   * Internal api.
+   * Public API.
    *
    * @memberof WokConfig
    * @property {function} src See {@link https://gulpjs.com/docs/en/api/src}.
