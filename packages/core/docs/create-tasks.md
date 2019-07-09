@@ -2,6 +2,19 @@
 
 Sharable tasks let you define a gulp task blueprint that can act differently based on runtime parameters or environmental variables.
 
+<!-- TOC -->
+
+- [Anatomy of a Sharable Task](#anatomy-of-a-sharable-task)
+  - [Creator Function Arguments](#creator-function-arguments)
+- [Generating a task function from a creator function](#generating-a-task-function-from-a-creator-function)
+- [Task Function Hooks](#task-function-hooks)
+- [Task plugins](#task-plugins)
+  - [Plugin parameters](#plugin-parameters)
+    - [Computed parameters](#computed-parameters)
+  - [`createPlugin` Signature](#createplugin-signature)
+
+<!-- /TOC -->
+
 ## Anatomy of a Sharable Task
 
 At its root a sharable task is a function (let's call it the _creator_ function ) that, when executed, returns another function (the gulp _task_ function). Here is an example:
@@ -91,11 +104,131 @@ const copy = $.task(copyCreator, {
   dest: 'public',
 });
 
-copy.tap('process', 'myhook', (lazypipe) => {
-  return lazypipe.pipe(/* do something here*/);
+copy.tap('process', 'myhook', (lazypipe, env) => {
+  if (env.production) {
+    return lazypipe.pipe(/* do something here in production */);
+  }
+  // do nothing in development
+  return lazypipe;
 });
 
 exports.copy = copy;
 ```
 
 ?> Learn more about Hooks at the [dedicated guide](packages/core/hooks).
+
+## Task plugins
+
+As we have seen in the previous section, task hooks can be leveraged to allow users to interact with sharable tasks by adding hook functions via the `.tap()` method.
+
+In WOK task hook functions are called **task plugins**.
+
+To simplify and standardize plugin development WOK exposes an utility function to create such hook functions called `createPlugin`. Let's rewrite the last example with this utility.
+
+```diff
+// gulpfile.js
+
+// ...
+
++ const { createPlugin } = require('@wok-cli/core/utils');
+
+const copy = $.task(copyCreator, {
+  src: 'static/**',
+  dest: 'public',
+});
+
++ const myPlugin = createPlugin({
++   name: 'myplugin',
++   productionOnly: true,
++   plugin(lazypipe) {
++     return lazypipe.pipe(/* do something here in production */);
++   },
++ });
+
+- copy.tap('process', 'myhook', (lazypipe, env) => {
+-   if (env.production) {
+-     return lazypipe.pipe(/* do something here in production */);
+-   }
+-   // do nothing in development
+-   return lazypipe;
+- });
+
++ copy.tap('process', 'myhook', myPlugin);
+
+exports.copy = copy;
+```
+
+### Plugin parameters
+
+Plugins created with the `createPlugin` function requires a `name` configuration property. That name can be used in the task creator parameters as a property to pass plugin-specific configuration parameters.
+
+Let's see an example:
+
+```js
+// plugins/my-plugin.js
+module.exports = createPlugin({
+  name: 'myplugin',
+  productionOnly: true,
+  plugin(lazypipe, params) {
+    console.log(params.message);
+    return lazypipe;
+  },
+});
+```
+
+```js
+// gulpfile.js
+// ...
+const myPlugin = require('./plugins/my-plugin.js');
+
+const copy = $.task(copyCreator, {
+  src: 'static/**',
+  dest: 'public',
+  myplugin: 'Hello World!',
+});
+
+copy.tap('process', 'myhook', myPlugin);
+
+exports.copy = copy;
+```
+
+When executed with `gulp copy --production` the copy task will log `Hello World!`. (note the `myplugin` key in the task parameters object).
+
+#### Computed parameters
+
+In alternative to the plugin's name you can use the `params` function property to dynamically compute a
+plugin parameters from the task parameters:
+
+```diff
+// plugins/my-plugin.js
+module.exports = createPlugin({
+  name: 'myplugin',
+  productionOnly: true,
++ params(taskParams) {
++   return {
++     message: `Copying files to "${taskParams.dest}"`
++   }
++ },
+  plugin(lazypipe, params) {
+    console.log(params.message);
+    return lazypipe;
+  },
+});
+```
+
+Applying the previous changes the task will log `Copying files to "public"`.
+
+### `createPlugin` Signature
+
+The `createPlugin` utility accepts an object as argument with the following properties:
+
+| name           | type     | description                                                                                                                          |
+| -------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| name           | string   | Plugin name                                                                                                                          |
+| plugin         | function | The [hook function][1]                                                                                                               |
+| productionOnly | boolean  | (optional) If se to `true` will execute the plugin just in production (default `false`)                                              |
+| test           | function | (optional) Returns a boolean to control plugins execution. Receives the configuration [`env` object][2] and the plugin's parameters. |
+| params         | function | (optional) A function to return computed plugin parameters. Receives the task parameters object as its only argument.                |
+
+[1]: packages/core/hooks#hook-function-signature
+[2]: packages/core/configuration#env
