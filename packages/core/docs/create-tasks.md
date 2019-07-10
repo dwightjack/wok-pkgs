@@ -8,6 +8,7 @@ Sharable tasks let you define a gulp task blueprint that can act differently bas
   - [Creator Function Arguments](#creator-function-arguments)
 - [Generating a task function from a creator function](#generating-a-task-function-from-a-creator-function)
 - [Task Function Hooks](#task-function-hooks)
+- [Conditional Task Execution](#conditional-task-execution)
 - [Task plugins](#task-plugins)
   - [Plugin parameters](#plugin-parameters)
     - [Computed parameters](#computed-parameters)
@@ -116,6 +117,33 @@ exports.copy = copy;
 ```
 
 ?> Learn more about Hooks at the [dedicated guide](packages/core/hooks).
+
+## Conditional Task Execution
+
+In some cases you might want to control tasks execution based on a condition.
+A common scenario is a series of tasks composed with `gulp.series` where one of the tasks is only relevant in production.
+
+To address this scenario you can use the `runif` utility function:
+
+```js
+// ... configuration and tasks setup
+const { runif } = require('@wok-cli/core/utils');
+
+exports.build = gulp.series(
+  copy,
+  scripts,
+  runif(() => $.env.production, minify),
+);
+```
+
+`runif` accepts two arguments:
+
+| name      | type     | description                                    |
+| --------- | -------- | ---------------------------------------------- |
+| condition | function | condition to test. Must return a boolean value |
+| task      | function | a gulp-compliant task                          |
+
+If the condition returns `true` it will execute the task else it will complete right away and step to the next task (if any).
 
 ## Task plugins
 
