@@ -2,10 +2,18 @@
 
 Sharable tasks implementing [gulp-bump](https://www.npmjs.com/package/gulp-bump).
 
-# Installation
+## Installation
 
 ```
 npm i @wok-cli/task-bump --save-dev
+```
+
+## CLI arguments
+
+To programmatically specify the type of version bump use the `--type` argument
+
+```
+gulp bump --type patch
 ```
 
 ## Parameters
