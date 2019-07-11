@@ -27,18 +27,19 @@ module.exports = function myPreset(config) {
 
 Let's setup a copy and clean task based on the WOK [copy](packages/core/tasks/copy) and [clean](packages/core/tasks/clean) task
 
+<!-- prettier-ignore -->
 ```js
 const { copy, clean } = require('@wok-cli/core/tasks');
 
 preset
   .set('clean')
-  // task setup sub-chain
-  .task(clean)
-  .params({ pattern: 'public' })
+    // task setup sub-chain
+    .task(clean)
+    .params({ pattern: 'public' })
   .end() // <-- return to the main chain
   .set('copy')
-  .task(copy)
-  .params({ src: 'static/**', dest: 'public' });
+    .task(copy)
+    .params({ src: 'static/**', dest: 'public' });
 ```
 
 #### Setup Shorthand
@@ -78,15 +79,16 @@ Hook plugin are used inside a task to allow the user to customize task functiona
 
 You can setup task hooks in a preset:
 
+<!-- prettier-ignore -->
 ```js
 preset
   .set('copy')
-  .task(copy)
-  .params({ ... })
-  .hooks()
-    .tap('process', 'myhook', (lazypipe) => {
-      return lazypipe.pipe(...);
-    });
+    .task(copy)
+    .params({ ... })
+    .hooks()
+      .tap('process', 'myhook', (lazypipe) => {
+        return lazypipe.pipe(...);
+      });
 ```
 
 ?> Calling `hooks` returns an instance of the [Hooks class](packages/core/api/hooks).
@@ -95,14 +97,15 @@ preset
 
 The above snippet can be written as
 
+<!-- prettier-ignore -->
 ```js
 preset
   .set('copy')
-  .task(copy)
-  .params({ ... })
-  .hook('process', 'myhook', (lazypipe) => {
-    return lazypipe.pipe(...);
-  });
+    .task(copy)
+    .params({ ... })
+    .hook('process', 'myhook', (lazypipe) => {
+      return lazypipe.pipe(...);
+    });
 ```
 
 The main different is that while `hooks()` (without arguments) gives you access to an Hooks class instance, `hook()` will return the preset instance itself.
@@ -115,7 +118,7 @@ A composed task is a special task that does not have a dedicated task function b
 
 Usually this kind of task uses `gulp.series` or `gulp.parallel` to orchestrate other tasks.
 
-Let's compose a `build` task excuting the `clean` and `copy` tasks we previously defined.
+Let's compose a `build` task executing the `clean` and `copy` tasks we previously defined.
 
 ```js
 preset.task('build').compose((tasks) => {
@@ -159,3 +162,87 @@ preset.onResolve((tasks) => {
 ```
 
 ## Altering a Preset
+
+The advantage of the preset interface is that it gives you the ability to altering existing presets by modifying, adding or removing tasks, parameters and hooks.
+
+Let's define an example preset:
+
+<!-- prettier-ignore -->
+```js
+preset
+  .set('clean')
+    .task(clean)
+    .params({ pattern: 'public' })
+  .end()
+  .set('copy')
+    .task(copy)
+    .params({ src: 'static/**', dest: 'public' })
+    .hooks()
+      .tap('process', 'myhook', myPlugin);
+```
+
+### Removing a task
+
+```js
+preset.delete('clean');
+```
+
+### Altering Parameters
+
+Editing a parameter
+
+<!-- prettier-ignore -->
+```js
+preset
+  .get('copy')
+    .params()
+      .set('dest', 'build');
+```
+
+Editing multiple parameters at once
+
+<!-- prettier-ignore -->
+```js
+preset
+  .get('copy')
+    .params({ src: 'src', dest: 'build' });
+```
+
+Other methods exposed by `.params()`:
+
+- `delete(name)`: Deletes a parameter by name
+- `get(name)`: Returns the value of a parameter by name
+- `has(name)`: Returns `true` is a parameter with the given name has already been set
+- `clear()`: Deletes all parameters
+- `serialize()`: Returns all parameters as a key/value object
+
+?> Refer to the [`Config` class API](packages/core/api/lib/config) for further details.
+
+### Altering Hooks
+
+Removing a hook function
+
+<!-- prettier-ignore -->
+```js
+preset
+  .get('copy')
+    .hooks()
+      .delete('process', 'myhook');
+```
+
+Clearing all hook functions
+
+<!-- prettier-ignore -->
+```js
+preset
+  .get('copy')
+    .hooks()
+      .delete('process');
+```
+
+Other methods exposed by `.hooks()`:
+
+- `get(id)`: Gets all hook function for a specific hook
+- `count(id)`: Returns the number hook functions added to a specific hook
+
+?> Refer to the [`Hook` class API](packages/core/api/lib/hooks) for further details.
