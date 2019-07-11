@@ -1,5 +1,6 @@
 {
-  "name": "eslint-config-wok",
+  "name": "@wok-cli/eslint-config-wok",
+  "private": false,
   "version": "1.0.0",
   "description": "",
   "main": "index.js",

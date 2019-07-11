@@ -1,4 +1,4 @@
-const { createPlugin, logger } = require('wok-core/utils');
+const { createPlugin, logger } = require('@wok-cli/core/utils');
 
 function rsyncPlugin(
   promise,

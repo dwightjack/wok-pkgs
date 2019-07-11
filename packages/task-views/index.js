@@ -5,7 +5,7 @@ module.exports = function(
   api,
 ) {
   const { extname } = require('path');
-  const { map, noopStream } = require('wok-core/utils');
+  const { map, noopStream } = require('@wok-cli/core/utils');
   const { json, dataExtract } = require('./lib/plugins');
   const { matchParser, matchEngine } = require('./lib/utils');
   const srcFolder = api.pattern(src);

@@ -1,4 +1,4 @@
-const { createPlugin, pipeChain, noopStream } = require('wok-core/utils');
+const { createPlugin, pipeChain, noopStream } = require('@wok-cli/core/utils');
 
 function userefPlugin(stream, env, api, opts) {
   const useref = require('gulp-useref');

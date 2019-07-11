@@ -1,4 +1,4 @@
-const { createPlugin, logger } = require('wok-core/utils');
+const { createPlugin, logger } = require('@wok-cli/core/utils');
 
 function lftpPlugin(promise, env, api, { src, strategy, target, ...options }) {
   if (/^(ftp|ftps|lftp)$/.test(strategy) === false) {

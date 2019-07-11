@@ -1,5 +1,6 @@
 {
-  "name": "task-rev",
+  "name": "@wok-cli/task-rev",
+  "private": false,
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -15,6 +16,6 @@
     "gulp-rev-rewrite": "^1.1.4"
   },
   "peerDependencies": {
-    "wok-core": "*"
+    "@wok-cli/core": "*"
   }
 }

@@ -5,7 +5,7 @@
 The WOK project features two independent sub-projects:
 
 - `@wok-cli/*` [gulp 4](https://gulpjs.com/) based CLI tools and tasks
-- `wok` a loosely opinionated frontend boilerplate powered by `@wok-cli/preset-wok`
+- `wok` a loosely opinionated frontend boilerplate powered by `@wok-cli/preset-standard`
 
 <!-- TOC -->
 

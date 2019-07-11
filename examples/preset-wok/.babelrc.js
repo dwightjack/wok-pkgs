@@ -1,1 +1,1 @@
-module.exports = require('preset-wok/configs/babel');
+module.exports = require('@wok-cli/preset-standard/configs/babel');

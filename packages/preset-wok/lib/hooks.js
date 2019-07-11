@@ -1,5 +1,5 @@
 const rename = require('gulp-rename');
-const { noopStream, createPlugin } = require('wok-core/utils');
+const { noopStream, createPlugin } = require('@wok-cli/core/utils');
 
 const minPrefix = createPlugin({
   name: 'minSuffix',

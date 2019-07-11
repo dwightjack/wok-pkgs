@@ -1,11 +1,11 @@
 const gulp = require('gulp');
-const config = require('wok-core');
-const { deploy } = require('wok-core/tasks');
+const config = require('@wok-cli/core');
+const { deploy } = require('@wok-cli/core/tasks');
 
-const preset = require('preset-wok');
-const ssh = require('task-ssh');
-const rsync = require('plugin-deploy-rsync');
-const lftp = require('plugin-deploy-lftp');
+const preset = require('@wok-cli/preset-standard');
+const ssh = require('@wok-cli/task-ssh');
+const rsync = require('@wok-cli/plugin-deploy-rsync');
+const lftp = require('@wok-cli/plugin-deploy-lftp');
 
 const $ = config(gulp);
 
@@ -21,7 +21,7 @@ sync.tap('strategy', 'lftp', lftp);
 const wok = preset($);
 
 wok
-  .globalHook('watcher', 'notifier', require('plugin-notifier'))
+  .globalHook('watcher', 'notifier', require('@wok-cli/plugin-notifier'))
   .params('watch', {
     notifier: {
       message: 'Updated!',

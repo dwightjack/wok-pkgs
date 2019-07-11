@@ -1,5 +1,6 @@
 {
-  "name": "task-scripts",
+  "name": "@wok-cli/task-scripts",
+  "private": false,
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -12,6 +13,6 @@
   "dependencies": {
   },
   "peerDependencies": {
-    "wok-core": "*"
+    "@wok-cli/core": "*"
   }
 }

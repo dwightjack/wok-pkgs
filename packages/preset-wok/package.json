@@ -1,5 +1,6 @@
 {
-  "name": "preset-wok",
+  "name": "@wok-cli/preset-standard",
+  "private": false,
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -24,21 +25,21 @@
     "node-sass": "^4.12.0",
     "nunjucks": "^3.2.0",
     "nunjucks-markdown": "^2.0.0",
-    "plugin-imagemin": "^1.0.0",
-    "plugin-render-nunjucks": "^1.0.0",
-    "plugin-sass": "^1.0.0",
-    "plugin-useref": "^1.0.0",
-    "task-bump": "^1.0.0",
-    "task-modernizr": "^1.0.0",
-    "task-rev": "^1.0.0",
-    "task-scripts": "^1.0.0",
-    "task-serve": "^1.0.0",
-    "task-styles": "^1.0.0",
-    "task-views": "^1.0.0"
+    "@wok-cli/plugin-imagemin": "^1.0.0",
+    "@wok-cli/plugin-render-nunjucks": "^1.0.0",
+    "@wok-cli/plugin-sass": "^1.0.0",
+    "@wok-cli/plugin-useref": "^1.0.0",
+    "@wok-cli/task-bump": "^1.0.0",
+    "@wok-cli/task-modernizr": "^1.0.0",
+    "@wok-cli/task-rev": "^1.0.0",
+    "@wok-cli/task-scripts": "^1.0.0",
+    "@wok-cli/task-serve": "^1.0.0",
+    "@wok-cli/task-styles": "^1.0.0",
+    "@wok-cli/task-views": "^1.0.0"
   },
   "peerDependencies": {
     "gulp": "*",
     "prettier": "^1.18.2",
-    "wok-core": "^1.0.0"
+    "@wok-cli/core": "^1.0.0"
   }
 }

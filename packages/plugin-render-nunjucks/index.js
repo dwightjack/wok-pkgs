@@ -1,4 +1,4 @@
-const { createPlugin } = require('wok-core/utils');
+const { createPlugin } = require('@wok-cli/core/utils');
 const nunjucksEnv = require('./lib/env');
 
 function nunjucks(engines, env, api, opts) {

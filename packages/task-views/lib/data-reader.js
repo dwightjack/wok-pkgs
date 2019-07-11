@@ -3,7 +3,7 @@ const { promisify } = require('util');
 const { parse } = require('path');
 const glob = require('globby');
 const readAsync = promisify(fs.readFile);
-const { camelCase } = require('wok-core/utils');
+const { camelCase } = require('@wok-cli/core/utils');
 
 module.exports = async function dataReader(dataPatter, parsersMatcher, env) {
   try {

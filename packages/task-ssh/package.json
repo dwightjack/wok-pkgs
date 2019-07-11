@@ -1,5 +1,6 @@
 {
-  "name": "task-ssh",
+  "name": "@wok-cli/task-ssh",
+  "private": false,
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -13,6 +14,6 @@
     "ssh2": "^0.8.4"
   },
   "peerDependencies": {
-    "wok-core": "*"
+    "@wok-cli/core": "*"
   }
 }

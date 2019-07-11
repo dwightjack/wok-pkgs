@@ -1,10 +1,10 @@
 **Guides**
 
-- [wok-core](packages/core/)
+- [@wok-cli/core](packages/core/)
 
 ---
 
 **API**
 
-- [wok-core](packages/core/api/)
-  <!-- wok-core -->
+- [@wok-cli/core](packages/core/api/)
+  <!-- @wok-cli/core -->

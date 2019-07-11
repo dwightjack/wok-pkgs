@@ -1,5 +1,6 @@
 {
-  "name": "plugin-imagemin",
+  "name": "@wok-cli/plugin-imagemin",
+  "private": false,
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -14,6 +15,6 @@
     "gulp-imagemin": "^5.0.3"
   },
   "peerDependencies": {
-    "wok-core": "*"
+    "@wok-cli/core": "*"
   }
 }

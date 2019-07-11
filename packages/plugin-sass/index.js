@@ -1,5 +1,5 @@
 const fns = require('./lib/functions');
-const { createPlugin } = require('wok-core/utils');
+const { createPlugin } = require('@wok-cli/core/utils');
 
 function sass(stream, env, api, opts) {
   const { includePaths = ['node_modules'], functions, ...options } = opts;

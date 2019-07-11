@@ -1,4 +1,4 @@
-const { logger } = require('wok-core/utils');
+const { logger } = require('@wok-cli/core/utils');
 
 module.exports = function exec(
   command,

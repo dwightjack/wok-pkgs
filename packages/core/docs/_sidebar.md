@@ -1,6 +1,6 @@
 **Guides**
 
-- [wok-core](packages/core/)
+- [@wok-cli/core](packages/core/)
   - [configuration](packages/core/configuration)
   - [create sharable tasks](packages/core/create-tasks)
   - [hooks](packages/core/hooks)
@@ -15,5 +15,5 @@
 
 **API**
 
-- [wok-core](packages/core/api/)
-  <!-- wok-core -->
+- [@wok-cli/core](packages/core/api/)
+  <!-- @wok-cli/core -->

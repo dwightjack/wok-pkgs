@@ -4,7 +4,7 @@ module.exports = function(
   env,
   api,
 ) {
-  const { logger } = require('wok-core/utils');
+  const { logger } = require('@wok-cli/core/utils');
   const src = api.pattern(pattern).concat(['!**/*.map']);
   const dist = api.resolve(dest);
   const man = manifest && api.resolve(manifest);

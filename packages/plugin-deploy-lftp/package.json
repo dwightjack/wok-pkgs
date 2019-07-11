@@ -1,5 +1,6 @@
 {
-  "name": "plugin-deploy-lftp",
+  "name": "@wok-cli/plugin-deploy-lftp",
+  "private": false,
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -15,6 +16,6 @@
     "rsyncwrapper": "^3.0.1"
   },
   "peerDependencies": {
-    "wok-core": "*"
+    "@wok-cli/core": "*"
   }
 }

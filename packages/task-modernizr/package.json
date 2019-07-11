@@ -1,5 +1,6 @@
 {
-  "name": "task-modernizr",
+  "name": "@wok-cli/task-modernizr",
+  "private": false,
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -13,6 +14,6 @@
     "gulp-modernizr": "^3.2.1"
   },
   "peerDependencies": {
-    "wok-core": "*"
+    "@wok-cli/core": "*"
   }
 }

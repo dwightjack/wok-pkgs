@@ -1,5 +1,6 @@
 {
-  "name": "stylelint-config-wok",
+  "name": "@wok-cli/stylelint-config-wok",
+  "private": false,
   "version": "1.0.0",
   "description": "",
   "main": "index.js",

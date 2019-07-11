@@ -1,15 +1,15 @@
-const { copy, clean } = require('wok-core/tasks');
-const bump = require('task-bump');
-const styles = require('task-styles');
-const scripts = require('task-scripts');
-const modernizr = require('task-modernizr');
-const views = require('task-views');
-const { createPreset } = require('wok-core/preset');
-const { runif } = require('wok-core/utils');
-const imagemin = require('plugin-imagemin');
-const sass = require('plugin-sass');
-const rev = require('task-rev');
-const serve = require('task-serve');
+const { copy, clean } = require('@wok-cli/core/tasks');
+const bump = require('@wok-cli/task-bump');
+const styles = require('@wok-cli/task-styles');
+const scripts = require('@wok-cli/task-scripts');
+const modernizr = require('@wok-cli/task-modernizr');
+const views = require('@wok-cli/task-views');
+const { createPreset } = require('@wok-cli/core/preset');
+const { runif } = require('@wok-cli/core/utils');
+const imagemin = require('@wok-cli/plugin-imagemin');
+const sass = require('@wok-cli/plugin-sass');
+const rev = require('@wok-cli/task-rev');
+const serve = require('@wok-cli/task-serve');
 const { babel, eslint, stylelint, minifyJS } = require('./lib/hooks');
 
 // passed-in config object
@@ -69,8 +69,8 @@ module.exports = (config) => {
     })
     .set('views')
     .task(views)
-    .hook('engines', 'nunjucks', require('plugin-render-nunjucks'))
-    .hook('post', 'useref', require('plugin-useref'))
+    .hook('engines', 'nunjucks', require('@wok-cli/plugin-render-nunjucks'))
+    .hook('post', 'useref', require('@wok-cli/plugin-useref'))
     .params({
       src: ['<%= paths.src.views %>/**/*.*', '!<%= paths.src.views %>/**/_*.*'],
       dest: '<%= paths.dist.root %>',

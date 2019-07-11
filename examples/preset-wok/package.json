@@ -1,5 +1,5 @@
 {
-  "name": "preset-wok-example",
+  "name": "@wok-cli/preset-standard-example",
   "version": "1.0.0",
   "license": "MIT",
   "engines": {
@@ -9,17 +9,17 @@
   "devDependencies": {
     "@babel/core": "^7.0.0",
     "gulp": "^4.0.0",
-    "preset-wok": "*",
-    "plugin-notifier": "*",
-    "task-ssh": "*",
-    "plugin-deploy-rsync": "*",
-    "plugin-deploy-lftp": "*",
-    "eslint-config-wok": "^1.0.0",
-    "stylelint-config-wok": "^1.0.0",
+    "@wok-cli/preset-standard": "*",
+    "@wok-cli/plugin-notifier": "*",
+    "@wok-cli/task-ssh": "*",
+    "@wok-cli/plugin-deploy-rsync": "*",
+    "@wok-cli/plugin-deploy-lftp": "*",
+    "@wok-cli/eslint-config-wok": "^1.0.0",
+    "@wok-cli/stylelint-config-wok": "^1.0.0",
     "stylelint": "^10.0.0",
     "eslint": ">=5.0.0",
     "prettier": "^1.18.2",
-    "wok-core": "*"
+    "@wok-cli/core": "*"
   },
   "browserslist": [
     ">= 1%",

@@ -97,7 +97,7 @@ module.exports = class PresetConfig extends Config {
    * @param {object<string,*>} [params] Task parameters
    * @returns {PresetConfig|Task}
    * @example
-   * const { copy } = require('wok-core/tasks');
+   * const { copy } = require('@wok-cli/core/tasks');
    * preset.set('copy', copy, { src: ['src/*.html'] })
    *
    * // equivalent to

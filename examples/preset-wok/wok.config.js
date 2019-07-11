@@ -1,4 +1,4 @@
-const config = require('preset-wok/configs/default');
+const config = require('@wok-cli/preset-standard/configs/default');
 
 config.hosts = {
   staging: {

@@ -8,7 +8,7 @@ module.exports = function(
   const destFolder = api.resolve(dest);
   const postcssHook = require('./lib/postcss');
   const $hooks = this.getHooks();
-  const { noopStream } = require('wok-core/utils');
+  const { noopStream } = require('@wok-cli/core/utils');
 
   $hooks.tap('post', 'postcss', postcssHook);
 

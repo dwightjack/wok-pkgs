@@ -1,4 +1,4 @@
-const { getEnvTarget, resolveTemplate, logger } = require('wok-core/utils');
+const { getEnvTarget, resolveTemplate, logger } = require('@wok-cli/core/utils');
 const defaultCommands = require('./lib/commands');
 const exec = require('./lib/exec');
 

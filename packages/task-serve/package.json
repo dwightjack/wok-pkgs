@@ -1,5 +1,6 @@
 {
-  "name": "task-serve",
+  "name": "@wok-cli/task-serve",
+  "private": false,
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -14,6 +15,6 @@
     "compression": "^1.7.4"
   },
   "peerDependencies": {
-    "wok-core": "*"
+    "@wok-cli/core": "*"
   }
 }
