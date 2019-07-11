@@ -14,24 +14,27 @@ module.exports = function(
     const gRev = require('gulp-rev');
     const del = require('gulp-rev-delete-original');
 
-    return gulp
+    const stream = gulp
       .src(src, { base: dist, sourcemaps: !!sourcemaps })
       .pipe($hooks.call('before', opts['hooks:before']))
       .pipe(gRev())
       .pipe(del())
       .pipe($hooks.call('after', opts['hooks:after']))
-      .pipe(gulp.dest(dist, { sourcemaps }))
-      .pipe(gRev.manifest(man, { merge: true }))
-      .pipe(gulp.dest('.'));
+      .pipe(gulp.dest(dist, { sourcemaps }));
+
+    if (man) {
+      stream.pipe(gRev.manifest(man, { merge: true })).pipe(gulp.dest('.'));
+    }
+    return stream;
   }
 
   function revRewrite() {
     const rewrite = require('gulp-rev-rewrite');
-    const manStream = gulp.src(man);
+    const manStream = man && gulp.src(man);
     return gulp
       .src(`${dist}/**/*.*`)
       .pipe($hooks.call('rewrite', opts['hooks:rewrite']))
-      .pipe(rewrite({ manifest: manStream }))
+      .pipe(rewrite(manStream ? { manifest: manStream } : {}))
       .pipe(gulp.dest(dist));
   }
 
