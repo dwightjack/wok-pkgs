@@ -1,13 +1,10 @@
-const gulp = require('gulp');
-const config = require('@wok-cli/core');
+const $ = require('@wok-cli/core');
 const { deploy } = require('@wok-cli/core/tasks');
 
 const preset = require('@wok-cli/preset-standard');
 const ssh = require('@wok-cli/task-ssh');
 const rsync = require('@wok-cli/plugin-deploy-rsync');
 const lftp = require('@wok-cli/plugin-deploy-lftp');
-
-const $ = config(gulp);
 
 const backup = $.task(ssh, { command: 'backup' });
 const sync = $.task(deploy, {

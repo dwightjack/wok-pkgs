@@ -29,12 +29,9 @@ A generic purpose task. Use it as base for custom tasks.
 Create a file concatenation task.
 
 ```js
-const gulp = require('gulp');
-const config = require('@wok-cli/core');
+const $ = require('@wok-cli/core');
 const { base } = require('@wok-cli/core/tasks');
 const concat = require('gulp-concat');
-
-const $ = config(gulp);
 
 const concatTask = $.task(base, {
   src: ['src/js/*.js'],

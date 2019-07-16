@@ -6,7 +6,6 @@ const merge = require('lodash/merge');
 const through2 = require('through2');
 const lazypipe = require('lazypipe');
 const PluginError = require('plugin-error');
-const base = require('./tasks/base');
 
 /**
  * @module Utils
@@ -211,19 +210,6 @@ function createPlugin({ name, plugin, productionOnly = false, test, params }) {
 }
 
 /**
- * Creates a named task from the base task.
- *
- * @param {string} name Task name
- * @param {object<string,*>} [defs] Task default parameters
- * @returns {function}
- */
-function createTask(name, defs) {
-  return function(gulp, params = {}, ...args) {
-    return base.call(this, gulp, { ...params, ...defs, name }, ...args);
-  };
-}
-
-/**
  * Runs a task only if `cond` return `true`
  * @param {function} cond Conditional function
  * @param {function} task Task to run
@@ -281,7 +267,6 @@ function loadProjectConfig(basePath, target) {
   const localPath = basePath.replace(/\.js/, '.local.js');
 
   if (!fs.existsSync(basePath)) {
-    logger.warn(`Configuration file not found: ${basePath}`);
     return {};
   }
 
@@ -313,7 +298,6 @@ module.exports = {
   map,
   tap,
   createPlugin,
-  createTask,
   runif,
   getEnvTarget,
   camelCase,

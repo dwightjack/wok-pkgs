@@ -36,11 +36,8 @@ And we use it like this:
 
 ```js
 // gulpfile.js
-const gulp = require('gulp');
-const config = require('@wok-cli/core');
+const $ = require('@wok-cli/core');
 const scriptsTask = require('./tasks/scripts.js');
-
-const $ = config(gulp);
 
 const scripts = $.task(scriptsTask, {
   src: 'src/**',
@@ -69,11 +66,8 @@ We can then enqueue a hook transformation in `gulpfile.js` using the `.tap()` me
 
 ```diff
 // gulpfile.js
-const gulp = require('gulp');
-const config = require('@wok-cli/core');
+const $ = require('@wok-cli/core');
 const scriptsTask = require('./tasks/scripts.js');
-
-const $ = config(gulp);
 
 const scripts = $.task(scriptsTask, {
   src: 'src/**',

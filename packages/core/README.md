@@ -2,9 +2,14 @@
 
 This package includes core functionalities and utilities to setup a build tool chain with gulp.
 
+## Requirements
+
+- Node.js >=8.12.0
+-
+
 ## Installation
 
-This modules requires node.js v8.12.0 or newer and [gulp 4+](https://gulpjs.com/).
+This modules needs [Gulp >=4.0.0](https://gulpjs.com/).
 
 ```
 npm i gulp @wok-cli/core
@@ -16,10 +21,7 @@ Here is a simple copy task with CLI flag support:
 
 ```js
 // gulpfile.js
-const gulp = require('gulp');
-const config = require('@wok-cli/core');
-
-const $ = config(gulp);
+const $ = require('@wok-cli/core');
 const { env } = $;
 
 const srcPattern = 'src/**';
@@ -56,11 +58,9 @@ Then in the `gulpfile.js` we leverage the `$.task` function to parse and configu
 
 ```js
 // gulpfile.js
-const gulp = require('gulp');
-const config = require('@wok-cli/core');
+const $ = require('@wok-cli/core');
 const copyTask = require('./tasks/copy.js');
 
-const $ = config(gulp);
 const srcPattern = 'src/**';
 
 exports.copy = $.task(copyTask, {
@@ -70,7 +70,7 @@ exports.copy = $.task(copyTask, {
 
 ## Learn More
 
-The package comes with more many features like:
+The package comes with many more features like:
 
 - environment specific configuration
 - hookable tasks

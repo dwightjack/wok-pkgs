@@ -44,7 +44,7 @@ The creator function should be authored to receive the following arguments
 
 ## Generating a task function from a creator function
 
-The easiest way to create a task function from a sharable task is by generating a configuration object and use its `task()` method.
+The easiest way to create a task function from a sharable task is by using the default `task()` method.
 
 ```js
 // tasks/copy.js
@@ -57,12 +57,8 @@ module.exports = function copyCreator(gulp, params) {
 
 ```js
 // gulpfile.js
-const gulp = require('gulp');
-const config = require('@wok-cli/core');
+const $ = require('@wok-cli/core');
 const copyCreator = require('./tasks/copy.js');
-
-// 1. create a configuration object
-const $ = config(gulp);
 
 // use the task method and export the returned task function
 exports.copy = $.task(copyCreator, {

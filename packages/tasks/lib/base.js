@@ -4,7 +4,7 @@ module.exports = function baseTask(
   env,
   api,
 ) {
-  const { logger, noopStream } = require('../utils');
+  const { logger, noopStream } = require('@wok-cli/core/utils');
   const folders = api.pattern(src);
   let destFolder;
   const $hooks = this.getHooks();

@@ -77,11 +77,8 @@ Each `strategy` hook function will receive as 4th argument an object containing,
 ## Example
 
 ```js
-const gulp = require('gulp');
-const config = require('@wok-cli/core');
+const $ = require('@wok-cli/core');
 const { deploy } = require('@wok-cli/core/tasks');
-
-const $ = config(gulp);
 
 const deployTask = $.task(deploy, {
   src: 'dist/',

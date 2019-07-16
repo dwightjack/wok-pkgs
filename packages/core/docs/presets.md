@@ -62,11 +62,8 @@ To convert a preset to actual gulp tasks import it, call its `resolve()` method 
 
 ```js
 // gulpfile.js
-const gulp = require('gulp');
-const config = require('@wok-cli/core');
+const $ = require('@wok-cli/core');
 const myPreset = require('./configs/preset');
-
-const $ = config(gulp);
 
 module.exports = myPreset($).resolve();
 ```

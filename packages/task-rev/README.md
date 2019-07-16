@@ -49,11 +49,8 @@ This plugin adds the following [environmental variables](packages/core/configura
 ## Example
 
 ```js
-const gulp = require('gulp');
-const config = require('@wok-cli/core');
+const $ = require('@wok-cli/core');
 const rev = require('@wok-cli/task-rev');
-
-const $ = config(gulp);
 
 exports.rev = $.task(rev, {
   pattern: ['public/**/*.{js,css}'],

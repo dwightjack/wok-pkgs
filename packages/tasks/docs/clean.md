@@ -22,11 +22,8 @@ This task does not expose any hook
 ## Example
 
 ```js
-const gulp = require('gulp');
-const config = require('@wok-cli/core');
+const $ = require('@wok-cli/core');
 const { clean } = require('@wok-cli/core/tasks');
-
-const $ = config(gulp);
 
 exports.copy = $.task(clean, {
   pattern: ['dist'],

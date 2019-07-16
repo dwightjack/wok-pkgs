@@ -16,10 +16,8 @@ Here is a simple copy task with CLI flag support:
 
 ```js
 // gulpfile.js
-const gulp = require('gulp');
-const config = require('@wok-cli/core');
+const $ = require('@wok-cli/core');
 
-const $ = config(gulp);
 const { env } = $;
 
 const srcPattern = 'src/**';
@@ -56,11 +54,9 @@ Then in the `gulpfile.js` we leverage the `$.task` function to parse and configu
 
 ```js
 // gulpfile.js
-const gulp = require('gulp');
-const config = require('@wok-cli/core');
+const $ = require('@wok-cli/core');
 const copyTask = require('./tasks/copy.js');
 
-const $ = config(gulp);
 const srcPattern = 'src/**';
 
 exports.copy = $.task(copyTask, {

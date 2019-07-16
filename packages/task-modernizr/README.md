@@ -34,11 +34,8 @@ npm i @wok-cli/task-modernizr --save-dev
 ## Example
 
 ```js
-const gulp = require('gulp');
-const config = require('@wok-cli/core');
+const $ = require('@wok-cli/core');
 const modernizr = require('@wok-cli/task-modernizr');
-
-const $ = config(gulp);
 
 exports.modernizr = $.task(modernizr, {
   src: ['src/**/*.{js,css}'],

@@ -34,11 +34,8 @@ This task does not expose any hook
 ## Example
 
 ```js
-const gulp = require('gulp');
-const config = require('@wok-cli/core');
+const $ = require('@wok-cli/core');
 const bump = require('@wok-cli/task-bump');
-
-const $ = config(gulp);
 
 exports.bump = $.task(bump, {
   src: ['./package.json'],

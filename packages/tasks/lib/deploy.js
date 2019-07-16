@@ -1,4 +1,4 @@
-const { getEnvTarget } = require('../utils');
+const { getEnvTarget } = require('@wok-cli/core/utils');
 
 module.exports = function(gulp, { src = '', ...params }, env, api) {
   const $hooks = this.getHooks();

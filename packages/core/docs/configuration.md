@@ -26,15 +26,11 @@ A WOK configuration object includes methods and properties used to setup wok tas
 
 ## Usage
 
-To create a configuration object call the main `@wok-cli/core` function passing a gulp object as its first argument:
+To load the default configuration object require it from `@wok-cli/core`:
 
 ```js
 // gulpfile.js
-
-const gulp = require('gulp');
-const config = require('@wok/cli/core');
-
-const $ = config(gulp);
+const $ = require('@wok-cli/core');
 ```
 
 ?> **Note**: as a convention we use `$` as the configuration constant name. Feel free to use any name you prefer.
@@ -82,10 +78,8 @@ module.exports = function(gulp, params) {
 // gulpfile.js
 
 const gulp = require('gulp');
-const config = require('@wok-cli/core');
+const $ = require('@wok-cli/core');
 const copy = require('./tasks/copy.js');
-
-const $ = config(gulp);
 
 exports.copy = $.task(copy, {
   src: 'src/**',
@@ -200,18 +194,7 @@ $.api.pattern('<%= target %>') === ['development'];
 
 There are two methods to add or overwrite the properties in `$.env` (except for `argv` and `pkg`):
 
-1. Pass a configuration object to `config`:
-
-```js
-// gulpfile.js
-
-// force production to `true` regardless of the value of `--production`
-const $ = config(gulp, {
-  production: true,
-});
-```
-
-2. Create a `wok.config.js` configuration file in the project root folder. WOK will read the file contents and merge into `$.env`.
+1. Create a `wok.config.js` configuration file in the project root folder. WOK will read the file contents and merge into `$.env`.
 
 ```js
 // wok.config.js
@@ -220,15 +203,24 @@ module.exports = {
 };
 ```
 
+2. Generate a custom configuration object:
+
+```js
+// gulpfile.js
+const gulp = require('gulp');
+const createConfig = require('@wok-cli/core/config');
+
+// force production to `true` regardless of the value of `--production`
+const $ = createConfig(gulp, {
+  production: true,
+});
+```
+
 ### Local Configuration File
 
-The second method lets you specify configuration options in a dedicated file. A benefit of this method is that
-it allows you to create a local configuration file (`wok.config.local.js`) with setups just for
-your local environment. Just add it to your `.gitignore` file to prevent it to be shared with other developers
-or pushed to CI servers.
+The first method lets you specify configuration options in a dedicated file. A benefit of this method is that it allows you to create a local configuration file `wok.config.local.js`) with setups just for your local environment. Just add it to your `.gitignore` file to prevent it to be shared with other developers or pushed to CI servers.
 
-The local configuration file can expose either an object, in which case the local and project configurations will be merged,
-or a function receiving the project's configuration as first argument.
+The local configuration file can expose either an object, in which case the local and project configurations will be merged, or a function receiving the project's configuration as first argument.
 
 ```js
 // wok.config.local.js
@@ -250,4 +242,4 @@ The order in which custom environment properties will be merged is:
 
 - `wok.config.js` properties
 - `wok.config.local.js` properties
-- `config` function parameters
+- `createConfig` function parameters

@@ -30,11 +30,8 @@ To maximize the task performances just those files that have changed since the t
 ## Example
 
 ```js
-const gulp = require('gulp');
-const config = require('@wok-cli/core');
+const $ = require('@wok-cli/core');
 const { copy } = require('@wok-cli/core/tasks');
-
-const $ = config(gulp);
 
 exports.copy = $.task(copy, {
   src: ['static/**'],
