@@ -1,3 +1,3 @@
-const { createTask } = require('@wok-cli/core/utils');
+const { createTask } = require('../index');
 
 module.exports = createTask('copy', { cache: true });

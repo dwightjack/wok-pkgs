@@ -12,4 +12,8 @@ npm i @wok-cli/core @wok-cli/tasks
 
 ## Tasks
 
+- [base](packages/tasks/base)
 - [copy](packages/tasks/copy)
+- [clean](packages/tasks/clean)
+- [deploy](packages/tasks/deploy)
+- [noop](packages/tasks/noop)

@@ -1,5 +1,5 @@
 - [base](packages/tasks/base)
-- [noop](packages/tasks/noop)
-- [clean](packages/tasks/clean)
 - [copy](packages/tasks/copy)
+- [clean](packages/tasks/clean)
 - [deploy](packages/tasks/deploy)
+- [noop](packages/tasks/noop)
