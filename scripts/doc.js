@@ -25,6 +25,15 @@ function printParams(params) {
     .join(', ');
 }
 
+async function composeSidebar(baseSidebar, src, dest, pkgName) {
+  if (fs.existsSync(src)) {
+    let partial = await readAsync(src, 'utf8');
+    partial = partial.trim().replace(/^/gm, '  ');
+    partial = baseSidebar.replace(`  <!-- guides:${pkgName} -->`, partial);
+    await writeAsync(path.join(dest, '_sidebar.md'), partial, 'utf8');
+  }
+}
+
 (async function() {
   //copy some files
   await cpy(['*.*'], docs, {
@@ -62,21 +71,29 @@ function printParams(params) {
       });
       console.log('-> Base documentation copied!');
     } else {
-      await cpy(['**/*.*', '!_sidebar.partial.md'], dest, {
-        parents: true,
-        cwd: docsFolder,
-      });
+      const tasks = [];
 
-      //compose a custom sidebar
-      if (fs.existsSync(path.join(docsFolder, '_sidebar.partial.md'))) {
-        let partial = await readAsync(
-          path.join(docsFolder, '_sidebar.partial.md'),
-          'utf8',
+      if (!fs.existsSync(path.join(docsFolder, 'README.md'))) {
+        tasks.push(
+          cpy(['README.md'], dest, {
+            cwd: baseFolder,
+          }),
         );
-        partial = partial.trim().replace(/^/gm, '  ');
-        partial = sidebar.replace(`  <!-- guides:${pkg.name} -->`, partial);
-        await writeAsync(path.join(dest, '_sidebar.md'), partial, 'utf8');
       }
+      tasks.push(
+        cpy(['**/*.*', '!_sidebar.partial.md'], dest, {
+          parents: true,
+          cwd: docsFolder,
+        }),
+        composeSidebar(
+          sidebar,
+          path.join(docsFolder, '_sidebar.partial.md'),
+          dest,
+          pkg.name,
+        ),
+      );
+
+      await Promise.all(tasks);
       console.log('-> Documentation files copied!');
     }
 
