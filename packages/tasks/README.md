@@ -10,6 +10,6 @@ This modules requires `@wok-cli/core` as peer dependency.
 npm i @wok-cli/core @wok-cli/tasks
 ```
 
-## Tasks
+## Documentation
 
-- copy
+Read the official documentation here
