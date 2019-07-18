@@ -1,4 +1,0 @@
-- [configuration](packages/core/configuration)
-- [create sharable tasks](packages/core/create-tasks)
-- [hooks](packages/core/hooks)
-- [presets](packages/core/presets)

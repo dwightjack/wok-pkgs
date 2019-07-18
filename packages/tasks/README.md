@@ -1,4 +1,4 @@
-# `@wok-cli/tasks`
+# @wok-cli/tasks
 
 This package includes a collection of general purpose sharable tasks.
 

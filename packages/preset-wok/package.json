@@ -35,7 +35,8 @@
     "@wok-cli/task-scripts": "^1.0.0",
     "@wok-cli/task-serve": "^1.0.0",
     "@wok-cli/task-styles": "^1.0.0",
-    "@wok-cli/task-views": "^1.0.0"
+    "@wok-cli/task-views": "^1.0.0",
+    "@wok-cli/tasks": "^1.0.0"
   },
   "peerDependencies": {
     "gulp": "*",

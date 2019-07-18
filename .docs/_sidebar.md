@@ -1,13 +1,46 @@
-**Guides**
+<!-- prettier-ignore -->
+**Core**
 
-- [@wok-cli/core](packages/core/)
-  <!-- guides:@wok-cli/core -->
-- [@wok-cli/tasks](packages/tasks/)
-  <!-- guides:@wok-cli/tasks -->
+{{#each core}}
+- [{{ name }}]({{ url }})
+  {{#ifeq name ../currentcore }}
+  {{#each children}}
+  - [{{ name }}]({{ url }})
+  {{/each}}
+  {{/ifeq}}
+{{/each}}
+
+**Tasks**
+
+{{#each tasks}}
+- [{{ name }}]({{ url }})
+  {{#ifeq name ../currenttasks }}
+  {{#each children}}
+  - [{{ name }}]({{ url }})
+  {{/each}}
+  {{/ifeq}}
+{{/each}}
+
+**Plugins**
+
+{{#each plugins}}
+- [{{ name }}]({{ url }})
+  {{#ifeq name ../currentplugins }}
+  {{#each children}}
+  - [{{ name }}]({{ url }})
+  {{/each}}
+  {{/ifeq}}
+{{/each}}
 
 ---
 
-**API**
+**API Reference**
 
-- [@wok-cli/core](packages/core/api/)
-  <!-- @wok-cli/core -->
+{{#each apis}}
+- [{{ name }}]({{ url }}api/)
+  {{#ifeq name ../currentapis }}
+  {{#each children}}
+  - [{{ name }}]({{ url }})
+  {{/each}}
+  {{/ifeq}}
+{{/each}}

@@ -6,7 +6,7 @@ Sharable tasks to apply a unique hash to file names. Implements the following gu
 - [gulp-rev-delete-original](https://www.npmjs.com/package/gulp-rev-delete-original)
 - [gulp-rev-rewrite](https://www.npmjs.com/package/gulp-rev-rewrite)
 
-**Note** This plugin will be applied just on production.
+**Note** This task will be applied just on production.
 
 ## Installation
 
@@ -16,7 +16,7 @@ npm i @wok-cli/task-rev --save-dev
 
 ## Environmental variables
 
-This plugin adds the following [environmental variables](packages/core/configuration#env):
+This task adds the following [environmental variables](packages/core/configuration#env):
 
 - `rev`: (boolean) Set to `false` to skip execution.
 

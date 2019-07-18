@@ -1,4 +1,4 @@
-const { copy, clean } = require('@wok-cli/core/tasks');
+const { copy, clean } = require('@wok-cli/tasks');
 const bump = require('@wok-cli/task-bump');
 const styles = require('@wok-cli/task-styles');
 const scripts = require('@wok-cli/task-scripts');

@@ -6,6 +6,11 @@ const mkdir = require('make-dir');
 const glob = require('fast-glob');
 const rimraf = require('rimraf');
 const cpy = require('cpy');
+const Handlebars = require('handlebars');
+
+Handlebars.registerHelper('ifeq', function ifeq(arg1, arg2, options) {
+  return arg1 == arg2 ? options.fn(this) : options.inverse(this);
+});
 
 const writeAsync = promisify(fs.writeFile);
 const readAsync = promisify(fs.readFile);
@@ -13,6 +18,7 @@ const readAsync = promisify(fs.readFile);
 const root = path.join(__dirname, '..', 'packages');
 const docs = path.join(__dirname, '..', 'docs');
 const src = path.join(__dirname, '..', '.docs');
+
 const packages = fs
   .readdirSync(root)
   .filter((item) => fs.lstatSync(path.join(root, item)).isDirectory());
@@ -25,15 +31,6 @@ function printParams(params) {
     .join(', ');
 }
 
-async function composeSidebar(baseSidebar, src, dest, pkgName) {
-  if (fs.existsSync(src)) {
-    let partial = await readAsync(src, 'utf8');
-    partial = partial.trim().replace(/^/gm, '  ');
-    partial = baseSidebar.replace(`  <!-- guides:${pkgName} -->`, partial);
-    await writeAsync(path.join(dest, '_sidebar.md'), partial, 'utf8');
-  }
-}
-
 (async function() {
   //copy some files
   await cpy(['*.*'], docs, {
@@ -42,10 +39,37 @@ async function composeSidebar(baseSidebar, src, dest, pkgName) {
     cwd: src,
   });
 
-  // sidebar sorce
+  // sidebar source
+  const sidebars = {
+    core: [],
+    tasks: [],
+    plugins: [],
+    apis: [],
+  };
+
+  await Promise.all(packages.map(packageTraverse));
+
   const sidebar = await readAsync(path.join(docs, '_sidebar.md'), 'utf8');
 
-  packages.forEach(packageTraverse);
+  const sidebarTmpl = Handlebars.compile(sidebar);
+
+  await writeAsync(
+    path.join(docs, '_sidebar.md'),
+    sidebarTmpl(sidebars),
+    'utf8',
+  );
+
+  Object.entries(sidebars).forEach(([key, data]) => {
+    data.forEach(({ folder, children, name }) => {
+      if (children) {
+        writeAsync(
+          path.join(folder, '_sidebar.md'),
+          sidebarTmpl({ ...sidebars, [`current${key}`]: name }),
+          'utf8',
+        );
+      }
+    });
+  });
 
   async function packageTraverse(package) {
     const baseFolder = path.join(root, package);
@@ -81,16 +105,10 @@ async function composeSidebar(baseSidebar, src, dest, pkgName) {
         );
       }
       tasks.push(
-        cpy(['**/*.*', '!_sidebar.partial.md'], dest, {
+        cpy(['**/*.*', '!**/_*.*'], dest, {
           parents: true,
           cwd: docsFolder,
         }),
-        composeSidebar(
-          sidebar,
-          path.join(docsFolder, '_sidebar.partial.md'),
-          dest,
-          pkg.name,
-        ),
       );
 
       await Promise.all(tasks);
@@ -106,41 +124,59 @@ async function composeSidebar(baseSidebar, src, dest, pkgName) {
       'utf8',
     );
 
+    const guide = {
+      name: pkg.name,
+      url: `packages/${package}/`,
+      folder: dest,
+    };
+
+    // add to the guide list
+    const summary = path.join(docsFolder, '_summary.js');
+    if (fs.existsSync(summary)) {
+      guide.children = require(summary);
+    }
+
+    if (package.includes('task-')) {
+      sidebars.tasks.push(guide);
+    } else if (package.includes('plugin-')) {
+      sidebars.plugins.push(guide);
+    } else {
+      sidebars.core.push(guide);
+    }
+
     // generate API
     const files = await glob('{lib/,tasks/,}*.js', {
       cwd: baseFolder,
       absolute: true,
     });
 
-    const moduleLinks = files
-      .map((f) => {
-        const base = path.basename(f, '.js');
-        let dirname = path.relative(baseFolder, path.dirname(f));
-        if (dirname.length > 0) {
-          dirname += '/';
-        }
-        return ` - [${dirname}${base}](packages/${package}/api/${base})`;
-      })
-      .join('\n');
+    const modules = files.map((f) => {
+      const base = path.basename(f, '.js');
+      let dirname = path.relative(baseFolder, path.dirname(f));
+      if (dirname.length > 0) {
+        dirname += '/';
+      }
+      return { name: dirname + base, url: `packages/${package}/api/${base}` };
+    });
+
+    sidebars.apis.push({
+      ...guide,
+      folder: destApi,
+      children: modules,
+    });
+
+    const moduleLinks = modules.map(({ name, url }) => `- [${name}](${url})`);
 
     //create a readme
     const readme = `
   # ${pkg.name}
 
-  ### Exposed modules
+### Exposed modules
 
-  ${moduleLinks}
+${moduleLinks.join('\n')}
   `.trim();
 
     await writeAsync(path.join(destApi, 'README.md'), readme, 'utf8');
-
-    // create a custom sidebar
-
-    await writeAsync(
-      path.join(destApi, '_sidebar.md'),
-      sidebar.replace(`<!-- ${pkg.name} -->`, moduleLinks.trim()),
-      'utf8',
-    );
 
     const renders = files.map(async (file) => {
       const basename = path.basename(file, '.js');
