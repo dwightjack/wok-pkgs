@@ -4,13 +4,13 @@ A generic purpose task. Use it as base for custom tasks.
 
 ## Parameters
 
-| parameter  | type (defaults)    | note                                       |
-| ---------- | ------------------ | ------------------------------------------ |
-| `src`      | string<br>string[] | [Globs][1] source files <sup>(1)</sup>     |
-| `dest`     | string             | Destination folder <sup>(1)</sup>          |
-| `name`     | string             | Final task name                            |
-| `cache`    | boolean (`false`)  | Run the task on changed files only         |
-| `hook:(*)` | object             | Hooks configuration parameters (see below) |
+| parameter  | type               | default | note                                       |
+| ---------- | ------------------ | ------- | ------------------------------------------ |
+| `src`      | string<br>string[] |         | [Globs][1] source files <sup>(1)</sup>     |
+| `dest`     | string             |         | Destination folder <sup>(1)</sup>          |
+| `name`     | string             |         | Final task name                            |
+| `cache`    | boolean            | `false` | Run the task on changed files only         |
+| `hook:(*)` | object             |         | Hooks configuration parameters (see below) |
 
 1. Supports environment templates.
 

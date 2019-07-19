@@ -7,7 +7,7 @@ By default the task just copies scripts from source to destination. Use one of t
 ## Installation
 
 ```
-npm i @wok-cli/task-rev --save-dev
+npm i @wok-cli/task-scripts --save-dev
 ```
 
 ## Parameters

@@ -1,3 +1,21 @@
+/**
+ * Sharable File Revving Task
+ *
+ * The `params` object accepts the following hook configuration keys:
+ *
+ * - `hooks:before` parameters passed to the `before` hook
+ * - `hooks:after` parameters passed to the `after` hook
+ *
+ * @param {Gulp} gulp Gulp instance
+ * @param {object} params Task parameters
+ * @param {string|string[]} params.pattern Source globs
+ * @param {string} params.dest Revved file destination folder
+ * @param {string} [params.manifest] Optional file path of an [asset manifest](https://github.com/sindresorhus/gulp-rev#asset-manifest)
+ * @param {string|boolean} [params.sourcemaps='.'] Files sourcemaps. Set to `false` to don't generate any sourcemap
+ * @param {object} env Wok environment object
+ * @param {object} api Wok API object
+ * @returns {function} Gulp tasks
+ */
 module.exports = function(
   gulp,
   { pattern = '', dest = '', manifest, sourcemaps = '.', ...opts },

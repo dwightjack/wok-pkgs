@@ -1,3 +1,14 @@
+/**
+ * Sharable Bump Task
+ *
+ * @param {Gulp} gulp Gulp instance
+ * @param {object} params Task parameters
+ * @param {string|string[]} [params.src=['package.json']] Source globs
+ * @param {string} [params.dest='./'] Destination folder
+ * @param {object} env Wok environment object
+ * @param {object} api Wok API object
+ * @returns {function} Gulp tasks
+ */
 module.exports = (gulp, { src = ['package.json'], dest = './' }, env, api) => {
   const { pkg, argv } = env;
 
