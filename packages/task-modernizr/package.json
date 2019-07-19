@@ -14,6 +14,6 @@
     "gulp-modernizr": "^3.2.1"
   },
   "peerDependencies": {
-    "@wok-cli/core": "*"
+    "@wok-cli/core": "^1.0.0"
   }
 }

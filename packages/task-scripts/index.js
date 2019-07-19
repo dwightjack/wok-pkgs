@@ -12,8 +12,8 @@
  * @param {string|string[]} params.src Source globs
  * @param {string} params.dest Destination folder
  * @param {string|boolean} [params.sourcemaps='.'] Sourcemap file location. Set to `false` to disable sourcemaps generation.
- * @param {object} env WOK environment object
- * @param {object} api WOK API object
+ * @param {object} env Wok environment object
+ * @param {object} api Wok API object
  * @returns {function} Gulp tasks
  */
 module.exports = function(

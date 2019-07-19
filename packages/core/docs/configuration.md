@@ -1,6 +1,6 @@
 # Configuration Object
 
-A WOK configuration object includes methods and properties used to setup wok tasks and manage their workflow.
+A Wok configuration object includes methods and properties used to setup Wok tasks and manage their workflow.
 
 <!-- TOC -->
 
@@ -45,7 +45,7 @@ const $ = require('@wok-cli/core');
 
 ### Inherited Functions
 
-The WOK configuration object inherits and exposes the following functions from gulp:
+The Wok configuration object inherits and exposes the following functions from gulp:
 
 - [\$.series](https://gulpjs.com/docs/en/api/series)
 - [\$.parallel](https://gulpjs.com/docs/en/api/parallel)
@@ -53,13 +53,13 @@ The WOK configuration object inherits and exposes the following functions from g
 
 ### `$.task`
 
-An utility function to setup sharable wok tasks. It will return a gulp-ready task ready to be exposed from your gulpfile.
+An utility function to setup sharable Wok tasks. It will return a gulp-ready task ready to be exposed from your gulpfile.
 
 Accepts the following arguments:
 
 | name   | type     | description                                  |
 | ------ | -------- | -------------------------------------------- |
-| task   | function | A sharable wok task function                 |
+| task   | function | A sharable Wok task function                 |
 | params | object   | (optional) The task configuration parameters |
 
 #### Example
@@ -141,7 +141,7 @@ The `watcher` hook is called with the following arguments:
 
 To tap into the hook use the `$.api.globalHooks` instance.
 
-?> Learn more about WOK hooks in the [Hooks Guide](packages/core/hooks).
+?> Learn more about Wok hooks in the [Hooks Guide](packages/core/hooks).
 
 ### `$.env`
 
@@ -158,7 +158,7 @@ To tap into the hook use the `$.api.globalHooks` instance.
 
 ### `$.api`
 
-The WOK configuration public API. Includes the following functions and objects:
+The Wok configuration public API. Includes the following functions and objects:
 
 #### `src()` and `dest()`
 
@@ -194,7 +194,7 @@ $.api.pattern('<%= target %>') === ['development'];
 
 There are two methods to add or overwrite the properties in `$.env` (except for `argv` and `pkg`):
 
-1. Create a `wok.config.js` configuration file in the project root folder. WOK will read the file contents and merge into `$.env`.
+1. Create a `wok.config.js` configuration file in the project root folder. Wok will read the file contents and merge into `$.env`.
 
 ```js
 // wok.config.js

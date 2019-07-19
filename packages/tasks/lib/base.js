@@ -1,3 +1,23 @@
+/**
+ * Base Sharable Task
+ *
+ * Use this task as base for specialized tasks
+ *
+ * The `params` object accepts the following hook configuration keys:
+ *
+ * - `hooks:process` parameters passed to the `process` hook
+ * - `hooks:complete` parameters passed to the `complete` hook
+ *
+ * @param {Gulp} gulp Gulp instance
+ * @param {object} params Task parameters
+ * @param {string} params.name Name of the task
+ * @param {string|string[]} params.src Source globs
+ * @param {string} params.dest Destination folder
+ * @param {string|boolean} [params.cache=false] Process just the files changed from the last execution
+ * @param {object} env Wok environment object
+ * @param {object} api Wok API object
+ * @returns {function} Gulp tasks
+ */
 module.exports = function baseTask(
   gulp,
   { src = [], dest = '', name = '<task>', cache = false, ...params },

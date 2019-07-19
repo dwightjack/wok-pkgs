@@ -16,6 +16,6 @@
     "rsyncwrapper": "^3.0.1"
   },
   "peerDependencies": {
-    "@wok-cli/core": "*"
+    "@wok-cli/core": "^1.0.0"
   }
 }

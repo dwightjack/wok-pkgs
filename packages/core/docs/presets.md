@@ -25,7 +25,7 @@ module.exports = function myPreset(config) {
 
 ### Task Setup
 
-Let's setup a copy and clean task based on the WOK [copy](packages/core/tasks/copy) and [clean](packages/core/tasks/clean) task
+Let's setup a copy and clean task based on the Wok [copy](packages/core/tasks/copy) and [clean](packages/core/tasks/clean) task
 
 <!-- prettier-ignore -->
 ```js
@@ -128,7 +128,7 @@ The `compose` method receives the following arguments:
 | name   | type   | description                                                     |
 | ------ | ------ | --------------------------------------------------------------- |
 | tasks  | object | an object containing all the _normal_ tasks setup in the preset |
-| config | object | the [WOK configuration object][1]                               |
+| config | object | the [Wok configuration object][1]                               |
 | params | object | the task parameters                                             |
 
 [1]: packages/core/configuration

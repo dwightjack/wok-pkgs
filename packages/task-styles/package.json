@@ -16,6 +16,6 @@
     "gulp-postcss": "^8.0.0"
   },
   "peerDependencies": {
-    "@wok-cli/core": "*"
+    "@wok-cli/core": "^1.0.0"
   }
 }

@@ -4,12 +4,12 @@ const Hooks = require('./lib/hooks');
 const { resolvePath, resolvePatterns, loadProjectConfig } = require('./utils');
 
 /**
- * Creates a WOK configuration object reading the project config and environment.
+ * Creates a Wok configuration object reading the project config and environment.
  *
  * @param {Gulp} gulp a Gulp instance
  * @param {object} [params] Optional configuration parameters
  * @param {string} [params.cwd=process.cwd()] Working directory
- * @param {string} [params.configFile='Worker.config.js'] Path to a wok config file, relative to `cwd`.
+ * @param {string} [params.configFile='Worker.config.js'] Path to a Wok config file, relative to `cwd`.
  * @returns {WokConfig}
  */
 function config(gulp, params = {}) {

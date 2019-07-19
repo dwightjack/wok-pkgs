@@ -133,7 +133,7 @@ module.exports = function scriptsTask(gulp, params, env, api) {
 
 ### Enqueuing hook functions
 
-To enqueue an hook function to wok task call its `.tap()` method:
+To enqueue an hook function to Wok task call its `.tap()` method:
 
 ```diff
 // gulpfile.js

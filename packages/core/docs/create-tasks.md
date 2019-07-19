@@ -67,7 +67,7 @@ exports.copy = $.task(copyCreator, {
 });
 ```
 
-?> Learn more about WOK configuration objects in the [dedicated guide](packages/core/configuration).
+?> Learn more about Wok configuration objects in the [dedicated guide](packages/core/configuration).
 
 ## Task Function Hooks
 
@@ -145,9 +145,9 @@ If the condition returns `true` it will execute the task else it will complete r
 
 As we have seen in the previous section, task hooks can be leveraged to allow users to interact with sharable tasks by adding hook functions via the `.tap()` method.
 
-In WOK task hook functions are called **task plugins**.
+In Wok task hook functions are called **task plugins**.
 
-To simplify and standardize plugin development WOK exposes an utility function to create such hook functions called `createPlugin`. Let's rewrite the last example with this utility.
+To simplify and standardize plugin development Wok exposes an utility function to create such hook functions called `createPlugin`. Let's rewrite the last example with this utility.
 
 ```diff
 // gulpfile.js

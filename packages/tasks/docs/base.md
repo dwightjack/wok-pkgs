@@ -4,7 +4,7 @@ A generic purpose task. Use it as base for custom tasks.
 
 ## Parameters
 
-| parameter  | type               | note                                       |
+| parameter  | type (defaults)    | note                                       |
 | ---------- | ------------------ | ------------------------------------------ |
 | `src`      | string<br>string[] | [Globs][1] source files <sup>(1)</sup>     |
 | `dest`     | string             | Destination folder <sup>(1)</sup>          |
