@@ -1,8 +1,24 @@
-module.exports = function(gulp, opts, env, api) {
+/**
+ * Sharable Node.js Server Task based on BrowserSync
+ *
+ * The `params` object accepts the following hook configuration keys:
+ *
+ * - `hooks:config` parameters passed to the `config` hook
+ * - `hooks:middlewares` parameters passed to the `middlewares` hook
+ * - `hooks:running` parameters passed to the `running` hook
+ *
+ * @param {Gulp} gulp Gulp instance
+ * @param {object} params Task parameters
+ * @param {string|string[]} [params.baseDir=['public']] Directories to serve
+ * @param {object} env Wok environment object
+ * @param {object} api Wok API object
+ * @returns {function} Gulp tasks
+ */
+module.exports = function(gulp, params, env, api) {
   const { compression } = require('./lib/middlewares');
   const { getServer } = require('./lib/utils');
   const { development = {} } = env;
-  const { baseDir = ['public'] } = opts;
+  const { baseDir = ['public'] } = params;
   const $hooks = this.getHooks();
 
   function createConfig(middlewares) {
@@ -41,14 +57,14 @@ module.exports = function(gulp, opts, env, api) {
     const middlewares = $hooks.callWith(
       'middlewares',
       new Map(),
-      opts['hooks:middlewares'],
+      params['hooks:middlewares'],
       bs,
     );
 
     const cfg = $hooks.callWith(
       'config',
       createConfig(middlewares),
-      opts['hooks:config'],
+      params['hooks:config'],
     );
 
     process.on('exit', () => {
@@ -62,18 +78,22 @@ module.exports = function(gulp, opts, env, api) {
           return;
         }
         resolve();
-        $hooks.callWith('running', server, opts['hooks:running']);
+        $hooks.callWith('running', server, params['hooks:running']);
       });
     });
   }
 
   serve.getServer = getServer.bind(null, env);
-  serve.reload = () => {
+  serve.reload = (arg) => {
     const bs = getServer(env);
     return function livereload(done) {
-      bs.reload();
+      bs.reload(arg);
       done();
     };
+  };
+  serve.stream = (options) => {
+    const bs = getServer(env);
+    return bs.stream.bind(bs, options);
   };
 
   return serve;

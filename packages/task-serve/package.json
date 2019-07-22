@@ -1,8 +1,8 @@
 {
   "name": "@wok-cli/task-serve",
+  "description": "Sharable Node.js Server Task based on BrowserSync",
   "private": false,
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "repository": "git@github.com:fevrcoding/wok-pkgs.git",
   "author": "Marco Solazzi <marco.solazzi@gmail.com>",

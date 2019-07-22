@@ -127,11 +127,7 @@ module.exports = (config) => {
     .get('styles')
     .hook('complete', 'reload', (stream, env) => {
       if (env.$$isServe && env.livereload !== false) {
-        const bs = serve.getServer(env);
-        return stream.pipe(
-          bs.stream,
-          { match: '**/*.css' },
-        );
+        return stream.pipe(serve.stream({ match: '**/*.css' }));
       }
       return stream;
     })

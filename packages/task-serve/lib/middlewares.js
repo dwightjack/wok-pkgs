@@ -14,6 +14,6 @@ module.exports.compression = createPlugin({
   name: 'compression',
   productionOnly: true,
   plugin(middlewares) {
-    middlewares.set('compression', require('compression')());
+    return middlewares.set('compression', require('compression')());
   },
 });
