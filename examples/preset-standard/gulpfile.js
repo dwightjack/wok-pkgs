@@ -1,5 +1,5 @@
 const $ = require('@wok-cli/core');
-const { deploy } = require('@wok-cli/core/tasks');
+const { deploy } = require('@wok-cli/tasks');
 
 const preset = require('@wok-cli/preset-standard');
 const ssh = require('@wok-cli/task-ssh');

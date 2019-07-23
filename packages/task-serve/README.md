@@ -10,6 +10,13 @@ This task uses [BrowserSync](https://www.browsersync.io/)
 npm i @wok-cli/task-serve --save-dev
 ```
 
+## Environmental variables
+
+This task adds the following [environmental variables](packages/core/configuration#env):
+
+- `livereload`: (boolean) Set to `false` to disable live reloading.
+- `devServer`: (object) BrowserSync server options. Currently it just supports the `port` property (defaults to `8000`).
+
 ## Parameters
 
 | parameter  | type               | default      | note                                       |
@@ -107,7 +114,7 @@ const serve = $.task(serve, {
 const reload = serve.reload();
 
 // watch scripts, run associated tasks and reload the page
-exports.watch = $.watch('src/*.js', $.series([scripts, reload]));
+exports.watch = $.watch('src/*.js', $.series(scripts, reload));
 ```
 
 The method accepts the same arguments of BrowserSync's [`.reload()`](https://www.browsersync.io/docs/api#api-reload) method
@@ -115,7 +122,7 @@ The method accepts the same arguments of BrowserSync's [`.reload()`](https://www
 ### Content injection
 
 This method will try to inject the changed files instead of perform a full page reload.
-It technique is use, for example, to live reload CSS files.
+The technique is useful, for example, to live reload CSS files.
 
 ```js
 const $ = require('@wok-cli/core');
@@ -130,7 +137,7 @@ const serve = $.task(serve, {
 const stream = serve.stream({ match: '**/*.css' });
 
 // watch Sass files, run associated tasks and inject the new CSS
-exports.watch = $.watch('src/*.scss', $.series([styles, stream]));
+exports.watch = $.watch('src/*.scss', $.series(styles, stream));
 ```
 
 The method accepts the same arguments of BrowserSync's [`.stream()`](https://www.browsersync.io/docs/api#api-stream) method.

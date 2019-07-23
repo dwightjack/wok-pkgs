@@ -17,7 +17,8 @@
 module.exports = function(gulp, params, env, api) {
   const { compression } = require('./lib/middlewares');
   const { getServer } = require('./lib/utils');
-  const { development = {} } = env;
+  const { noopStream } = require('@wok-cli/core/utils');
+  const { devServer = {} } = env;
   const { baseDir = ['public'] } = params;
   const $hooks = this.getHooks();
 
@@ -47,12 +48,12 @@ module.exports = function(gulp, params, env, api) {
     };
   }
 
-  const { port = 8000 } = development;
+  const { port = 8000 } = devServer;
 
   $hooks.set('middlewares', 'compression', compression);
 
   function serve() {
-    const bs = getServer(env);
+    const bs = getServer(env.buildHash);
 
     const middlewares = $hooks.callWith(
       'middlewares',
@@ -83,16 +84,24 @@ module.exports = function(gulp, params, env, api) {
     });
   }
 
-  serve.getServer = getServer.bind(null, env);
+  serve.getServer = getServer.bind(null, env.buildHash);
   serve.reload = (arg) => {
-    const bs = getServer(env);
+    if (env.livereload === false) {
+      return function livereload() {
+        return Promise.resolve();
+      };
+    }
+    const bs = getServer(env.buildHash);
     return function livereload(done) {
       bs.reload(arg);
       done();
     };
   };
   serve.stream = (options) => {
-    const bs = getServer(env);
+    if (env.livereload === false) {
+      return noopStream;
+    }
+    const bs = getServer(env.buildHash);
     return bs.stream.bind(bs, options);
   };
 

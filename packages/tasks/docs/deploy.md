@@ -4,11 +4,11 @@ Base task for project deployment. Enhance it with plugins and hook functions to 
 
 ## Deploy Hosts and Targets
 
-This task lets you define multiple remote host definitions and choose your deploy target and method at execution time.
+This task leverages [deploy targets](packages/core/cli#deploy-hosts-and-targets) to let you choose your deploy target and method at execution time.
 
-To define a remote host add it to the `hosts` key in your configuration file (`wok.config.js`).
+To define a deploy strategy for a remote host add a `deployStrategy` key in your configuration file (`wok.config.js`).
 
-```js
+```diff
 module.exports = {
   // .... other configs
 
@@ -18,7 +18,7 @@ module.exports = {
       username: 'ftpuser',
       password: 'password',
       path: 'public',
-      deployStrategy: 'rsync',
++     deployStrategy: 'rsync',
     },
   },
 };
@@ -30,7 +30,7 @@ Then select it upon task execution via the `--target` option:
 gulp deploy --target=production
 ```
 
-The task will use the object data as connection settings. `deployStrategy` defines the deploy method for that host. If now defined it will default to the value of the `deployStrategy` key in the config object:
+The task will use the selected host object as connection settings. `deployStrategy` defines the deploy method for that host. If now defined it will default to the value of the `deployStrategy` key in the config object:
 
 ```diff
 module.exports = {
@@ -49,8 +49,6 @@ module.exports = {
   },
 };
 ```
-
-**Note**: when using the `--production` flag the target will be automatically set to `production` if not explicitly defined.
 
 ## Parameters
 

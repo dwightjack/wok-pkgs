@@ -1,8 +1,8 @@
 {
   "name": "@wok-cli/task-ssh",
+  "description": "Wok task based on ssh2",
   "private": false,
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "repository": "git@github.com:fevrcoding/wok-pkgs.git",
   "author": "Marco Solazzi <marco.solazzi@gmail.com>",

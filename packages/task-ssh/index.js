@@ -1,8 +1,11 @@
-const { getEnvTarget, resolveTemplate, logger } = require('@wok-cli/core/utils');
-const defaultCommands = require('./lib/commands');
+const {
+  getEnvTarget,
+  resolveTemplate,
+  logger,
+} = require('@wok-cli/core/utils');
 const exec = require('./lib/exec');
 
-module.exports = (gulp, params, env, api) => {
+module.exports = (gulp, params, env) => {
   return function ssh() {
     const target = getEnvTarget(env);
     const { command } = Object.assign(params, env.argv);
@@ -23,15 +26,20 @@ module.exports = (gulp, params, env, api) => {
       throw new Error(`[ssh]: Command to execute not defined!`);
     }
 
-    const commands = Object.assign({}, defaultCommands, params.commands);
+    const commands = Object.assign({}, params.commands, env.commands);
 
     if (!commands[command]) {
       throw new Error(`Command "${command}" not defined`);
     }
 
-    const parsed = resolveTemplate(commands[command], {
+    let commandTmpl = commands[command];
+
+    if (commandTmpl.test && commandTmpl.test(target, env) === true) {
+      commandTmpl = commandTmpl.exec;
+    }
+
+    const parsed = resolveTemplate(commandTmpl, {
       env,
-      src: api.resolve(params.src),
       target,
       excludes: params.excludes || [],
     });
