@@ -1,3 +1,21 @@
+/**
+ * Sharable CSS Styles Task
+ *
+ * The `params` object accepts the following hook configuration keys:
+ *
+ * - `hooks:pre` parameters passed to the `pre` hook
+ * - `hooks:post` parameters passed to the `post` hook
+ * - `hooks:complete` parameters passed to the `complete` hook
+ *
+ * @param {Gulp} gulp Gulp instance
+ * @param {object} params Task parameters
+ * @param {string|string[]} params.src Source globs
+ * @param {string} params.dest Destination folder
+ * @param {string|boolean} [params.sourcemaps='.'] Sourcemap file location. Set to `false` to disable sourcemaps generation.
+ * @param {object} env Wok environment object
+ * @param {object} api Wok API object
+ * @returns {function} Gulp tasks
+ */
 module.exports = function(
   gulp,
   { src = '', dest = '', sourcemaps = '.', ...params },

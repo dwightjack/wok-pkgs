@@ -7,9 +7,9 @@ This package includes a collection of general purpose sharable tasks.
 This modules requires `@wok-cli/core` as peer dependency.
 
 ```
-npm i @wok-cli/core @wok-cli/tasks
+npm i @wok-cli/core @wok-cli/tasks --save-dev
 ```
 
 ## Documentation
 
-Read the official documentation here
+Read the official documentation here.

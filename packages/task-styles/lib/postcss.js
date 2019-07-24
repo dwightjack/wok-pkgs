@@ -13,7 +13,7 @@ function postcss(stream, { production }, api, opts) {
     return plugins;
   }
 
-  const plugins = opts.plugins || defaultPlugins();
+  const plugins = Array.isArray(opts) ? opts : defaultPlugins();
   return stream.pipe(
     require('gulp-postcss'),
     plugins,
