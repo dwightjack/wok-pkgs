@@ -51,7 +51,7 @@ gulp ssh --target=production
 | parameter  | type     | default | note                                       |
 | ---------- | -------- | ------- | ------------------------------------------ |
 | `command`  | string   |         | Specific command to execute                |
-| `commands` | object   |         | Map of executable commands(see below)      |
+| `commands` | object   |         | Map of executable commands (see below)     |
 | `excludes` | string[] |         | Array of files to exclude (supports globs) |
 
 ## Hooks
