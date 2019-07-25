@@ -86,4 +86,4 @@ exports.styles = $.task(styles, {
 });
 ```
 
-Than create a configuration file in project root folder. See [postcss-load-config](https://www.npmjs.com/package/postcss-load-config) for available formats.
+Then create a configuration file in project root folder. See [postcss-load-config](https://www.npmjs.com/package/postcss-load-config) for available formats.

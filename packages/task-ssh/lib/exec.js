@@ -1,5 +1,17 @@
 const { logger } = require('@wok-cli/core/utils');
 
+/**
+ * Execute a command with ssh2
+ *
+ * @private
+ * @param {string} command Command to execute
+ * @param {object} target Target host
+ * @param {string} target.host Remote hostname
+ * @param {string} target.username Login username
+ * @param {string} target.password Login password
+ * @param {number} [target.port=22] SSH port
+ * @return {Promise}
+ */
 module.exports = function exec(
   command,
   { host, port = 22, password, username },

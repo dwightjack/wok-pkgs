@@ -5,6 +5,17 @@ const {
 } = require('@wok-cli/core/utils');
 const exec = require('./lib/exec');
 
+/**
+ * Sharable SSH Task
+ *
+ * @param {Gulp} gulp Gulp instance
+ * @param {object} params Task parameters
+ * @param {string} params.command Specific command to execute
+ * @param {object} params.commands Map of executable commands
+ * @param {string[]} [params.exclude=[]] Array of files to exclude (supports globs)
+ * @param {object} env Wok environment object
+ * @returns {function} Gulp tasks
+ */
 module.exports = (gulp, params, env) => {
   return function ssh() {
     const target = getEnvTarget(env);
