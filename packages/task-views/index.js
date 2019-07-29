@@ -7,7 +7,7 @@ module.exports = function(
   const { extname } = require('path');
   const { map, noopStream } = require('@wok-cli/core/utils');
   const { json, dataExtract } = require('./lib/plugins');
-  const { matchParser, matchEngine } = require('./lib/utils');
+  const { matchEngine } = require('./lib/utils');
   const srcFolder = api.pattern(src);
   const destFolder = api.resolve(dest);
   const { production } = env;
@@ -38,12 +38,9 @@ module.exports = function(
       .src(srcFolder)
       .pipe(
         dataPattern
-          ? $hooks.call(
-              'data',
-              params['hooks:data'],
-              dataPattern,
-              matchParser(parsers),
-            )
+          ? $hooks.call('data', params['hooks:data'], dataPattern, [
+              ...parsers.values(),
+            ])
           : noopStream(),
       )
       .pipe(

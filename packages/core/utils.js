@@ -148,7 +148,7 @@ function tap(fn) {
 function map(fn) {
   const mapFn = typeof fn === 'function' ? fn : (val) => val;
 
-  return through2.obj(function mapIterator(file, enc, cb) {
+  return through2.obj(async function mapIterator(file, enc, cb) {
     if (file.isNull()) {
       this.push(file);
       cb();
@@ -163,8 +163,8 @@ function map(fn) {
 
     try {
       file.contents = Buffer.from(
-        mapFn(file.contents.toString(), file.path, file),
-      ); //eslint-disable-line no-param-reassign
+        await mapFn(file.contents.toString(), file.path, file),
+      );
     } catch (err) {
       this.emit('error', new PluginError('@wok-cli/core/map', err.toString()));
     }
