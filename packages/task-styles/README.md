@@ -29,7 +29,7 @@ npm i @wok-cli/task-scripts --save-dev
 | name       | type          | description                                          |
 | ---------- | ------------- | ---------------------------------------------------- |
 | `pre`      | [lazypipe][1] | execute pre-processing hooks                         |
-| `pre`      | [lazypipe][1] | execute post-processing hooks (by default `postcss`) |
+| `post`     | [lazypipe][1] | execute post-processing hooks (by default `postcss`) |
 | `complete` | [lazypipe][1] | executed after styles have been copied               |
 
 [1]: https://github.com/OverZealous/lazypipe

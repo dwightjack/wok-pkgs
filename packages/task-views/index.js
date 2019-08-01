@@ -1,3 +1,23 @@
+/**
+ * Sharable tasks for rendering HTML views.
+ *
+ * The `params` object accepts the following hook configuration keys:
+ *
+ * - `hooks:data:parsers` parameters passed to the `data:parsers` hook
+ * - `hooks:data` parameters passed to the `data` hook
+ * - `hooks:engines` parameters passed to the `engines` hook
+ * - `hooks:post` parameters passed to the `post` hook
+ * - `hooks:complete` parameters passed to the `complete` hook
+ *
+ * @param {Gulp} gulp Gulp instance
+ * @param {object} params Task parameters
+ * @param {string|string[]} params.src Source globs
+ * @param {string} params.dest Destination folder
+ * @param {string} [params.data=''] External data sources glob pattern
+ * @param {object} env Wok environment object
+ * @param {object} api Wok API object
+ * @returns {function} Gulp tasks
+ */
 module.exports = function(
   gulp,
   { src = '', dest = '', data = '', ...params },
@@ -6,7 +26,7 @@ module.exports = function(
 ) {
   const { extname } = require('path');
   const { map, noopStream } = require('@wok-cli/core/utils');
-  const { json, dataExtract } = require('./lib/plugins');
+  const { json, fileExtract } = require('./lib/plugins');
   const { matchEngine } = require('./lib/utils');
   const srcFolder = api.pattern(src);
   const destFolder = api.resolve(dest);
@@ -14,21 +34,17 @@ module.exports = function(
   const $hooks = this.getHooks();
 
   $hooks.tap('data:parsers', 'json', json);
-  $hooks.tap('data', 'global', dataExtract);
+  $hooks.tap('data', 'fileExtract', fileExtract);
 
   return function views() {
     const rename = require('gulp-rename');
-    let parsers;
-    let dataPattern;
+    const gulpData = require('gulp-data');
 
-    if (data) {
-      parsers = $hooks.callWith(
-        'data:parsers',
-        new Map(),
-        params['hooks:data:parsers'],
-      );
-      dataPattern = api.pattern(data);
-    }
+    const parsers = $hooks.callWith(
+      'data:parsers',
+      new Map(),
+      params['hooks:data:parsers'],
+    );
 
     const engineMatcher = matchEngine(
       $hooks.callWith('engines', new Map(), params['hooks:engines']),
@@ -37,11 +53,13 @@ module.exports = function(
     return gulp
       .src(srcFolder)
       .pipe(
-        dataPattern
-          ? $hooks.call('data', params['hooks:data'], dataPattern, [
-              ...parsers.values(),
-            ])
-          : noopStream(),
+        gulpData((file) =>
+          $hooks.callWith('data', Promise.resolve({}), params['hooks:data'], {
+            file,
+            pattern: data && api.pattern(data),
+            parsers,
+          }),
+        ),
       )
       .pipe(
         map((code, filepath, { data = {} }) => {
@@ -56,6 +74,7 @@ module.exports = function(
                 },
                 data,
               ),
+              filepath,
             );
           }
           return code;
