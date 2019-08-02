@@ -4,6 +4,7 @@ const styles = require('@wok-cli/task-styles');
 const scripts = require('@wok-cli/task-scripts');
 const modernizr = require('@wok-cli/task-modernizr');
 const views = require('@wok-cli/task-views');
+const { fileExtract } = require('@wok-cli/task-views/lib/plugins');
 const { createPreset } = require('@wok-cli/core/preset');
 const { runif } = require('@wok-cli/core/utils');
 const imagemin = require('@wok-cli/plugin-imagemin');
@@ -70,6 +71,7 @@ module.exports = (config) => {
     .set('views')
     .task(views)
     .hook('engines', 'nunjucks', require('@wok-cli/plugin-render-nunjucks'))
+    .hook('data', 'globalData', fileExtract)
     .hook('post', 'useref', require('@wok-cli/plugin-useref'))
     .params({
       src: ['<%= paths.src.views %>/**/*.*', '!<%= paths.src.views %>/**/_*.*'],

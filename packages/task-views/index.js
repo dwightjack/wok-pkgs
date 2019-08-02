@@ -26,15 +26,14 @@ module.exports = function(
 ) {
   const { extname } = require('path');
   const { map, noopStream } = require('@wok-cli/core/utils');
-  const { json, fileExtract } = require('./lib/plugins');
-  const { matchEngine } = require('./lib/utils');
+  const { json } = require('./lib/plugins');
+  const { matchEngine, filesToData } = require('./lib/utils');
   const srcFolder = api.pattern(src);
   const destFolder = api.resolve(dest);
   const { production } = env;
   const $hooks = this.getHooks();
 
   $hooks.tap('data:parsers', 'json', json);
-  $hooks.tap('data', 'fileExtract', fileExtract);
 
   return function views() {
     const rename = require('gulp-rename');
@@ -54,11 +53,12 @@ module.exports = function(
       .src(srcFolder)
       .pipe(
         gulpData((file) =>
-          $hooks.callWith('data', Promise.resolve({}), params['hooks:data'], {
-            file,
-            pattern: data && api.pattern(data),
-            parsers,
-          }),
+          $hooks
+            .callWith('data', Promise.resolve({}), params['hooks:data'], {
+              file,
+              pattern: data && api.pattern(data),
+            })
+            .then((files) => filesToData(files, parsers, env)),
         ),
       )
       .pipe(

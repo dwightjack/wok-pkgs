@@ -1,6 +1,5 @@
 const { createPlugin } = require('@wok-cli/core/utils');
 const dataReader = require('./data-reader');
-const { matchParser } = require('./utils');
 
 /**
  * Plugin to parse JSON data files
@@ -16,21 +15,19 @@ module.exports.json = createPlugin({
 });
 
 /**
- * Plugin to extracts and parses data from files matching a glob pattern
+ * Plugin to extracts data from a glob of files
  */
 module.exports.fileExtract = createPlugin({
   name: 'fileExtract',
-  plugin(promise, env, api, params, { pattern, parsers = new Map() }) {
+  plugin(sources, env, api, params, { pattern }) {
     if (!pattern) {
-      return promise;
+      return sources;
     }
 
     let reader;
-    return promise.then((data) => {
+    return sources.then((files) => {
       if (!reader) {
-        reader = dataReader(pattern, matchParser(parsers), env).then((v) =>
-          Object.assign(data, v),
-        );
+        reader = dataReader(pattern, env).then((f) => files.concat(f));
       }
       return reader;
     });
