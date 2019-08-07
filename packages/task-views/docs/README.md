@@ -7,6 +7,7 @@ This task uses [gulp-data](https://www.npmjs.com/package/gulp-data) to read data
 <!-- TOC -->
 
 - [Installation](#installation)
+- [Environmental variables](#environmental-variables)
 - [Parameters](#parameters)
 - [Hooks](#hooks)
 - [Example](#example)
@@ -27,6 +28,13 @@ This task uses [gulp-data](https://www.npmjs.com/package/gulp-data) to read data
 ```
 npm i @wok-cli/task-views --save-dev
 ```
+
+## Environmental variables
+
+This task adds the following [environmental variables](packages/core/configuration#env):
+
+- `views`: (object) configuration object with the following properties
+  - `outputExt`: (string) Rendered file extension (defaults to `.html`)
 
 ## Parameters
 
@@ -87,6 +95,8 @@ The `render` function will receive three arguments:
 - the template contents as a string
 - an object with optional data collected from external data sources.
 - the path to the template file
+
+?> the object data exposes a special `PRODUCTION` flag that reflects the `production` property of Wok [`$.env` object](#TODO).
 
 ### Example
 
@@ -297,6 +307,63 @@ module.exports.json = createPlugin({
 
 ## Reducing Data Sources
 
-Reducing refers to the operation of transforming the array of parsed data files to an object suitable for [gulp-data](https://www.npmjs.com/package/gulp-data).
+_Reducing_ refers to the operation of transforming the array of parsed data files into an object suitable for [gulp-data](https://www.npmjs.com/package/gulp-data).
 
-The default behavior
+The default behavior provided by the build-in `filesToObject` plugin is to transform the files into an object with keys represented by the normalized filename and values generated from parsed contents.
+
+Looking at a [previous example](#parsing-data-sources) the object passed into gulp-data will look like:
+
+```
+{
+  posts: [
+    {
+      title: 'My Great Post',
+      // ...
+    },
+    {
+      title: 'My Second Great Post',
+      // ...
+    },
+  ]
+}
+```
+
+You can move collected data under a namespace by setting the `hooks:data:reducers -> filesToObject -> namepace` configuration property:
+
+```diff
+// ...
+
+const viewTask = $.task(views, {
+  src: ['src/**/*.html'],
+  dest: 'public',
+  data: 'src/data/*.json',
++ 'hooks:data:reducers': {
++   filesToObject: {
++     namespace: 'data'
++   }
++ },
+});
+
+// ...
+
+exports.views = viewTask;
+```
+
+This will lead to the following data structure:
+
+```
+{
+  data: { <-- added namespace
+    posts: [
+      {
+        title: 'My Great Post',
+        // ...
+      },
+      {
+        title: 'My Second Great Post',
+        // ...
+      },
+    ]
+  }
+}
+```

@@ -60,8 +60,8 @@ module.exports.filesToObject = createPlugin({
       const acc = await promise;
       const parsedFiles = await Promise.all(parseJobs);
 
-      if (params.key) {
-        acc[params.key] = Object.assign(...parsedFiles);
+      if (params.namespace) {
+        acc[params.namespace] = Object.assign(...parsedFiles);
         return acc;
       }
 
