@@ -4,7 +4,8 @@
  * The `params` object accepts the following hook configuration keys:
  *
  * - `hooks:data:parsers` parameters passed to the `data:parsers` hook
- * - `hooks:data` parameters passed to the `data` hook
+ * - `hooks:data:fetch` parameters passed to the `data:fetch` hook
+ * - `hooks:data:reducers` parameters passed to the `data:reducers` hook
  * - `hooks:engines` parameters passed to the `engines` hook
  * - `hooks:post` parameters passed to the `post` hook
  * - `hooks:complete` parameters passed to the `complete` hook
@@ -26,14 +27,15 @@ module.exports = function(
 ) {
   const { extname } = require('path');
   const { map, noopStream } = require('@wok-cli/core/utils');
-  const { json } = require('./lib/plugins');
-  const { matchEngine, filesToData } = require('./lib/utils');
+  const { json, filesToObject } = require('./lib/plugins');
+  const { matchEngine } = require('./lib/utils');
   const srcFolder = api.pattern(src);
   const destFolder = api.resolve(dest);
   const { production } = env;
   const $hooks = this.getHooks();
 
   $hooks.tap('data:parsers', 'json', json);
+  $hooks.tap('data:reducers', 'filesToObject', filesToObject);
 
   return function views() {
     const rename = require('gulp-rename');
@@ -52,14 +54,27 @@ module.exports = function(
     return gulp
       .src(srcFolder)
       .pipe(
-        gulpData((file) =>
-          $hooks
-            .callWith('data', Promise.resolve({}), params['hooks:data'], {
+        gulpData(async (file) => {
+          const fetchers = $hooks.callWith(
+            'data:fetch',
+            [],
+            params['hooks:data:fetch'],
+            {
               file,
               pattern: data && api.pattern(data),
-            })
-            .then((files) => filesToData(files, parsers, env)),
-        ),
+            },
+          );
+
+          const files = [].concat(await Promise.all(fetchers));
+
+          return $hooks.callWith(
+            'data:reducers',
+            Promise.resolve({}),
+            params['hooks:data:reducers'],
+            files,
+            parsers,
+          );
+        }),
       )
       .pipe(
         map((code, filepath, { data = {} }) => {
@@ -67,13 +82,11 @@ module.exports = function(
           if (engine) {
             return engine.render(
               code,
-              Object.assign(
-                {
-                  PRODUCTION: production,
-                  page: {},
-                },
-                data,
-              ),
+              {
+                page: {},
+                ...data,
+                PRODUCTION: production,
+              },
               filepath,
             );
           }

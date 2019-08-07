@@ -13,7 +13,12 @@ This task uses [gulp-data](https://www.npmjs.com/package/gulp-data) to read data
 - [Configuring a template engine](#configuring-a-template-engine)
   - [Example](#example-1)
 - [Setup a data source](#setup-a-data-source)
+- [Files Array and File Object](#files-array-and-file-object)
   - [File based data source](#file-based-data-source)
+  - [Pattern based data sources](#pattern-based-data-sources)
+- [Parsing data sources](#parsing-data-sources)
+  - [Parsing YAML Files](#parsing-yaml-files)
+- [Reducing Data Sources](#reducing-data-sources)
 
 <!-- /TOC -->
 
@@ -39,13 +44,14 @@ npm i @wok-cli/task-views --save-dev
 
 ## Hooks
 
-| name           | type          | description                                   |
-| -------------- | ------------- | --------------------------------------------- |
-| `data:parsers` | Map           | a map of objects to parse files to objects    |
-| `engines`      | Map           | view render engines                           |
-| `data`         | Promise       | external data object passed to [gulp-data][2] |
-| `post`         | [lazypipe][1] | executed after views are rendered             |
-| `complete`     | [lazypipe][1] | executed after views have been copied         |
+| name            | type            | description                                                      |
+| --------------- | --------------- | ---------------------------------------------------------------- |
+| `engines`       | Map             | view render engines                                              |
+| `data:fetch`    | array           | collects files from external sources                             |
+| `data:parsers`  | Map             | a map of objects to parse files to objects                       |
+| `data:reducers` | Promise<object> | merges parsed object files into data suitable for [gulp-data][2] |
+| `post`          | [lazypipe][1]   | executed after views are rendered                                |
+| `complete`      | [lazypipe][1]   | executed after views have been copied                            |
 
 [1]: https://github.com/OverZealous/lazypipe
 [2]: https://www.npmjs.com/package/gulp-data
@@ -72,9 +78,9 @@ A render engine is a function returning an object with the following properties
 
 | name     | type     | description                                    |
 | -------- | -------- | ---------------------------------------------- |
-| `name`   | String   | engine name                                    |
+| `name`   | string   | engine name                                    |
 | `test`   | RegExp   | a regular expression matching a file extension |
-| `render` | Function | render function                                |
+| `render` | function | render function                                |
 
 The `render` function will receive three arguments:
 
@@ -127,16 +133,31 @@ exports.views = viewTask;
 
 ## Setup a data source
 
-The `data` hook exposes a promise that resolves to a list of files. These files are later processed and parsed to be used as input for [gulp-data](https://www.npmjs.com/package/gulp-data).
+The `data:fetch` hook exposes an array of files object. This array is later processed and parsed to be used as input to [gulp-data](https://www.npmjs.com/package/gulp-data).
 
-In addition to the usual arguments received by a hook function, a data hook function will receive as 4th argument an object with the following properties
+In addition to the usual arguments received by a hook function, a data hook function will receive a 4th object argument with the following properties:
 
 | name      | type     | description                                                     |
 | --------- | -------- | --------------------------------------------------------------- |
-| `file`    | object   | [Vinyl][1] file object                                          |
+| `file`    | object   | currently processed file as [Vinyl][1] file object              |
 | `pattern` | string[] | Glob patterns resolved from the [`data` parameter](#parameters) |
 
 [1]: https://gulpjs.com/docs/en/api/vinyl
+
+## Files Array and File Object
+
+A file object is a plain object with the following properties
+
+- `id`: a unique string id for the file
+- `ext`: file extension (for example `.json`)
+- `contents`: file contents as string
+- `filepath`: absolute path of the file
+
+Each files array member can be:
+
+1. a file object
+1. an array of file objects
+1. a promise returning one of the two previous formats
 
 ### File based data source
 
@@ -151,22 +172,131 @@ const name = 'readJSON';
 
 module.exports = createPlugin({
   name,
-  plugin(sources, env, api, params, { file }) {
+  plugin(files, env, api, params, { file }) {
     const json = file.path.replace(file.extname, '.json');
 
     if (!fs.existsSync(json)) {
-      return sources;
+      return files;
     }
 
-    return sources.then((files) => {
-      const newFile = {
-        id: file.stem, // a unique ID
-        ext: '.json',
-        contents: fs.readFileSync(json, 'utf8'),
-        filepath: json,
-      };
-      return [...files, newFile];
+    // add a new file to the files array
+    files.push({
+      id: file.stem,
+      ext: '.json',
+      contents: fs.readFileSync(json, 'utf8'),
+      filepath: json,
+    });
+
+    return files;
+  },
+});
+```
+
+```diff
+const $ = require('@wok-cli/core');
+const views = require('@wok-cli/task-views');
+const mustache = require('./engines/handlebars.js');
++ const readJSON = require('./sources/file.js');
+
+const viewTask = $.task(views, {
+  src: ['src/**/*.html'],
+  dest: 'public',
+});
+
+viewTask.tap('engines', 'mustache', mustache);
++ viewTask.tap('data:fetch', 'readJSON', readJSON);
+
+exports.views = viewTask;
+```
+
+### Pattern based data sources
+
+To fetch data from a group of files you can use the built-in `fileExtract` plugin in conjunction with the `data` parameter.
+
+As an examples let's imagine we have a `posts.json` file inside the `src/data` folder:
+
+```json
+[
+  {
+    "title": "My Great Post"
+    // ...
+  },
+  {
+    "title": "My Second Great Post"
+    // ...
+  }
+]
+```
+
+Here is the changes needed to fetch those posts:
+
+```diff
+const $ = require('@wok-cli/core');
+const views = require('@wok-cli/task-views');
+const mustache = require('./engines/handlebars.js');
+const { fileExtract } = require('@wok-cli/task-views/lib/plugins');
+
+const viewTask = $.task(views, {
+  src: ['src/**/*.html'],
+  dest: 'public',
++ data: 'src/data/*.json',
+});
+
+viewTask.tap('engines', 'mustache', mustache);
++ viewTask.tap('data:fetch', 'files', fileExtract);
+
+exports.views = viewTask;
+```
+
+The files array will contain a file object with an id `posts` and a content representing the stringified JSON.
+
+## Parsing data sources
+
+Once you have collected data files you might need to parse their contents in order to be readable by the view engine.
+
+By default `task-view` parses JSON strings into JavaScript objects. If you need to support another data format you can do so by
+providing a data parser.
+
+A data parser is basically an object with two properties:
+
+| name    | type     | description                                    |
+| ------- | -------- | ---------------------------------------------- |
+| `test`  | RegExp   | a regular expression matching a file extension |
+| `parse` | function | parse function (either sync or async)          |
+
+The `parse` function will receive three arguments:
+
+- the file contents as a string
+- the path to the template file
+- the Wok configuration `env` object
+
+?> If a suitable parser is not found, the raw content as a string will be passed to the view engine.
+
+### Parsing YAML Files
+
+As an example let's implement a YAML parser using [js-yaml](https://github.com/nodeca/js-yaml).
+
+```js
+// ./parsers/yaml.js
+const yaml = require('js-yaml');
+const { createPlugin } = require('@wok-cli/core/utils');
+
+const name = 'yaml';
+
+module.exports.json = createPlugin({
+  name,
+  plugin(parsers) {
+    return parsers.set(name, {
+      // load both .yml and .yaml files
+      test: /\.ya?ml$/,
+      parse: (str) => yaml.safeLoad(str),
     });
   },
 });
 ```
+
+## Reducing Data Sources
+
+Reducing refers to the operation of transforming the array of parsed data files to an object suitable for [gulp-data](https://www.npmjs.com/package/gulp-data).
+
+The default behavior
