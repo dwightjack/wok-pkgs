@@ -71,7 +71,7 @@ module.exports = (config) => {
     .set('views')
     .task(views)
     .hook('engines', 'nunjucks', require('@wok-cli/plugin-render-nunjucks'))
-    .hook('data', 'globalData', fileExtract)
+    .hook('data:fetch', 'globalData', fileExtract)
     .hook('post', 'useref', require('@wok-cli/plugin-useref'))
     .params({
       src: ['<%= paths.src.views %>/**/*.*', '!<%= paths.src.views %>/**/_*.*'],
