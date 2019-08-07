@@ -1,4 +1,4 @@
-const { createTask } = require('../index');
+const { createTask } = require('./utils');
 
 /**
  * Sharable Copy Task

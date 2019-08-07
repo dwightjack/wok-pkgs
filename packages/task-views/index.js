@@ -37,6 +37,28 @@ module.exports = function(
   $hooks.tap('data:parsers', 'json', json);
   $hooks.tap('data:reducers', 'filesToObject', filesToObject);
 
+  async function createDataFetcher(file, parsers) {
+    const fetchers = $hooks.callWith(
+      'data:fetch',
+      [],
+      params['hooks:data:fetch'],
+      {
+        file,
+        pattern: data && api.pattern(data),
+      },
+    );
+
+    const files = [].concat(await Promise.all(fetchers));
+
+    return $hooks.callWith(
+      'data:reducers',
+      Promise.resolve({}),
+      params['hooks:data:reducers'],
+      files,
+      parsers,
+    );
+  }
+
   return function views() {
     const rename = require('gulp-rename');
     const gulpData = require('gulp-data');
@@ -51,29 +73,16 @@ module.exports = function(
       $hooks.callWith('engines', new Map(), params['hooks:engines']),
     );
 
+    let data;
+
     return gulp
       .src(srcFolder)
       .pipe(
-        gulpData(async (file) => {
-          const fetchers = $hooks.callWith(
-            'data:fetch',
-            [],
-            params['hooks:data:fetch'],
-            {
-              file,
-              pattern: data && api.pattern(data),
-            },
-          );
-
-          const files = [].concat(await Promise.all(fetchers));
-
-          return $hooks.callWith(
-            'data:reducers',
-            Promise.resolve({}),
-            params['hooks:data:reducers'],
-            files,
-            parsers,
-          );
+        gulpData((file) => {
+          if (!data) {
+            data = createDataFetcher(file, parsers);
+          }
+          return data;
         }),
       )
       .pipe(

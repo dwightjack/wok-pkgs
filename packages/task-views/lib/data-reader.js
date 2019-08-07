@@ -20,7 +20,7 @@ module.exports = async function dataReader(pattern) {
 
       return { contents, filepath, ext, id };
     });
-    await Promise.all(queue);
+    return await Promise.all(queue);
   } catch (e) {
     logger.error(e);
     return [];

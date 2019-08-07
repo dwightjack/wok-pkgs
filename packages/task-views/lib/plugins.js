@@ -18,22 +18,20 @@ module.exports.json = createPlugin({
 /**
  * Plugin to extracts data from a glob of files
  */
-module.exports.fileExtract = createPlugin({
+const fileExtract = createPlugin({
   name: 'fileExtract',
-  plugin(sources, env, api, params, { pattern }) {
+  plugin(files, env, api, params, { pattern }) {
     if (!pattern) {
-      return sources;
+      return files;
     }
 
-    let reader;
-    return sources.then((files) => {
-      if (!reader) {
-        reader = dataReader(pattern, env).then((f) => files.concat(f));
-      }
-      return reader;
-    });
+    return [...files, dataReader(pattern, env)];
   },
 });
+
+fileExtract.cache = new Map();
+
+module.exports.fileExtract = fileExtract;
 
 /**
  * Parses an array of files into an object.
