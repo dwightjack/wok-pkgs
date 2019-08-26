@@ -23,7 +23,7 @@ This task does not expose any hook
 
 ```js
 const $ = require('@wok-cli/core');
-const { clean } = require('@wok-cli/core/tasks');
+const { clean } = require('@wok-cli/tasks');
 
 exports.copy = $.task(clean, {
   pattern: ['dist'],

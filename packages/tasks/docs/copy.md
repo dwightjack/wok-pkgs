@@ -31,7 +31,7 @@ To maximize the task performances just those files that have changed since the t
 
 ```js
 const $ = require('@wok-cli/core');
-const { copy } = require('@wok-cli/core/tasks');
+const { copy } = require('@wok-cli/tasks');
 
 exports.copy = $.task(copy, {
   src: ['static/**'],

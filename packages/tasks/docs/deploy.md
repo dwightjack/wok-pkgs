@@ -76,7 +76,7 @@ Each `strategy` hook function will receive as 4th argument an object containing,
 
 ```js
 const $ = require('@wok-cli/core');
-const { deploy } = require('@wok-cli/core/tasks');
+const { deploy } = require('@wok-cli/tasks');
 
 const deployTask = $.task(deploy, {
   src: 'dist/',
