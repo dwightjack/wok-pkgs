@@ -1,5 +1,20 @@
 const { createPlugin, logger } = require('@wok-cli/core/utils');
 
+/**
+ * A deploy plugin to upload files via rsync.
+ *
+ * Use this plugin with the deploy task of @wok-cli/tasks.
+ *
+ * @param {Promise} promise Hook accumulator
+ * @param {object} env Wok environment configuration object
+ * @param {object} api Wok internal API
+ * @param {object} params Plugin parameters. Any property not listed here below will be merged into to the FTPS configuration object.
+ * @param {string} params.src Source files to upload
+ * @param {string[]} params.exclude Array of strings to exclude from syncing
+ * @param {string} params.strategy Target deploy strategy
+ * @param {object} params.target A deploy target host object <#TODO: add link>
+ * @returns {Promise}
+ */
 function rsyncPlugin(
   promise,
   env,
