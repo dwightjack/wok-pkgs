@@ -1,13 +1,13 @@
-# Scripts Task
+# Styles Task
 
 Sharable tasks for CSS stylesheets.
 
-By default the task implements [gulp-postcss](https://github.com/postcss/gulp-postcss), [autoprefixer](https://github.com/postcss/autoprefixer) and [cssnano](https://cssnano.co/) (production only) copies scripts from source to destination. Use one of the [hooks](#hooks) to transform the source code.
+By default the task implements [gulp-postcss](https://github.com/postcss/gulp-postcss), [autoprefixer](https://github.com/postcss/autoprefixer) and [cssnano](https://cssnano.co/) (production only).
 
 ## Installation
 
 ```
-npm i @wok-cli/task-scripts --save-dev
+npm i @wok-cli/task-styles --save-dev
 ```
 
 ## Parameters

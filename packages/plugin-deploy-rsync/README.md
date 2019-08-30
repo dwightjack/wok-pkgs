@@ -4,6 +4,10 @@ You can use this plugin with the `deploy` task of `@wok-cli/tasks` to add the ab
 
 This package implements [rsyncwrapper](https://www.npmjs.com/package/rsyncwrapper) and requires rsync to be installed on your machine.
 
+| Hook types | Production only | Purpose      |
+| ---------- | --------------- | ------------ |
+| promise    | no              | build deploy |
+
 ## Installation
 
 ```
@@ -31,7 +35,10 @@ module.exports = {
 };
 ```
 
-Note that `hosts.production.path` will be used as the remote base directory for upload.
+**Notes:**
+
+- `hosts.production.path` will be used as the remote base directory for upload.
+- `@wok-cli/plugin-deploy-rsync` will ignore any target host with a `deployStrategy` other than `'rsync'`.
 
 Then configure the plugin as a strategy for `@wok/tasks`'s deploy task:
 

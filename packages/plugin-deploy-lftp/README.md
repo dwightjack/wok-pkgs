@@ -4,6 +4,10 @@ You can use this plugin with the `deploy` task of `@wok-cli/tasks` to add the ab
 
 This package implements [node-ftp](https://www.npmjs.com/package/ftps) and requires [lftp](https://lftp.yar.ru/) to be installed on your machine.
 
+| Hook types | Production only | Purpose      |
+| ---------- | --------------- | ------------ |
+| promise    | no              | build deploy |
+
 ## Why lftp?
 
 [lftp](https://lftp.yar.ru/) comes with a mirroring feature that tries to keep your local and remote files in sync, removing old files and uploading updated or new files only.
@@ -37,7 +41,10 @@ module.exports = {
 };
 ```
 
-Note that `hosts.production.path` will be used as the remote base directory for upload.
+**Notes:**
+
+- `hosts.production.path` will be used as the remote base directory for upload.
+- `@wok-cli/plugin-deploy-lftp` will ignore any target host with other `deployStrategy`.
 
 Then configure the plugin as a strategy for `@wok/tasks`'s deploy task:
 

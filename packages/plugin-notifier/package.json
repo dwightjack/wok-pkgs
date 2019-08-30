@@ -2,7 +2,7 @@
   "name": "@wok-cli/plugin-notifier",
   "private": false,
   "version": "1.0.0",
-  "description": "",
+  "description": "Build status notifier for Wok",
   "main": "index.js",
   "repository": "git@github.com:fevrcoding/wok-pkgs.git",
   "author": "Marco Solazzi <marco.solazzi@gmail.com>",
