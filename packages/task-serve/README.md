@@ -12,4 +12,4 @@ npm i @wok-cli/task-serve --save-dev
 
 ## Documentation
 
-Read the full documentation here.
+Read the full documentation [here](#TODO).

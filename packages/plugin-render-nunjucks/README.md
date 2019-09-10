@@ -12,6 +12,7 @@
 - [Installation](#installation)
 - [Parameters](#parameters)
 - [Usage](#usage)
+  - [Global functions](#global-functions)
   - [Setting global helpers](#setting-global-helpers)
   - [Environment Customization](#environment-customization)
 
@@ -29,14 +30,14 @@ npm i @wok-cli/core @wok-cli/task-views @wok-cli/plugin-render-nunjucks --save-d
 
 Configuration path: `nunjucks`.
 
-| parameter | type               | default | note                                        |
-| --------- | ------------------ | ------- | ------------------------------------------- |
-| `root`    | string<br>string[] |         | Templates root folders<sup>(1)</sup>        |
-| `helpers` | function           |         | Global [helpers][1]                         |
-| `env`     | function           |         | Nunjucks [environment customizer][2]        |
-| `...opts` | object             |         | Nunjucks environment options <sup>(2)</sup> |
+| parameter | type     | default | note                                        |
+| --------- | -------- | ------- | ------------------------------------------- |
+| `root`    | string   |         | Templates root folder<sup>(1)</sup>         |
+| `helpers` | function |         | Global [helpers][1]                         |
+| `env`     | function |         | Nunjucks [environment customizer][2]        |
+| `...opts` | object   |         | Nunjucks environment options <sup>(2)</sup> |
 
-1. Supports environment templates. it will be used as first argument for [nunjucks.configure](https://mozilla.github.io/nunjucks/api.html#configure).
+1. Supports environment templates. It will be used as first argument for [nunjucks.configure](https://mozilla.github.io/nunjucks/api.html#configure).
 2. Any other parameter will be passed as the `opts` argument to [nunjucks.configure](https://mozilla.github.io/nunjucks/api.html#configure).
 
 [1]: #setting-global-helpers
@@ -61,6 +62,12 @@ viewTask.tap('engines', 'nunjucks', nunjucks);
 
 export.views = viewTask;
 ```
+
+### Global functions
+
+This plugin adds the following [global functions](https://mozilla.github.io/nunjucks/api.html#addglobal):
+
+- `url(str)` A function that prepends the value of the `publicPath` [Wok environment object](#TODO) to the passed in string and normalizes it.
 
 ### Setting global helpers
 

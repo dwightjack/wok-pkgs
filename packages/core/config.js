@@ -38,6 +38,7 @@ function config(gulp, params = {}) {
     command,
     target,
     buildHash: `buildhash${Date.now()}`,
+    publicPath: '/',
     ...loadProjectConfig(join(cwd, configFile), target),
     ...params,
     pkg,

@@ -27,6 +27,7 @@ module.exports = function(gulp, params, env, api) {
       notify: false,
       ghostMode: false,
       port,
+      startPath: env.publicPath,
       server: {
         baseDir: api.pattern(baseDir),
       },

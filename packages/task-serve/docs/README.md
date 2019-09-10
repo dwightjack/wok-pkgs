@@ -36,7 +36,7 @@ This task adds the following [environmental variables](packages/core/configurati
 
 | parameter  | type               | default      | note                                       |
 | ---------- | ------------------ | ------------ | ------------------------------------------ |
-| `basedir`  | string<br>string[] | `['public']` | Directories to [serve][1]                  |
+| `baseDir`  | string<br>string[] | `['public']` | Directories to [serve][1]                  |
 | `hook:(*)` | object             |              | Hooks configuration parameters (see below) |
 
 1. Supports environment templates.

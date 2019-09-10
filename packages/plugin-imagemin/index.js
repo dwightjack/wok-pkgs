@@ -1,5 +1,15 @@
 const { createPlugin } = require('@wok-cli/core/utils');
 
+/**
+ * A plugin to optimize image files in a stream of files.
+ *
+ * @param {Lazypipe} lazypipe Hook accumulator
+ * @param {object} env Wok environment configuration object
+ * @param {object} api Wok internal API
+ * @param {object} params Plugin parameters.
+ * @param {string|string[]} params.pattern Glob pattern matching image files
+ * @returns {Lazypipe}
+ */
 function imageMinPlugin(
   lazypipe,
   { production },

@@ -1,4 +1,12 @@
-module.exports = function nunjucksEnv(viewPath, options) {
+/**
+ * Creates a custom Nunjucks environment
+ *
+ * @see https://mozilla.github.io/nunjucks/api.html#configure
+ *
+ * @param {string} [viewPath] Template base folder
+ * @param {object} [options] Nunjucks configuration options. Defaults to `{noCache: true}`
+ */
+module.exports = function nunjucksEnv(viewPath, options = {}) {
   const nunjucks = require('nunjucks');
   const marked = require('marked');
   const Markdown = require('nunjucks-markdown/lib/markdown_tag');

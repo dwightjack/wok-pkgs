@@ -149,6 +149,7 @@ To tap into the hook use the `$.api.globalHooks` instance.
 
 | property   | type    | description                                                                                                   |
 | ---------- | ------- | ------------------------------------------------------------------------------------------------------------- |
+| publicPath | string  | base path for all URLs within your application. Defaults to `'/'`<sup>(1)</sup>                               |
 | production | boolean | will be true if the `--production` CLI flag is set                                                            |
 | command    | string  | the value of the `--command` CLI option                                                                       |
 | target     | string  | the value of the `--target` CLI option. Defaults to `development` or to `production` if `--production` is set |
