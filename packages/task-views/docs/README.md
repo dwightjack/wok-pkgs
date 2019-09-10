@@ -127,14 +127,15 @@ module.exports = createPlugin({
 ```diff
 const $ = require('@wok-cli/core');
 const views = require('@wok-cli/task-views');
-+ const mustache = require('./engines/handlebars.js');
++ const handlebars = require('./engines/handlebars.js');
 
 const viewTask = $.task(views, {
-  src: ['src/**/*.html'],
+- src: ['src/**/*.html'],
++  src: ['src/**/*.{hbs,html}'],
   dest: 'public',
 });
 
-+ viewTask.tap('engines', 'mustache', mustache);
++ viewTask.tap('engines', 'handlebars', handlebars);
 
 exports.views = viewTask;
 ```
@@ -205,15 +206,15 @@ module.exports = createPlugin({
 ```diff
 const $ = require('@wok-cli/core');
 const views = require('@wok-cli/task-views');
-const mustache = require('./engines/handlebars.js');
+const handlebars = require('./engines/handlebars.js');
 + const readJSON = require('./sources/file.js');
 
 const viewTask = $.task(views, {
-  src: ['src/**/*.html'],
+  src: ['src/**/*.{html,hbs}'],
   dest: 'public',
 });
 
-viewTask.tap('engines', 'mustache', mustache);
+viewTask.tap('engines', 'handlebars', handlebars);
 + viewTask.tap('data:fetch', 'readJSON', readJSON);
 
 exports.views = viewTask;
@@ -243,16 +244,16 @@ Here is the changes needed to fetch those posts:
 ```diff
 const $ = require('@wok-cli/core');
 const views = require('@wok-cli/task-views');
-const mustache = require('./engines/handlebars.js');
+const handlebars = require('./engines/handlebars.js');
 const { fileExtract } = require('@wok-cli/task-views/lib/plugins');
 
 const viewTask = $.task(views, {
-  src: ['src/**/*.html'],
+  src: ['src/**/*.{html,hbs}'],
   dest: 'public',
 + data: 'src/data/*.json',
 });
 
-viewTask.tap('engines', 'mustache', mustache);
+viewTask.tap('engines', 'handlebars', handlebars);
 + viewTask.tap('data:fetch', 'files', fileExtract);
 
 exports.views = viewTask;
@@ -334,7 +335,7 @@ You can move collected data under a namespace by setting the `hooks:data:reducer
 // ...
 
 const viewTask = $.task(views, {
-  src: ['src/**/*.html'],
+  src: ['src/**/*.{html,hbs}'],
   dest: 'public',
   data: 'src/data/*.json',
 + 'hooks:data:reducers': {

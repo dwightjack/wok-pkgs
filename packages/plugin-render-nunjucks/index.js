@@ -5,7 +5,7 @@ function nunjucks(engines, env, api, opts) {
   return engines.set('nunjucks', function createRenderer() {
     let _env;
 
-    const { root, helpers, ...options } = opts;
+    const { root, helpers, env: envFn, ...options } = opts;
 
     return {
       name: 'nunjucks',
@@ -17,10 +17,12 @@ function nunjucks(engines, env, api, opts) {
             _env = nunjucksEnv(root && api.pattern(root), options);
             _env.addGlobal(
               'helpers',
-              typeof helpers === 'function' ? helpers(options) : {},
+              typeof helpers === 'function' ? helpers(options, env) : {},
             );
-            _env.addGlobal('_', require('lodash'));
-            _env.addGlobal('faker', require('faker'));
+
+            if (typeof envFn === 'function') {
+              envFn(_env);
+            }
           }
           return _env.renderString(string, locals);
         } catch (e) {

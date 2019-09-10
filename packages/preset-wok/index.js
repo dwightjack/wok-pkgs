@@ -80,6 +80,10 @@ module.exports = (config) => {
       'hooks:engines': {
         nunjucks: {
           root: ['<%= paths.src.views %>', '<%= paths.src.fixtures %>'],
+          env(_env) {
+            _env.addGlobal('_', require('lodash'));
+            _env.addGlobal('faker', require('faker'));
+          },
         },
       },
       'hooks:post': {
