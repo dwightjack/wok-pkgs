@@ -13,6 +13,7 @@
 - [Parameters](#parameters)
 - [Usage](#usage)
   - [Setting global helpers](#setting-global-helpers)
+  - [Environment Customization](#environment-customization)
 
 <!-- /TOC -->
 
@@ -31,12 +32,15 @@ Configuration path: `nunjucks`.
 | parameter | type               | default | note                                        |
 | --------- | ------------------ | ------- | ------------------------------------------- |
 | `root`    | string<br>string[] |         | Templates root folders<sup>(1)</sup>        |
-| `helpers` | function           |         | Global helpers                              |
-| `env`     | function           |         | Nunjucks environment enhancer               |
+| `helpers` | function           |         | Global [helpers][1]                         |
+| `env`     | function           |         | Nunjucks [environment customizer][2]        |
 | `...opts` | object             |         | Nunjucks environment options <sup>(2)</sup> |
 
 1. Supports environment templates. it will be used as first argument for [nunjucks.configure](https://mozilla.github.io/nunjucks/api.html#configure).
 2. Any other parameter will be passed as the `opts` argument to [nunjucks.configure](https://mozilla.github.io/nunjucks/api.html#configure).
+
+[1]: #setting-global-helpers
+[2]: #environment-customization
 
 ## Usage
 
@@ -64,4 +68,69 @@ Global helpers are functions and variables available in every template on the `h
 
 To define global helpers set a `helpers` function on the `hooks:engines -> nunjucks` task parameters.
 
-The function receives the `opts` parameters and the [Wok environment configuration object](#TODO).
+The function receives the `opts` parameters and the [Wok environment configuration object](#TODO) as arguments
+
+```diff
+const $ = require('@wok-cli/core');
+const views = require('@wok-cli/task-views');
+const nunjucks = require('@wok-cli/plugin-render-nunjucks');
+
++function helpers(opts, env) {
++  return {
++    // return the name from package.json
++    projectName: () => env.pkg.name;
++  }
++}
+
+const viewTask = $.task(views, {
+  // multiple templates allowed
+  src: ['src/**/*.{njk,hbs,html}'],
+  dest: 'public',
++ 'hooks:engines': {
++   nunjucks: {
++     helpers
++   }
++ }
+});
+
+viewTask.tap('engines', 'nunjucks', nunjucks);
+
+export.views = viewTask;
+```
+
+With the above example you can access the `projectName` helper function like this:
+
+```html
+<p>This project name: {{ helpers.projectName() }}</p>
+```
+
+### Environment Customization
+
+You can customize the [Nunjucks environment](https://mozilla.github.io/nunjucks/api.html#environment) instance via the `env` parameter.
+
+The following example will use [`addGlobal`](https://mozilla.github.io/nunjucks/api.html#addglobal) to make the [lodash](https://lodash.com/) library available to every template under the `_` global object:
+
+```diff
+const $ = require('@wok-cli/core');
+const views = require('@wok-cli/task-views');
+const nunjucks = require('@wok-cli/plugin-render-nunjucks');
+
++ function env(nunjucksEnv) {
++   nunjucksEnv.addGlobal('_', require('lodash'))
++ }
+
+const viewTask = $.task(views, {
+  // multiple templates allowed
+  src: ['src/**/*.{njk,hbs,html}'],
+  dest: 'public',
++ 'hooks:engines': {
++   nunjucks: {
++     env
++   }
++ }
+});
+
+viewTask.tap('engines', 'nunjucks', nunjucks);
+
+export.views = viewTask;
+```
