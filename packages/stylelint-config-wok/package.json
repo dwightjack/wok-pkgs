@@ -2,7 +2,7 @@
   "name": "@wok-cli/stylelint-config-wok",
   "private": false,
   "version": "1.0.0",
-  "description": "",
+  "description": "Stylelint shared config for Wok-based templates",
   "main": "index.js",
   "repository": "git@github.com:fevrcoding/wok-pkgs.git",
   "author": "Marco Solazzi <marco.solazzi@gmail.com>",

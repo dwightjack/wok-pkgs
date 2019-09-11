@@ -2,7 +2,7 @@
   "name": "@wok-cli/eslint-config-wok",
   "private": false,
   "version": "1.0.0",
-  "description": "ESLint Shared config for Wok-based templates",
+  "description": "ESLint shared config for Wok-based templates",
   "main": "index.js",
   "repository": "git@github.com:fevrcoding/wok-pkgs.git",
   "author": "Marco Solazzi <marco.solazzi@gmail.com>",
