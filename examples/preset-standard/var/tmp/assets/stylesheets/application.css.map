@@ -1,1 +1,0 @@
-{"version":3,"sources":["application.scss","application.css","modules/_base.scss"],"names":[],"mappings":"AAEA,KACE,cCDF,CCFA,EACE,YDKF","file":"application.css","sourcesContent":["$demo: 1rem;\n\nhtml {\n  font-size: $demo;\n}\n\n@import 'modules/base.scss';\n","html {\n  font-size: 1rem;\n}\n\np {\n  margin: 1em 0;\n}\n","p {\n  margin: 1em 0;\n}\n"]}
