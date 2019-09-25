@@ -1,6 +1,5 @@
 const { createPlugin } = require('@wok-cli/core/utils');
 const nunjucksEnv = require('./lib/env');
-const
 
 /**
  * Nunjucks template renderer
@@ -14,6 +13,7 @@ const
  * @param {function} [params.env] Nunjucks environment customizer. Receives a Nunjucks environment as argument.
  * @returns {*}
  */
+
 function nunjucks(engines, env, api, opts) {
   return engines.set('nunjucks', function createRenderer() {
     let _env;
@@ -27,13 +27,15 @@ function nunjucks(engines, env, api, opts) {
         try {
           // lazy load renderer
           if (!_env) {
-            _env = nunjucksEnv(root && api.resolve(root), options);
+            _env = nunjucksEnv(root && api.pattern(root), options);
             _env.addGlobal(
               'helpers',
               typeof helpers === 'function' ? helpers(options, env) : {},
             );
 
-            _env.addGlobal('url', (str) => `${env.publicPath}/${str}`.replace(/\/+/g, '/') )
+            _env.addGlobal('url', (str) =>
+              `${env.publicPath}/${str}`.replace(/\/+/g, '/'),
+            );
 
             if (typeof envFn === 'function') {
               envFn(_env);

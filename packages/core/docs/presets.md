@@ -4,7 +4,7 @@ Presets expose a chaining API to define sharable sets of tasks and workflows.
 
 Presets let's you setup pre-defined tasks, parameters and hooks.
 
-## Gettings started
+## Getting started
 
 A preset must be a module exporting a function. The function will receive a [configuration object](packages/core/configuration).
 
@@ -54,7 +54,7 @@ preset
   .set('copy', copy, { src: 'static/**', dest: 'public' });
 ```
 
-This notation is easier when you want to setup simple tasks but don't let's you easily setup advanced features like hooks ([see below](###)).
+This notation is easier when you want to setup simple tasks but don't let's you easily setup advanced features like hooks ([see below](#TODO)).
 
 ### Consuming a Preset
 
@@ -118,7 +118,7 @@ Usually this kind of task uses `gulp.series` or `gulp.parallel` to orchestrate o
 Let's compose a `build` task executing the `clean` and `copy` tasks we previously defined.
 
 ```js
-preset.task('build').compose((tasks) => {
+preset.set('build').compose((tasks) => {
   return gulp.series(tasks.clean, tasks.copy);
 });
 ```
@@ -132,6 +132,41 @@ The `compose` method receives the following arguments:
 | params | object | the task parameters                                             |
 
 [1]: packages/core/configuration
+
+## Private Tasks
+
+A private task is a task that will not be directly callable by the user. It can be used as part of a composed task. By default all tasks with a name starting with `$` are considered private. In alternative you can use the `.private(true|false)` method to toggle a task visibility status.
+
+Let's extend the previous example with a greeting and the beginning of the build process:
+
+```js
+preset.set('$greet').compose(() => {
+  console.log('Hello!');
+  return Promise.resolve();
+});
+
+preset.set('build').compose((tasks) => {
+  return gulp.series(tasks.$greet, tasks.clean, tasks.copy);
+});
+```
+
+The user will be greeted when running `gulp build` but won't be able to run `gulp $greet` directly.
+
+The same example could be written as:
+
+```js
+preset
+  .set('greet')
+  .private(true)
+  .compose(() => {
+    console.log('Hello!');
+    return Promise.resolve();
+  });
+
+preset.set('build').compose((tasks) => {
+  return gulp.series(tasks.greet, tasks.clean, tasks.copy);
+});
+```
 
 ## Default Task
 

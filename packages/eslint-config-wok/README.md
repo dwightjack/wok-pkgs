@@ -47,4 +47,10 @@ In order to make this configuration interoperable with [prettier](https://pretti
 - `@wok-cli/eslint-config-wok/web` -> `@wok-cli/eslint-config-wok/web-prettier`
 - `@wok-cli/eslint-config-wok/node` -> `@wok-cli/eslint-config-wok/node-prettier`
 
+You may also need to install prettier:
+
+```
+npm i prettier --save-dev
+```
+
 **Note**: this configuration implements the recommended configuration from [eslint-plugin-prettier](https://github.com/prettier/eslint-plugin-prettier#recommended-configuration).

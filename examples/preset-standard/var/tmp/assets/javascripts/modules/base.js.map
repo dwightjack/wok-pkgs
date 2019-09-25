@@ -1,0 +1,1 @@
+{"version":3,"sources":["modules/base.js"],"names":["base","console","log"],"mappings":"AAAA,SAASA,IAAT,GAAgB;AACdC,EAAAA,OAAO,CAACC,GAAR,CAAY,MAAZ;AACD;;AAEDF,IAAI","sourcesContent":["function base() {\n  console.log('base');\n}\n\nbase();\n"],"file":"modules/base.js"}

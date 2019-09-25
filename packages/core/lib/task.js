@@ -24,6 +24,19 @@ module.exports = class Task extends Config {
      * @returns {Task} This method is chainable
      */
     this.shorthands(['task']);
+
+    this.$private = false;
+  }
+
+  /**
+   * Sets the task as private. Private tasks in presets are not exposed.
+   *
+   * @param {boolean} [toggle=true]
+   * @returns {Task}
+   */
+  private(toggle = true) {
+    this.$private = toggle;
+    return this;
   }
 
   /**

@@ -72,6 +72,9 @@ module.exports = class PresetConfig extends Config {
    */
   compose(taskName, fn) {
     const task = this.set(taskName);
+    if (taskName.startsWith('$')) {
+      task.private(true);
+    }
     task.compose(fn);
     return this;
   }
@@ -109,6 +112,12 @@ module.exports = class PresetConfig extends Config {
   set(taskName, fn, params) {
     const conf = new Task(this);
     this.$store.set(taskName, conf);
+
+    // task with a name starting with `$` are considered private by convention.
+    if (taskName.startsWith('$')) {
+      conf.private(true);
+    }
+
     if (fn) {
       conf.task(fn);
 
@@ -178,6 +187,7 @@ module.exports = class PresetConfig extends Config {
     const cfg = this.config();
     const { task } = cfg;
     const tasks = {};
+    const allTasks = {};
 
     if (typeof task !== 'function') {
       throw new Error('Task wrapper function not provided');
@@ -192,23 +202,35 @@ module.exports = class PresetConfig extends Config {
         : {};
 
       if (taskFn && taskCfg.$isComposed) {
-        composed.push({ name, fn: taskFn, params });
+        composed.push({ name, fn: taskFn, params, $private: taskCfg.$private });
         return;
       }
 
-      tasks[name] = task(taskFn, params, taskCfg.get('hooks'));
+      const computedTask = task(taskFn, params, taskCfg.get('hooks'));
+
+      allTasks[name] = computedTask;
+
+      if (!taskCfg.$private) {
+        tasks[name] = computedTask;
+      }
     });
 
     if (typeof this.$default === 'function') {
-      tasks.default = this.$default(tasks, cfg);
+      allTasks.default = tasks.default = this.$default(allTasks, cfg);
     }
 
-    composed.forEach(({ name, fn, params }) => {
-      tasks[name] = fn(tasks, cfg, params);
+    composed.forEach(({ name, fn, params, $private }) => {
+      const res = fn(allTasks, cfg, params);
+
+      allTasks[name] = res;
+
+      if (!$private) {
+        tasks[name] = res;
+      }
     });
 
     this.$cbs.forEach((cb) => {
-      cb(tasks, cfg);
+      cb(allTasks, cfg);
     });
 
     return tasks;

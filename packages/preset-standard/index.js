@@ -95,7 +95,7 @@ module.exports = (config) => {
       },
     })
     .end()
-    .set('rev')
+    .set('$rev')
     .task(rev)
     .params({
       pattern: [
@@ -108,14 +108,14 @@ module.exports = (config) => {
     .hook('before', 'minify', minifyJS)
     .end()
 
-    .set('cleanup', clean, {
+    .set('$cleanup', clean, {
       pattern: ['<%= paths.tmp %>'],
     })
     .set('server', serve, {
       baseDir: ['<%= paths.dist.root %>', '<%= paths.static %>'],
     })
     .default(
-      ({ clean, copy, styles, scripts, modernizr, views, cleanup, rev }) => {
+      ({ clean, copy, styles, scripts, modernizr, views, $cleanup, $rev }) => {
         return config.series(
           clean,
           config.parallel(
@@ -125,8 +125,8 @@ module.exports = (config) => {
             modernizr,
           ),
           views,
-          runif(() => env.production, rev),
-          cleanup,
+          runif(() => env.production, $rev),
+          $cleanup,
         );
       },
     )
