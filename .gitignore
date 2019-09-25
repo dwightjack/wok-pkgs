@@ -96,5 +96,6 @@ log
 node_modules
 coverage
 examples/**/public
+examples/**/var
 dist
 /docs
