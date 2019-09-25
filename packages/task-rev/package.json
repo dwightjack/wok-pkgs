@@ -13,7 +13,8 @@
   "dependencies": {
     "gulp-rev": "^9.0.0",
     "gulp-rev-delete-original": "^0.2.3",
-    "gulp-rev-rewrite": "^1.1.4"
+    "gulp-rev-rewrite": "^1.1.4",
+    "gulp-sourcemaps": "^2.6.5"
   },
   "peerDependencies": {
     "@wok-cli/core": "^1.0.0"

@@ -1,4 +1,4 @@
-const { createPlugin } = require('@wok-cli/core/utils');
+const { createPlugin, pipeChain } = require('@wok-cli/core/utils');
 
 const transforms = {
   /**
@@ -42,7 +42,11 @@ function userefPlugin(lazypipe, env, api, opts) {
         ...transforms,
         ...options,
       },
-      sourcemaps && gulpMaps.init({ loadMaps: true }),
+      sourcemaps &&
+        pipeChain().pipe(
+          gulpMaps.init,
+          { loadMaps: true },
+        ),
     ),
   );
 

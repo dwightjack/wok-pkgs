@@ -22,7 +22,7 @@ module.exports = function(
   env,
   api,
 ) {
-  const { logger } = require('@wok-cli/core/utils');
+  const { logger, noopStream } = require('@wok-cli/core/utils');
   const src = api.pattern(pattern).concat(['!**/*.map']);
   const dist = api.resolve(dest);
   const man = manifest && api.resolve(manifest);
@@ -31,17 +31,28 @@ module.exports = function(
   function revFiles() {
     const gRev = require('gulp-rev');
     const del = require('gulp-rev-delete-original');
+    const gulpMaps = require('gulp-sourcemaps');
 
-    const stream = gulp
-      .src(src, { base: dist, sourcemaps: !!sourcemaps })
+    let stream = gulp
+      .src(src, { base: dist })
+      .pipe(sourcemaps ? gulpMaps.init() : noopStream())
       .pipe($hooks.call('before', opts['hooks:before']))
       .pipe(gRev())
       .pipe(del())
       .pipe($hooks.call('after', opts['hooks:after']))
-      .pipe(gulp.dest(dist, { sourcemaps }));
+      .pipe(
+        sourcemaps
+          ? gulpMaps.write(
+              typeof sourcemaps === 'string' ? sourcemaps : undefined,
+            )
+          : noopStream(),
+      )
+      .pipe(gulp.dest(dist));
 
     if (man) {
-      stream.pipe(gRev.manifest(man, { merge: true })).pipe(gulp.dest('.'));
+      stream = stream
+        .pipe(gRev.manifest(man, { merge: true }))
+        .pipe(gulp.dest('.'));
     }
     return stream;
   }
@@ -49,6 +60,7 @@ module.exports = function(
   function revRewrite() {
     const rewrite = require('gulp-rev-rewrite');
     const manStream = man && gulp.src(man);
+
     return gulp
       .src(`${dist}/**/*.*`)
       .pipe($hooks.call('rewrite', opts['hooks:rewrite']))
