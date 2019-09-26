@@ -89,8 +89,6 @@ module.exports = (config) => {
       'hooks:post': {
         useref: {
           searchPath: ['<%= paths.dist.root %>', '<%= paths.tmp %>'],
-          // we need this to be inline to prevent the generation of multiple map files
-          sourcemaps: true,
         },
       },
     })

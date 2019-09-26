@@ -18,8 +18,7 @@ A Wok configuration object includes methods and properties used to setup Wok tas
     - [`GlobalHooks`](#globalhooks)
     - [`resolve(string)`](#resolvestring)
     - [`pattern(string|string[])`](#patternstringstring)
-- [Extend or Overwrite `$.env` Variables](#extend-or-overwrite-env-variables)
-  - [Local Configuration File](#local-configuration-file)
+- [Extend or Overwrite `$.env` Variables](#extend-or-overwrite-env-variables) - [Local Configuration File](#local-configuration-file)
   - [Merge Order](#merge-order)
 
 <!-- /TOC -->
@@ -147,15 +146,20 @@ To tap into the hook use the `$.api.globalHooks` instance.
 
 `env` exposes a composed APIs including configuration and environmental variables.
 
-| property   | type    | description                                                                                                   |
-| ---------- | ------- | ------------------------------------------------------------------------------------------------------------- |
-| publicPath | string  | base path for all URLs within your application. Defaults to `'/'`<sup>(1)</sup>                               |
-| production | boolean | will be true if the `--production` CLI flag is set                                                            |
-| command    | string  | the value of the `--command` CLI option                                                                       |
-| target     | string  | the value of the `--target` CLI option. Defaults to `development` or to `production` if `--production` is set |
-| pkg        | object  | `package.json` as an object                                                                                   |
-| argv       | object  | CLI arguments parsed by [yargs](https://github.com/yargs/yargs/blob/master/docs/.md#argv)                     |
-| buildHash  | string  | An unique hash for each execution. Can be used for logging                                                    |
+| property   | type              | description                                                        |
+| ---------- | ----------------- | ------------------------------------------------------------------ |
+| publicPath | string            | base path for all URLs within your application. Defaults to `'/'`. |
+| production | boolean           | will be true if the `--production` CLI flag is set                 |
+| target     | string            | the value of the `--target` CLI option. <sup>(1)</sup>             |
+| pkg        | object            | `package.json` as an object                                        |
+| argv       | object            | CLI arguments parsed by [yargs][1]                                 |
+| buildHash  | string            | An unique hash for each execution. Can be used for logging         |
+| sourcemaps | boolean<br>string | Generate sourcemaps. <sup>(2)</sup>                                |
+
+1. Defaults to `development`. If `--production` is set defaults to `production`.
+1. By default generates external sourcemaps in the same folder of the source file. Set to `true` to generate inline sourcemaps or to `false` to disable this feature.
+
+[1]: https://github.com/yargs/yargs/blob/master/docs/.md#argv
 
 ### `$.api`
 
@@ -197,10 +201,24 @@ There are two methods to add or overwrite the properties in `$.env` (except for 
 
 1. Create a `wok.config.js` configuration file in the project root folder. Wok will read the file contents and merge into `$.env`.
 
+As an object:
+
 ```js
 // wok.config.js
 module.exports = {
   production: true,
+};
+```
+
+As a function:
+
+```js
+// wok.config.js
+module.exports = (baseConfig) => {
+  return {
+    ...baseConfig,
+    publicPath: baseConfig.production ? '/campaign/' : '/',
+  };
 };
 ```
 
@@ -217,7 +235,7 @@ const $ = createConfig(gulp, {
 });
 ```
 
-### Local Configuration File
+#### Local Configuration File
 
 The first method lets you specify configuration options in a dedicated file. A benefit of this method is that it allows you to create a local configuration file `wok.config.local.js`) with setups just for your local environment. Just add it to your `.gitignore` file to prevent it to be shared with other developers or pushed to CI servers.
 

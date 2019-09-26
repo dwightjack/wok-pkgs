@@ -12,14 +12,15 @@ npm i @wok-cli/task-scripts --save-dev
 
 ## Parameters
 
-| parameter    | type               | default | note                                        |
-| ------------ | ------------------ | ------- | ------------------------------------------- |
-| `src`        | string<br>string[] |         | [Globs][1] source files <sup>(1)</sup>      |
-| `dest`       | string             |         | Destination folder <sup>(1)</sup>           |
-| `sourcemaps` | string<br>boolean  | `'.'`   | Write sourcemaps. See [here][2] for details |
-| `hook:(*)`   | object             |         | Hooks configuration parameters (see below)  |
+| parameter    | type               | default | note                                                      |
+| ------------ | ------------------ | ------- | --------------------------------------------------------- |
+| `src`        | string<br>string[] |         | [Globs][1] source files <sup>(1)</sup>                    |
+| `dest`       | string             |         | Destination folder <sup>(1)</sup>                         |
+| `sourcemaps` | string<br>boolean  |         | Write sourcemaps. See [here][2] for details<sup>(2)</sup> |
+| `hook:(*)`   | object             |         | Hooks configuration parameters (see below)                |
 
 1. Supports environment templates.
+2. Defaults to the value of `env.sourcemaps`.
 
 [1]: https://gulpjs.com/docs/en/api/concepts#globs
 [2]: https://gulpjs.com/docs/en/api/src#sourcemaps

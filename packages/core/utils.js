@@ -257,34 +257,34 @@ function getEnvTarget({ target, hosts }) {
  * and merge it with the default configuration.
  *
  * If the configuration file exports a function it will be executed with the
- * previous configuration and the current target as arguments
+ * previous configuration and a parameters object as arguments
  *
  * @param {string} basePath Base configuration file path
- * @param {string} target The current target
+ * @param {object} baseEnv Runtime parameters
  * @returns {object}
  */
-function loadProjectConfig(basePath, target) {
+function loadProjectConfig(basePath, baseEnv) {
   const localPath = basePath.replace(/\.js/, '.local.js');
 
   if (!fs.existsSync(basePath)) {
     return {};
   }
 
-  return [basePath, localPath].reduce((acc, filepath) => {
+  return [basePath, localPath].reduce((env, filepath) => {
     try {
       if (!fs.existsSync(filepath)) {
-        return acc;
+        return env;
       }
       const config = require(filepath);
       if (typeof config === 'function') {
-        return config(acc, target);
+        return config(env);
       }
-      return merge(acc, config);
+      return merge(env, config);
     } catch (e) {
       logger.error(e);
-      return acc;
+      return env;
     }
-  }, {});
+  }, baseEnv);
 }
 
 module.exports = {

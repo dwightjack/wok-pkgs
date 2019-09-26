@@ -18,10 +18,19 @@ function config(gulp, params = {}) {
   const { pkg } = readPkgUp.sync({ cwd });
 
   const { argv } = require('yargs');
-  const { production = false, command = null } = argv;
+  const { production = false } = argv;
   const { target = production ? 'production' : null } = argv;
   const { src, dest, parallel, series, watch } = gulp;
 
+  const baseEnv = {
+    production,
+    target,
+    sourcemaps: '.',
+    buildHash: `buildhash${Date.now()}`,
+    publicPath: '/',
+    pkg,
+    argv,
+  };
   /**
    * Environment object.
    *
@@ -34,15 +43,8 @@ function config(gulp, params = {}) {
    * @property {*} Other properties defined into the `wok.config.js` object.
    */
   const env = {
-    production,
-    command,
-    target,
-    buildHash: `buildhash${Date.now()}`,
-    publicPath: '/',
-    ...loadProjectConfig(join(cwd, configFile), target),
+    ...loadProjectConfig(join(cwd, configFile), baseEnv),
     ...params,
-    pkg,
-    argv,
   };
 
   const globalHooks = new Hooks();

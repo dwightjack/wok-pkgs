@@ -28,9 +28,11 @@ npm i @wok-cli/core @wok-cli/plugin-useref --save-dev
 
 Configuration path: `useref`.
 
-| parameter    | type    | default | note             |
-| ------------ | ------- | ------- | ---------------- |
-| `sourcemaps` | boolean | `true`  | write sourcemaps |
+| parameter    | type              | default | note                           |
+| ------------ | ----------------- | ------- | ------------------------------ |
+| `sourcemaps` | boolean<br>string |         | write sourcemaps<sup>(1)</sup> |
+
+1. Defaults to the value of `env.sourcemaps`.
 
 All other parameters will be used as gulp-useref [configuration options](https://www.npmjs.com/package/gulp-useref#options).
 
