@@ -208,6 +208,10 @@ module.exports = class PresetConfig extends Config {
 
       const computedTask = task(taskFn, params, taskCfg.get('hooks'));
 
+      Object.defineProperty(computedTask, 'name', {
+        value: name,
+      });
+
       allTasks[name] = computedTask;
 
       if (!taskCfg.$private) {
@@ -221,6 +225,10 @@ module.exports = class PresetConfig extends Config {
 
     composed.forEach(({ name, fn, params, $private }) => {
       const res = fn(allTasks, cfg, params);
+
+      Object.defineProperty(res, 'name', {
+        value: name,
+      });
 
       allTasks[name] = res;
 

@@ -22,18 +22,16 @@ This task adds the following [environmental variables](packages/core/configurati
 
 ## Parameters
 
-| parameter    | type               | default | note                                              |
-| ------------ | ------------------ | ------- | ------------------------------------------------- |
-| `pattern`    | string<br>string[] |         | [Globs][1] source files to rewrite <sup>(1)</sup> |
-| `dest`       | string             |         | Destination folder <sup>(1)</sup>                 |
-| `manifest`   | string             |         | Manifest file path <sup>(1)</sup>                 |
-| `sourcemaps` | string<br>boolean  | `'.'`   | Write sourcemaps. See [here][2] for details       |
-| `hook:(*)`   | object             |         | Hooks configuration parameters (see below)        |
+| parameter  | type               | default | note                                              |
+| ---------- | ------------------ | ------- | ------------------------------------------------- |
+| `pattern`  | string<br>string[] |         | [Globs][1] source files to rewrite <sup>(1)</sup> |
+| `dest`     | string             |         | Destination folder <sup>(1)</sup>                 |
+| `manifest` | string             |         | Manifest file path <sup>(1)</sup>                 |
+| `hook:(*)` | object             |         | Hooks configuration parameters (see below)        |
 
 1. Supports environment templates.
 
 [1]: https://gulpjs.com/docs/en/api/concepts#globs
-[2]: https://gulpjs.com/docs/en/api/src#sourcemaps
 
 ## Hooks
 

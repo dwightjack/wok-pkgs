@@ -11,19 +11,18 @@
  * @param {string|string[]} params.pattern Source globs
  * @param {string} params.dest Revved file destination folder
  * @param {string} [params.manifest] Optional file path of an [asset manifest](https://github.com/sindresorhus/gulp-rev#asset-manifest)
- * @param {string|boolean} [params.sourcemaps='.'] Files sourcemaps. Set to `false` to don't generate any sourcemap
  * @param {object} env Wok environment object
  * @param {object} api Wok API object
  * @returns {function} Gulp tasks
  */
 module.exports = function(
   gulp,
-  { pattern = '', dest = '', manifest, sourcemaps = '.', ...opts },
+  { pattern = '', dest = '', manifest, ...opts },
   env,
   api,
 ) {
-  const { logger, noopStream } = require('@wok-cli/core/utils');
-  const src = api.pattern(pattern).concat(['!**/*.map']);
+  const { logger } = require('@wok-cli/core/utils');
+  const src = api.pattern(pattern);
   const dist = api.resolve(dest);
   const man = manifest && api.resolve(manifest);
   const $hooks = this.getHooks();
@@ -31,22 +30,12 @@ module.exports = function(
   function revFiles() {
     const gRev = require('gulp-rev');
     const del = require('gulp-rev-delete-original');
-    const gulpMaps = require('gulp-sourcemaps');
-
     let stream = gulp
       .src(src, { base: dist })
-      .pipe(sourcemaps ? gulpMaps.init() : noopStream())
       .pipe($hooks.call('before', opts['hooks:before']))
       .pipe(gRev())
       .pipe(del())
       .pipe($hooks.call('after', opts['hooks:after']))
-      .pipe(
-        sourcemaps
-          ? gulpMaps.write(
-              typeof sourcemaps === 'string' ? sourcemaps : undefined,
-            )
-          : noopStream(),
-      )
       .pipe(gulp.dest(dist));
 
     if (man) {

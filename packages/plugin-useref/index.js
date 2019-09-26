@@ -53,7 +53,7 @@ function userefPlugin(lazypipe, env, api, opts) {
   if (sourcemaps) {
     ret = ret.pipe(
       gulpMaps.write,
-      typeof sourcemaps === 'string' ? sourcemaps : undefined,
+      typeof sourcemaps === 'string' ? sourcemaps : '.',
     );
   }
 
