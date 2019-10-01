@@ -9,5 +9,10 @@
   "devDependencies": {
     "gulp": "^4.0.0",
     "@wok-cli/core": "*"
+  },
+  "wok": {
+    "paths": {
+      "dest": "public"
+    }
   }
 }

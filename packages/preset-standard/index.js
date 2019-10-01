@@ -43,8 +43,6 @@ module.exports = (config) => {
       'hooks:pre': {
         sass: {
           includePaths: ['<%= paths.src.vendors %>', 'node_modules'],
-          publicPath: '/assets',
-          basePath: '<%= paths.src.root %>/assets',
         },
       },
     })
@@ -63,7 +61,7 @@ module.exports = (config) => {
     .set('modernizr', modernizr, {
       src: [
         '<%= paths.src.root %>/<%= paths.scripts %>/**/*.js',
-        '<%= paths.src.root %>/<%= paths.styles %>/**/*.{sass,scss}',
+        '<%= paths.src.root %>/<%= paths.styles %>/**/*.{css,sass,scss}',
       ],
       dest: '<%= paths.dist.root %>/<%= paths.dist.vendors %>/modernizr/',
       options: ['setClasses', 'addTest', 'testProp'],

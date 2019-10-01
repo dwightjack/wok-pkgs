@@ -265,23 +265,31 @@ function getEnvTarget({ target, hosts }) {
  * @returns {object}
  */
 function loadProjectConfig(configName, cwd = process.cwd(), baseEnv = {}) {
-  const cosmiconfig = require('cosmiconfig');
   const enhance = (base, obj) =>
     typeof obj === 'function' ? obj(base) : merge(base, obj);
 
   try {
+    const cosmiconfig = require('cosmiconfig')(configName);
     const result = cosmiconfig.searchSync(cwd);
 
     if (result === null) {
       return {};
     }
+
     const { config = {}, filepath } = result;
     const localFilepath = filepath.replace(
       /(\.json|\.js|\.ya?ml|)$/,
       '.local$1',
     );
 
-    if (filepath.endsWith('package.json') || !fs.existsSync(localFilepath)) {
+    if (filepath.endsWith('package.json')) {
+      if (typeof config === 'string') {
+        return enhance(baseEnv, require(config));
+      }
+      return enhance(baseEnv, config);
+    }
+
+    if (!fs.existsSync(localFilepath)) {
       return enhance(baseEnv, config);
     }
 

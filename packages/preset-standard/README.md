@@ -2,6 +2,29 @@
 
 A standard preset with pre-configured common tasks for Wok.
 
+<!-- TOC -->
+
+- [Installation](#installation)
+- [Usage](#usage)
+- [Environmental Defaults](#environmental-defaults)
+- [Folder Structure](#folder-structure)
+- [Exposed tasks](#exposed-tasks)
+  - [bump](#bump)
+  - [clean](#clean)
+  - [copy](#copy)
+  - [styles](#styles)
+  - [scripts](#scripts)
+  - [modernizr](#modernizr)
+  - [views](#views)
+    - [Subfolders](#subfolders)
+    - [Nunjucks globals](#nunjucks-globals)
+  - [server](#server)
+  - [watch](#watch)
+  - [default](#default)
+  - [serve](#serve)
+
+<!-- /TOC -->
+
 ## Installation
 
 This preset requires `@wok-cli/core` and `gulp`.
@@ -29,6 +52,16 @@ const wok = preset($);
 module.exports = wok.resolve();
 ```
 
+Alternatively to point (1) you can reference the preset config in a `wok` property in your project's `package.json`:
+
+```json
+{
+  "name": "my-project",
+  // ...
+  "wok": "@wok-cli/preset-standard/config"
+}
+```
+
 ## Environmental Defaults
 
 This preset sets the following environmental options:
@@ -41,7 +74,7 @@ This preset sets the following environmental options:
 
 ## Folder Structure
 
-### Application Folder Structure
+The `paths` object defines the expected folder structure as follows.
 
 ```
 ├─ application
@@ -50,7 +83,7 @@ This preset sets the following environmental options:
 │  │  ├─ stylesheets #SASS files
 │  ├─ vendors #3rd party files not installed by any package manager
 │  ├─ fixtures #Test data files. May contain JSON, JS, Markdown, etc...
-│  ├─ views #Nunjucks files
+│  ├─ views #Nunjucks/HTML files
 │  │  ├─ partials #View partials
 │  │  ├─ templates #Nunjucks templates
 │  │  ├─ *.njk #Views
@@ -66,16 +99,84 @@ Implements [@wok-cli/task-bump](https://github.com/fevrcoding/wok-pkgs/tree/mast
 
 ### clean
 
-Implements [@wok-cli/task-bump](https://github.com/fevrcoding/wok-pkgs/tree/master/packages/task-bump).
+Removes all files in the `public` folder.
 
 ### copy
 
+Copies files from the `static` folder into the `public` folder. Image files will be processed using the [@wok-cli/plugin-imagemin](https://github.com/fevrcoding/wok-pkgs/tree/master/packages/plugin-imagemin) module.
+
 ### styles
+
+Processes CSS and SCSS files in `application/assets/stylesheets` and outputs the results in `public/assets/stylesheets`. SCSS files are processed processed using the [@wok-cli/plugin-sass](https://github.com/fevrcoding/wok-pkgs/tree/master/packages/plugin-sass) module.
+
+Files will be linted with [gulp-stylelint](https://www.npmjs.com/package/gulp-stylelint) before processing. Set the `lint` [property](#environmental-defaults) to `false` to disable the linter.
+
+Note: `node-sass` [includePaths](https://github.com/sass/node-sass#includepaths) options is set by default to: `['application/vendors', 'node_modules']`.
 
 ### scripts
 
+Processes JavaScript files in `application/assets/javascripts` and outputs the results in `public/assets/javascripts`. Files will be parsed using Babel. See [below](#TODO) for configuration options.
+
+Files will be linted with [gulp-eslint](https://www.npmjs.com/package/gulp-eslint) before processing. Set the `lint` [property](#environmental-defaults) to `false` to disable the linter.
+
 ### modernizr
+
+Generates a custom [Modernizr](https://modernizr.com/) build parsing JavaScript, CSS and SCSS files in the `application/assets/javascripts` and `application/assets/stylesheets` folders. The output build will be saved into the `public/vendors/modernizr` folder.
+
+Implements [@wok-cli/task-modernizr](https://github.com/fevrcoding/wok-pkgs/tree/master/packages/task-modernizr).
 
 ### views
 
+Processes view files in `application/views` and outputs the results into `public`.
+
+This task implements the following modules:
+
+- [@wok-cli/task-views](https://github.com/fevrcoding/wok-pkgs/tree/master/packages/task-views)
+- [@wok-cli/plugin-render-nunjucks](https://github.com/fevrcoding/wok-pkgs/tree/master/packages/plugin-render-nunjucks): Nunjuck templates support.
+- [@wok-cli/plugin-useref](https://github.com/fevrcoding/wok-pkgs/tree/master/packages/plugin-useref): Assets replace and concatenation (production only).
+
+#### Subfolders
+
+You can create as many sub-folders in `application/views` as your project requires to. Note that `template` is a reserved folder for extendable Nunjucks templates and `partials` should only be used for HTML partials.
+
+Files starting with `_` will be ignored.
+
+#### Nunjucks globals
+
+The task will also parse [JSON view data sources](#TODO) from `application/fixtures/` and expose them to the Nunjucks templates as global objects.
+
+It will also expose two additional global objects:
+
+- `_`: the [lodash](https://lodash.com/) library
+- `faker`: the [faker](https://www.npmjs.com/package/faker) library
+
 ### server
+
+Runs a static server on `localhost:8000` serving the `public` and `static` folder.
+
+Implements [@wok-cli/task-server](https://github.com/fevrcoding/wok-pkgs/tree/master/packages/task-server)
+
+### watch
+
+Watches files in `application` and `static` for changes, processes them and reloads the page.
+
+CSS files trigger a live-reload (file injection) instead of a full reload.
+
+### default
+
+The default task (executed by running `gulp` on a terminal) will perform the following tasks:
+
+- `clean`
+- `copy`
+- `styles`
+- `scripts`
+- `modernizr`
+- `views`
+
+For production builds, assets will be revisioned using [@wok-cli/task-rev](https://github.com/fevrcoding/wok-pkgs/tree/master/packages/task-rev).
+
+### serve
+
+A shorthand task executing the following tasks: `default`, `watch` and `server`.
+
+Note: when executed within `serve` the `default` task will not copy files from `static` to `public`.

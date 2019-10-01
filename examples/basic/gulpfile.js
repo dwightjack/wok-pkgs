@@ -1,4 +1,4 @@
-const { task, series } = require('@wok-cli/core');
+const { task, series, api } = require('@wok-cli/core');
 
 function cpyTask(gulp, { src, dest }) {
   return function copy() {
@@ -8,7 +8,7 @@ function cpyTask(gulp, { src, dest }) {
 
 const copy = task(cpyTask, {
   src: 'src/**',
-  dest: 'public',
+  dest: api.resolve('<%= paths.dest %>'),
 });
 
 exports.default = series(copy);
