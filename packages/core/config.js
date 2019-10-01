@@ -1,5 +1,3 @@
-const { join } = require('path');
-
 const Hooks = require('./lib/hooks');
 const { resolvePath, resolvePatterns, loadProjectConfig } = require('./utils');
 
@@ -9,12 +7,12 @@ const { resolvePath, resolvePatterns, loadProjectConfig } = require('./utils');
  * @param {Gulp} gulp a Gulp instance
  * @param {object} [params] Optional configuration parameters
  * @param {string} [params.cwd=process.cwd()] Working directory
- * @param {string} [params.configFile='Worker.config.js'] Path to a Wok config file, relative to `cwd`.
+ * @param {string} [params.configName='wok'] Name of the configuration module used for cosmiconfig resolution.
  * @returns {WokConfig}
  */
 function config(gulp, params = {}) {
   const readPkgUp = require('read-pkg-up');
-  const { cwd = process.cwd(), configFile = 'wok.config.js' } = params;
+  const { cwd = process.cwd(), configName = 'wok' } = params;
   const { pkg } = readPkgUp.sync({ cwd });
 
   const { argv } = require('yargs');
@@ -42,10 +40,7 @@ function config(gulp, params = {}) {
    * @property {object} argv Parsed CLI arguments {@link https://github.com/yargs/yargs/blob/master/docs/api.md#argv}.
    * @property {*} Other properties defined into the `wok.config.js` object.
    */
-  const env = {
-    ...loadProjectConfig(join(cwd, configFile), baseEnv),
-    ...params,
-  };
+  const env = loadProjectConfig(configName, cwd, baseEnv);
 
   const globalHooks = new Hooks();
 

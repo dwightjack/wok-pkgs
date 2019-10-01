@@ -259,32 +259,39 @@ function getEnvTarget({ target, hosts }) {
  * If the configuration file exports a function it will be executed with the
  * previous configuration and a parameters object as arguments
  *
- * @param {string} basePath Base configuration file path
- * @param {object} baseEnv Runtime parameters
+ * @param {string} configName Name of the configuration. Used for cosmiconfig resolution.
+ * @param {string} [cwd=process.cwd()] Current working directory
+ * @param {object} [baseEnv={}] Runtime parameters
  * @returns {object}
  */
-function loadProjectConfig(basePath, baseEnv) {
-  const localPath = basePath.replace(/\.js/, '.local.js');
+function loadProjectConfig(configName, cwd = process.cwd(), baseEnv = {}) {
+  const cosmiconfig = require('cosmiconfig');
+  const enhance = (base, obj) =>
+    typeof obj === 'function' ? obj(base) : merge(base, obj);
 
-  if (!fs.existsSync(basePath)) {
-    return {};
-  }
+  try {
+    const result = cosmiconfig.searchSync(cwd);
 
-  return [basePath, localPath].reduce((env, filepath) => {
-    try {
-      if (!fs.existsSync(filepath)) {
-        return env;
-      }
-      const config = require(filepath);
-      if (typeof config === 'function') {
-        return config(env);
-      }
-      return merge(env, config);
-    } catch (e) {
-      logger.error(e);
-      return env;
+    if (result === null) {
+      return {};
     }
-  }, baseEnv);
+    const { config = {}, filepath } = result;
+    const localFilepath = filepath.replace(
+      /(\.json|\.js|\.ya?ml|)$/,
+      '.local$1',
+    );
+
+    if (filepath.endsWith('package.json') || !fs.existsSync(localFilepath)) {
+      return enhance(baseEnv, config);
+    }
+
+    const { config: localConfig = {} } = cosmiconfig.loadSync(localFilepath);
+
+    return [config, localConfig].reduce(enhance, baseEnv);
+  } catch (e) {
+    logger.error(e);
+    return baseEnv;
+  }
 }
 
 module.exports = {

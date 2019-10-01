@@ -1,6 +1,6 @@
 # @wok-cli/preset-standard
 
-A standard preset with pre-configured common tasks for WOK.
+A standard preset with pre-configured common tasks for Wok.
 
 ## Installation
 

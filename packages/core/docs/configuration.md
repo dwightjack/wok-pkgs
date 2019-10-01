@@ -18,8 +18,11 @@ A Wok configuration object includes methods and properties used to setup Wok tas
     - [`GlobalHooks`](#globalhooks)
     - [`resolve(string)`](#resolvestring)
     - [`pattern(string|string[])`](#patternstringstring)
-- [Extend or Overwrite `$.env` Variables](#extend-or-overwrite-env-variables) - [Local Configuration File](#local-configuration-file)
-  - [Merge Order](#merge-order)
+- [Extend or Overwrite `$.env` Variables](#extend-or-overwrite-env-variables)
+  - [Example](#example-2)
+  - [Custom config module name and base location](#custom-config-module-name-and-base-location)
+  - [Dynamic configuration](#dynamic-configuration)
+  - [Local Configuration File](#local-configuration-file)
 
 <!-- /TOC -->
 
@@ -197,17 +200,32 @@ $.api.pattern('<%= target %>') === ['development'];
 
 ## Extend or Overwrite `$.env` Variables
 
-There are two methods to add or overwrite the properties in `$.env` (except for `argv` and `pkg`):
+You can overwrite the properties in `$.env` (except for `argv` and `pkg`) by creating a configuration file in the project root folder or adding a `wok` property to your `package.json` file. Wok will read the file contents and merge them into `$.env`. A Wok configuration filename must follow the [cosmiconfig](https://github.com/davidtheclark/cosmiconfig#cosmiconfig) configuration standard.
 
-1. Create a `wok.config.js` configuration file in the project root folder. Wok will read the file contents and merge into `$.env`.
+### Example
 
-As an object:
+As a JavaScript file in the project root folder:
 
 ```js
 // wok.config.js
 module.exports = {
   production: true,
 };
+```
+
+As a property in you project's `package.json`.
+
+```json
+{
+  "name": "my-project",
+  "dependencies": {
+    //...
+  },
+  // ...
+  "wok": {
+    "production": true
+  }
+}
 ```
 
 As a function:
@@ -222,43 +240,57 @@ module.exports = (baseConfig) => {
 };
 ```
 
-2. Generate a custom configuration object:
+### Custom config module name and base location
+
+You can customize the config resolution method by generating a custom configuration object passing both a module name and the base folder where to search for the configuration files.
+
+In the following example we tell Wok to search for config files named `mywok` (like `.mywokrc.json` or `mywok.config.js`) starting from the `/path/to-the/project/` folder.
 
 ```js
 // gulpfile.js
 const gulp = require('gulp');
 const createConfig = require('@wok-cli/core/config');
 
-// force production to `true` regardless of the value of `--production`
 const $ = createConfig(gulp, {
-  production: true,
+  configName: 'mywok',
+  cwd: '/path/to-the/project/',
 });
 ```
 
-#### Local Configuration File
+### Dynamic configuration
 
-The first method lets you specify configuration options in a dedicated file. A benefit of this method is that it allows you to create a local configuration file `wok.config.local.js`) with setups just for your local environment. Just add it to your `.gitignore` file to prevent it to be shared with other developers or pushed to CI servers.
+If you need to set the configuration dynamically (for example based on the value of the `production` key), you can do so by using the `wok.config.js` file format and export a function instead of an object. The function receives the default computed `$.env` and must return the updated object:
 
-The local configuration file can expose either an object, in which case the local and project configurations will be merged, or a function receiving the project's configuration as first argument.
+```js
+// wok.config.js
+module.exports = (env) => {
+  return {
+    ...env,
+    publicPath: env.production ? '/campaign/' : '/',
+  };
+};
+```
+
+### Local Configuration File
+
+If you're using a configuration file like `wok.config.js` or `.wokrc.json`, you can also create a local configuration file with setups just for your local environment.
+
+1. Alongside the main configuration file create a new one with the same name and append `.local` before the extension (for example `wok.config.js` -> `wok.config.local.js`).
+1. Add the new file name to your `.gitignore` to prevent it to be shared with other developers or pushed to CI servers.
+
+As for the main configuration file, the `wok.config.local.js` file can export either an object, in which case the local and main configurations will be merged, or a function receiving the main configuration as first argument.
 
 ```js
 // wok.config.local.js
 
-module.exports = (cfg) => {
-  if (cfg.production === true) {
+module.exports = (mainConfig) => {
+  if (mainConfig.production === true) {
     // do something on production
     return {
+      ...mainConfig,
       // ...
     };
   }
-  return cfg;
+  return mainConfig;
 };
 ```
-
-### Merge Order
-
-The order in which custom environment properties will be merged is:
-
-- `wok.config.js` properties
-- `wok.config.local.js` properties
-- `createConfig` function parameters
