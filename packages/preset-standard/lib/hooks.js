@@ -1,15 +1,4 @@
-const rename = require('gulp-rename');
 const { noopStream, createPlugin } = require('@wok-cli/core/utils');
-
-const minPrefix = createPlugin({
-  name: 'minSuffix',
-  productionOnly: true,
-  plugin: (stream) =>
-    stream.pipe(
-      rename,
-      { suffix: '.min' },
-    ),
-});
 
 const babel = createPlugin({
   name: 'babel',
@@ -63,4 +52,4 @@ const minifyJS = createPlugin({
   },
 });
 
-module.exports = { minPrefix, babel, eslint, stylelint, minifyJS };
+module.exports = { babel, eslint, stylelint, minifyJS };
