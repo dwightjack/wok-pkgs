@@ -1,5 +1,9 @@
-function base() {
-  console.log('base');
+function base(prop = {}) {
+  const { msg, ...rest } = prop;
+  console.log(msg, {
+    ...rest,
+    production: false,
+  });
 }
 
-base();
+base({ msg: 'base', demo: true });
