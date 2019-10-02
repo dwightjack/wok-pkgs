@@ -121,7 +121,7 @@ module.exports = (config) => {
             modernizr,
           ),
           views,
-          runif(() => env.production, $rev),
+          $rev,
           $cleanup,
         );
       },
