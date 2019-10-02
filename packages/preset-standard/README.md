@@ -173,7 +173,7 @@ The default task (executed by running `gulp` on a terminal) will perform the fol
 - `modernizr`
 - `views`
 
-For production builds, assets will be revisioned using [@wok-cli/task-rev](https://github.com/fevrcoding/wok-pkgs/tree/master/packages/task-rev).
+For production builds, assets will be revised using [@wok-cli/task-rev](https://github.com/fevrcoding/wok-pkgs/tree/master/packages/task-rev).
 
 ### serve
 
