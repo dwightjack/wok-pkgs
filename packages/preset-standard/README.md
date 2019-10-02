@@ -23,6 +23,7 @@ A standard preset with pre-configured common tasks for Wok.
   - [default](#default)
   - [serve](#serve)
 - [Extending the configuration](#extending-the-configuration)
+  - [Configuring Babel](#configuring-babel)
 
 <!-- /TOC -->
 
@@ -174,7 +175,7 @@ The default task (executed by running `gulp` on a terminal) will perform the fol
 - `modernizr`
 - `views`
 
-For production builds, assets will be revised using [@wok-cli/task-rev](https://github.com/fevrcoding/wok-pkgs/tree/master/packages/task-rev).
+For production builds, assets will be revised using [@wok-cli/task-rev](https://github.com/fevrcoding/wok-pkgs/tree/master/packages/task-rev) and scripts will be minified with [gulp-minify](https://www.npmjs.com/package/gulp-minify).
 
 ### serve
 
@@ -195,4 +196,41 @@ module.exports = (env) => {
     // add your properties here
   };
 };
+```
+
+### Configuring Babel
+
+This plugin comes with a default configuration for Babel based on [@babel/preset-env](https://babeljs.io/docs/en/babel-preset-env) and including [@babel/plugin-proposal-class-properties](https://babeljs.io/docs/en/babel-plugin-proposal-class-properties).
+
+`@babel/preset-env` is configured with the following options:
+
+```
+{
+  modules: false,
+  loose: true,
+  useBuiltIns: false,
+}
+```
+
+In order to use this configuration on your project create a `.babelrc.js` file in the root folder of your project and add the following content:
+
+```js
+module.exports = require('@wok-cli/preset-standard/configs/babel');
+```
+
+Also remember to configure [target browsers](https://babeljs.io/docs/en/babel-preset-env#browserslist-integration) by adding a `browserslist` property to your project's `package.json`:
+
+```json
+{
+  // ...
+  "browserslist": [
+    ">= 1%",
+    "last 1 Chrome version",
+    "last 1 ChromeAndroid version",
+    "last 1 Edge version",
+    "last 1 Firefox version",
+    "last 1 iOS version",
+    "last 1 Safari version"
+  ]
+}
 ```
