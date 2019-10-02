@@ -1,7 +1,5 @@
 module.exports = (baseConfig) => {
-  const config = require('@wok-cli/preset-standard/configs/default')(
-    baseConfig,
-  );
+  const config = require('@wok-cli/preset-standard/config')(baseConfig);
 
   config.rev = false;
   config.hosts = {
