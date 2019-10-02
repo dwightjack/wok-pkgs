@@ -54,12 +54,12 @@ const $ = require('@wok-cli/core');
 const scripts = require('@wok-cli/task-scripts');
 const babel = require('gulp-babel');
 
-const scripts = $.task(scripts, {
+const scriptsTask = $.task(scripts, {
   src: ['src/assets/js/**/*.js'],
   dest: 'public/assets/js',
 });
 
-scripts.tap('transform', 'babel', (lazypipe) => {
+scriptsTask.tap('transform', 'babel', (lazypipe) => {
   return lazypipe.pipe(
     babel,
     {
@@ -68,5 +68,5 @@ scripts.tap('transform', 'babel', (lazypipe) => {
   );
 });
 
-exports.scripts = scripts;
+exports.scripts = scriptsTask;
 ```
