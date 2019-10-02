@@ -23,7 +23,7 @@ A standard preset with pre-configured common tasks for Wok.
   - [default](#default)
   - [serve](#serve)
 - [Extending the configuration](#extending-the-configuration)
-  - [Configuring Babel](#configuring-babel)
+- [Configuring Babel](#configuring-babel)
 
 <!-- /TOC -->
 
@@ -198,7 +198,7 @@ module.exports = (env) => {
 };
 ```
 
-### Configuring Babel
+## Configuring Babel
 
 This plugin comes with a default configuration for Babel based on [@babel/preset-env](https://babeljs.io/docs/en/babel-preset-env) and including [@babel/plugin-proposal-class-properties](https://babeljs.io/docs/en/babel-plugin-proposal-class-properties).
 
