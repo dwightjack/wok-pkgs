@@ -22,6 +22,7 @@ A standard preset with pre-configured common tasks for Wok.
   - [watch](#watch)
   - [default](#default)
   - [serve](#serve)
+- [Extending the configuration](#extending-the-configuration)
 
 <!-- /TOC -->
 
@@ -180,3 +181,18 @@ For production builds, assets will be revised using [@wok-cli/task-rev](https://
 A shorthand task executing the following tasks: `default`, `watch` and `server`.
 
 Note: when executed within `serve` the `default` task will not copy files from `static` to `public`.
+
+## Extending the configuration
+
+The preset exposes a configuration function that returns an object that you can extend to customize it:
+
+```js
+module.exports = (env) => {
+  const presetConfig = require('@wok-cli/preset-standard/config')(env);
+
+  return {
+    ...presetConfig,
+    // add your properties here
+  };
+};
+```
