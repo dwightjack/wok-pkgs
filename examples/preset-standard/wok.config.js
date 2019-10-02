@@ -1,8 +1,7 @@
 module.exports = (baseConfig) => {
   const config = require('@wok-cli/preset-standard/config')(baseConfig);
 
-  config.rev = false;
-  config.hosts = {
+  const hosts = {
     staging: {
       host: '192.168.1.58',
       username: 'ftpuser',
@@ -11,7 +10,6 @@ module.exports = (baseConfig) => {
       deployStrategy: 'rsync',
       backup: '/home/ftpuser/ftp/backups',
     },
-
     production: {
       host: '192.168.1.58',
       username: 'ftpuser',
@@ -23,7 +21,7 @@ module.exports = (baseConfig) => {
   };
 
   // SSH commands
-  config.commands = {
+  const commands = {
     backup:
       'mkdir -p <%= target.backup %>;' +
       'filecount=$(ls -t <%= target.backup %> | grep .tgz | wc -l);' +
@@ -48,5 +46,9 @@ module.exports = (baseConfig) => {
       'fi;',
   };
 
-  return config;
+  return {
+    ...config,
+    hosts,
+    commands,
+  };
 };
