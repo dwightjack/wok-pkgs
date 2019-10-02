@@ -11,7 +11,8 @@ const imagemin = require('@wok-cli/plugin-imagemin');
 const sass = require('@wok-cli/plugin-sass');
 const rev = require('@wok-cli/task-rev');
 const serve = require('@wok-cli/task-serve');
-const { babel, eslint, stylelint, minifyJS } = require('./lib/hooks');
+const { babel, eslint, stylelint } = require('./lib/hooks');
+const { minifyJS } = require('./lib/tasks');
 
 // passed-in config object
 module.exports = (config) => {
@@ -101,9 +102,10 @@ module.exports = (config) => {
       dest: '<%= paths.dist.root %>',
       manifest: '<%= paths.dist.root %>/<%= paths.dist.revmap %>',
     })
-    .hook('before', 'minify', minifyJS)
     .end()
-
+    .set('$minifyJS', minifyJS, {
+      pattern: ['<%= paths.dist.root %>/<%= paths.scripts %>/**/*.js'],
+    })
     .set('$cleanup', clean, {
       pattern: ['<%= paths.tmp %>'],
     })
@@ -111,7 +113,17 @@ module.exports = (config) => {
       baseDir: ['<%= paths.dist.root %>', '<%= paths.static %>'],
     })
     .default(
-      ({ clean, copy, styles, scripts, modernizr, views, $cleanup, $rev }) => {
+      ({
+        clean,
+        copy,
+        styles,
+        scripts,
+        modernizr,
+        views,
+        $cleanup,
+        $rev,
+        $minifyJS,
+      }) => {
         return config.series(
           clean,
           config.parallel(
@@ -122,6 +134,7 @@ module.exports = (config) => {
           ),
           views,
           $rev,
+          runif(() => env.production, $minifyJS),
           $cleanup,
         );
       },

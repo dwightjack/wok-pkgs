@@ -37,19 +37,4 @@ const stylelint = createPlugin({
   },
 });
 
-const minifyJS = createPlugin({
-  name: 'minifyJS',
-  productionOnly: true,
-  plugin(stream, env, api, opts) {
-    const minify = require('gulp-minify');
-    const gulpif = require('gulp-if');
-    const options = Object.assign(
-      { preserveComments: 'some', ext: '.js', noSource: true },
-      opts,
-    );
-
-    return stream.pipe(() => gulpif('*.js', minify(options)));
-  },
-});
-
-module.exports = { babel, eslint, stylelint, minifyJS };
+module.exports = { babel, eslint, stylelint };
