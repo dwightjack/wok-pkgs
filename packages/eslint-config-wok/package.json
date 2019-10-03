@@ -12,15 +12,14 @@
   },
   "dependencies": {
     "babel-eslint": "^10.0.3",
-    "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-config-prettier": "^4.3.0",
-    "eslint-import-resolver-webpack": "^0.11.1",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-config-prettier": "^6.3.0",
     "eslint-plugin-import": "^2.18.2",
-    "eslint-plugin-node": "^9.0.1",
+    "eslint-plugin-node": "^10.0.0",
     "eslint-plugin-prettier": "^3.1.1"
   },
   "peerDependencies": {
     "@babel/core": "*",
-    "eslint": ">=5.0.0"
+    "eslint": ">=6.0.0"
   }
 }

@@ -17,7 +17,7 @@
     "@wok-cli/stylelint-config-wok": "^1.0.0",
     "@wok-cli/task-ssh": "*",
     "@wok-cli/tasks": "*",
-    "eslint": ">=5.0.0",
+    "eslint": ">=6.5.1",
     "gulp": "^4.0.0",
     "prettier": "^1.18.2",
     "stylelint": "^10.0.0"

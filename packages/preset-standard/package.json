@@ -28,7 +28,7 @@
     "@wok-cli/tasks": "^1.0.0",
     "faker": "^4.1.0",
     "gulp-babel": "^8.0.0",
-    "gulp-eslint": "^5.0.0",
+    "gulp-eslint": "^6.0.0",
     "gulp-minify": "^3.1.0",
     "gulp-stylelint": "^9.0.0",
     "lodash": "^4.17.15",
