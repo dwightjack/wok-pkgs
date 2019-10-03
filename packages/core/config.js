@@ -13,7 +13,7 @@ const { resolvePath, resolvePatterns, loadProjectConfig } = require('./utils');
 function config(gulp, params = {}) {
   const readPkgUp = require('read-pkg-up');
   const { cwd = process.cwd(), configName = 'wok' } = params;
-  const { pkg } = readPkgUp.sync({ cwd });
+  const { packageJson } = readPkgUp.sync({ cwd });
 
   const { argv } = require('yargs');
   const { production = false } = argv;
@@ -26,7 +26,7 @@ function config(gulp, params = {}) {
     sourcemaps: '.',
     buildHash: `buildhash${Date.now()}`,
     publicPath: '/',
-    pkg,
+    pkg: packageJson,
     argv,
   };
   /**
