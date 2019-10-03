@@ -1,7 +1,7 @@
 {
   "name": "@wok-cli/plugin-sass",
   "private": false,
-  "version": "1.0.0",
+  "version": "1.0.0-rc.1",
   "description": "Wok plugin for the Sass pre-processor",
   "main": "index.js",
   "repository": "git@github.com:fevrcoding/wok-pkgs.git",

@@ -2,7 +2,7 @@
   "name": "@wok-cli/plugin-render-nunjucks",
   "description": "Nunjucks template renderer for @wok-cli/task-views",
   "private": false,
-  "version": "1.0.0",
+  "version": "1.0.0-rc.1",
   "main": "index.js",
   "repository": "git@github.com:fevrcoding/wok-pkgs.git",
   "author": "Marco Solazzi <marco.solazzi@gmail.com>",

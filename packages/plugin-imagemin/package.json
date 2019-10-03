@@ -1,7 +1,7 @@
 {
   "name": "@wok-cli/plugin-imagemin",
   "private": false,
-  "version": "1.0.0",
+  "version": "1.0.0-rc.1",
   "description": "Image optimization plugin for Wok",
   "main": "index.js",
   "repository": "git@github.com:fevrcoding/wok-pkgs.git",
