@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@babel/core": "^7.0.0",
-    "@babel/plugin-proposal-class-properties": "^7.0.0",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@babel/preset-env": "^7.0.0",
     "@wok-cli/plugin-imagemin": "^1.0.0",
     "@wok-cli/plugin-render-nunjucks": "^1.0.0",
