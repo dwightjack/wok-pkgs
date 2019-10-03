@@ -11,7 +11,7 @@
     "node": ">=8.12.0"
   },
   "dependencies": {
-    "del": "^5.0.0"
+    "del": "^5.1.0"
   },
   "peerDependencies": {
     "@wok-cli/core": "^1.0.0"

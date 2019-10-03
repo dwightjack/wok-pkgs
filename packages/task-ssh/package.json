@@ -11,7 +11,7 @@
     "node": ">=8.12.0"
   },
   "dependencies": {
-    "ssh2": "^0.8.4"
+    "ssh2": "^0.8.5"
   },
   "peerDependencies": {
     "@wok-cli/core": "^1.0.0"
