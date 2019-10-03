@@ -1,16 +1,10 @@
-# WOK
+# Wok
 
 > Tasty website cookware
 
-The WOK project features two independent sub-projects:
+The Wok project features two independent sub-projects:
 
-- `@wok-cli/*` [gulp 4](https://gulpjs.com/) based CLI tools and tasks
-- `wok` a loosely opinionated frontend boilerplate powered by `@wok-cli/preset-standard`
+- `@wok-cli/*` [gulp 4](https://gulpjs.com/) based CLI tools and tasks (this repo).
+- [`wok`](https://github.com/fevrcoding/wok) a loosely opinionated frontend boilerplate powered by `@wok-cli/preset-standard`.
 
-<!-- TOC -->
-
-- [`@wok-cli` Packages](#wok-cli-packages)
-
-<!-- /TOC -->
-
-## `@wok-cli` Packages
+learn more about `@wok-cli` on the [documentation site](https://dwightjack.github.io/wok-pkgs).
