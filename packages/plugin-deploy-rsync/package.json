@@ -1,7 +1,7 @@
 {
   "name": "@wok-cli/plugin-deploy-rsync",
   "private": false,
-  "version": "1.0.0-rc.1",
+  "version": "1.0.0",
   "description": "A @wok-cli/tasks/deploy plugin to sync files with rsync.",
   "main": "index.js",
   "repository": "git@github.com:fevrcoding/wok-pkgs.git",

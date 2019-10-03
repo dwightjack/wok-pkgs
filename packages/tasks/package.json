@@ -1,7 +1,7 @@
 {
   "name": "@wok-cli/tasks",
   "private": false,
-  "version": "1.0.0-rc.1",
+  "version": "1.0.0",
   "description": "A collection of general purpose sharable tasks for Wok",
   "main": "index.js",
   "repository": "git@github.com:fevrcoding/wok-pkgs.git",

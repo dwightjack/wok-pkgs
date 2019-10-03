@@ -1,6 +1,6 @@
 {
   "name": "wok-pkgs",
-  "version": "1.0.0-rc.1",
+  "version": "1.0.0",
   "description": "Wok Packages Repo",
   "main": "index.js",
   "repository": "git@github.com:fevrcoding/wok-pkgs.git",
