@@ -98,4 +98,3 @@ coverage
 examples/**/public
 examples/**/var
 dist
-/docs
