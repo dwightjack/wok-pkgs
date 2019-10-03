@@ -1,6 +1,6 @@
 {
   "name": "wok-pkgs",
-  "version": "1.0.0",
+  "version": "1.0.0-rc.1",
   "description": "Wok Packages Repo",
   "main": "index.js",
   "repository": "git@github.com:fevrcoding/wok-pkgs.git",
@@ -27,6 +27,7 @@
     "eslint-plugin-prettier": "~3.1.1",
     "fast-glob": "^3.0.2",
     "handlebars": "^4.4.2",
+    "lerna": "^3.16.4",
     "make-dir": "^3.0.0",
     "prettier": "^1.16.4",
     "rimraf": "^2.6.3"
