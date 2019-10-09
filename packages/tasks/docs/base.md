@@ -20,8 +20,8 @@ A generic purpose task. Use it as base for custom tasks.
 
 | name       | type          | description                                                   |
 | ---------- | ------------- | ------------------------------------------------------------- |
-| `process`  | [lazypipe][2] | executed before writing each file onto the destination folder |
-| `complete` | [lazypipe][2] | executed after each file has been written                     |
+| `process`  | [lazypipe][2] | Executed before writing each file onto the destination folder |
+| `complete` | [lazypipe][2] | Executed after each file has been written                     |
 
 [2]: https://github.com/OverZealous/lazypipe
 
@@ -49,17 +49,21 @@ exports.concat = concatTask;
 
 To create reusable, pre-configured tasks from the `base` task, use the `createTask` function.
 
-The function accepts the following arguments
+The function accepts the following arguments:
 
 | name     | type   | description                              |
 | -------- | ------ | ---------------------------------------- |
-| taskName | string | name of the task (required)              |
-| defaults | object | default [parameters](#parameters) values |
+| taskName | string | Name of the task (required)              |
+| defaults | object | Default [parameters](#parameters) values |
 
-The following example is the implementation of the [`copy`](/packages/tasks/copy) task, where, by default we enable source files caching.
+The following example shows the implementation of the [`copy`](/packages/tasks/copy) task. By default we enable source files caching.
 
 ```js
 const { createTask } = require('@wok-cli/tasks');
 
-module.exports = createTask('copy', { cache: true });
+const copyTaskCreator = createTask('copy', { cache: true });
+
+exports.copy = $.task(copyTaskCreator, {
+  // ...
+});
 ```

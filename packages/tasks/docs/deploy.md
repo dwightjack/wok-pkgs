@@ -30,13 +30,13 @@ Then select it upon task execution via the `--target` option:
 gulp deploy --target=production
 ```
 
-The task will use the selected host object as connection settings. `deployStrategy` defines the deploy method for that host. If now defined it will default to the value of the `deployStrategy` key in the config object:
+The task will use the selected host object as connection settings. `deployStrategy` defines the deploy method for that host. If not defined it will default to the value of the `deployStrategy` key in the config object:
 
 ```diff
 module.exports = {
   // .... other configs
 + //default to rsync as deploy method
-+ deployStrategy: 'rsync'
++ deployStrategy: 'rsync',
 
   hosts: {
     production: {

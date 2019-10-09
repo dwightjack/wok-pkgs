@@ -1,10 +1,10 @@
 # Copy Task
 
-The `copy` task can be used to copy set of files from one location to another.
+The `copy` task can be used to copy a set of files from one location to another.
 
-By default this task won't apply any transformation to the file.
+By default this task won't apply any transformation to the files.
 
-To maximize the task performances just those files that have changed since the task latest execution will be copied.
+To maximize the task performances it will copy just those files that have changed since the task latest execution.
 
 ## Parameters
 
@@ -22,8 +22,8 @@ To maximize the task performances just those files that have changed since the t
 
 | name       | type          | description                                                   |
 | ---------- | ------------- | ------------------------------------------------------------- |
-| `process`  | [lazypipe][2] | executed before writing each file onto the destination folder |
-| `complete` | [lazypipe][2] | executed after each file has been copied                      |
+| `process`  | [lazypipe][2] | Executed before writing each file onto the destination folder |
+| `complete` | [lazypipe][2] | Executed after each file has been copied                      |
 
 [2]: https://github.com/OverZealous/lazypipe
 
