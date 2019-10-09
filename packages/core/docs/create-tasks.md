@@ -18,7 +18,7 @@ Sharable tasks let you define a gulp task blueprint that can act differently bas
 
 ## Anatomy of a Sharable Task
 
-At its root a sharable task is a function (let's call it the _creator_ function ) that, when executed, returns another function (the gulp _task_ function). Here is an example:
+At its root, a sharable task is a function (let's call it the **creator** function ) that, when executed, returns another function (the gulp **task** function). Here is an example:
 
 ```js
 function myTaskCreator(gulp, params, env, api) {
@@ -36,8 +36,8 @@ The creator function should be authored to receive the following arguments
 | ------ | ------ | ------------------------------------- |
 | gulp   | Gulp   | A gulp module instance                |
 | params | object | Custom parameters                     |
-| env    | object | [configuration object environment][1] |
-| api    | object | [configuration object API][2]         |
+| env    | object | [Configuration environment object][1] |
+| api    | object | [Configuration public API object][2]  |
 
 [1]: packages/core/configuration#env
 [2]: packages/core/configuration#api
@@ -71,14 +71,14 @@ exports.copy = $.task(copyCreator, {
 
 ## Task Function Hooks
 
-As a task author you might want to give your users the ability to interact with the task flow.
+As a task author, you might want to give your users the ability to interact with the task flow.
 
-This can be achieved by defining task's hooks. Starting from the example above let's say we want the user to be able to process copied files before the got written onto the destination folder:
+This can be achieved by defining task's hooks. Starting from the example above, let's say we want the user to be able to process copied files before they got written onto the destination folder:
 
 ```diff
 // tasks/copy.js
 module.exports = function copyCreator(gulp, params) {
-+ // get the task's hooks list
++ // get the task's hooks object
 + const $hooks = this.getHooks();
   return function copy() {
     return gulp
@@ -89,7 +89,7 @@ module.exports = function copyCreator(gulp, params) {
 };
 ```
 
-End users will be able to hook into the copy stream by calling the `.tap` method of the task function:
+The end users will be able to hook into the copy stream by calling the `.tap` method of the task function:
 
 ```js
 // gulpfile.js
@@ -116,38 +116,37 @@ exports.copy = copy;
 
 ## Conditional Task Execution
 
-In some cases you might want to control tasks execution based on a condition.
-A common scenario is a series of tasks composed with `gulp.series` where one of the tasks is only relevant in production.
+In some cases, you might want to control tasks execution based on a condition.
+A common scenario is a series of tasks composed by `gulp.series` where one of the tasks is only relevant in production.
 
 To address this scenario you can use the `runif` utility function:
 
 ```js
 // ... configuration and tasks setup
+const minifyCreator = require('./tasks/minify');
 const { runif } = require('@wok-cli/core/utils');
 
-exports.build = gulp.series(
-  copy,
-  scripts,
-  runif(() => $.env.production, minify),
-);
+const minify = $.task(minifyCreator);
+
+exports.build = $.series(copy, scripts, runif(() => $.env.production, minify));
 ```
 
 `runif` accepts two arguments:
 
-| name      | type     | description                                    |
-| --------- | -------- | ---------------------------------------------- |
-| condition | function | condition to test. Must return a boolean value |
-| task      | function | a gulp-compliant task                          |
+| name      | type     | description                                     |
+| --------- | -------- | ----------------------------------------------- |
+| condition | function | Condition to test. Must return a boolean value. |
+| task      | function | A gulp-compliant task                           |
 
-If the condition returns `true` it will execute the task else it will complete right away and step to the next task (if any).
+If the condition returns `true` it will execute the task, else it will complete right away and step to the next task (if any).
 
 ## Task plugins
 
 As we have seen in the previous section, task hooks can be leveraged to allow users to interact with sharable tasks by adding hook functions via the `.tap()` method.
 
-In Wok task hook functions are called **task plugins**.
+In Wok, task hook functions are called **task plugins**.
 
-To simplify and standardize plugin development Wok exposes an utility function to create such hook functions called `createPlugin`. Let's rewrite the last example with this utility.
+To simplify and standardize plugin development, Wok exposes an utility function to create such hook functions called `createPlugin`. Let's rewrite a previuos example with this utility.
 
 ```diff
 // gulpfile.js
@@ -186,7 +185,24 @@ exports.copy = copy;
 
 Plugins created with the `createPlugin` function requires a `name` configuration property. That name can be used in the task creator parameters as a property to pass plugin-specific configuration parameters.
 
-Let's see an example:
+First of all we need to provide the task parameters to the hook:
+
+```diff
+// tasks/copy.js
+module.exports = function copyCreator(gulp, params) {
+  // get the task's hooks object
+  const $hooks = this.getHooks();
+  return function copy() {
+    return gulp
+      .src(params.src)
+-     .pipe($hooks.call('process'))
++     .pipe($hooks.call('process', params))
+      .pipe(params.dest);
+  };
+};
+```
+
+Then let's create our plugin and set it up.
 
 ```js
 // plugins/my-plugin.js
@@ -249,10 +265,10 @@ The `createPlugin` utility accepts an object as argument with the following prop
 | name           | type     | description                                                                                                                          |
 | -------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------ |
 | name           | string   | Plugin name                                                                                                                          |
-| plugin         | function | The [hook function][1]                                                                                                               |
+| plugin         | function | The [hook function][3]                                                                                                               |
 | productionOnly | boolean  | (optional) If se to `true` will execute the plugin just in production (default `false`)                                              |
-| test           | function | (optional) Returns a boolean to control plugins execution. Receives the configuration [`env` object][2] and the plugin's parameters. |
+| test           | function | (optional) Returns a boolean to control plugins execution. Receives the configuration [`env` object][4] and the plugin's parameters. |
 | params         | function | (optional) A function to return computed plugin parameters. Receives the task parameters object as its only argument.                |
 
-[1]: packages/core/hooks#hook-function-signature
-[2]: packages/core/configuration#env
+[3]: packages/core/hooks#hook-function-signature
+[4]: packages/core/configuration#env

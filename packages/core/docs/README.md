@@ -72,6 +72,8 @@ exports.copy = $.task(copyTask, {
 
 Explore other features provided by `@wok-cli/core`:
 
-- [Configuration](./configuration.md)
-- /packages/core/cli.md
-- /packages/core/configuration.md
+- [Configuration](/packages/core/configuration)
+- [CLI Usage](/packages/core/cli)
+- [Create Reusable Tasks](/packages/core/create-tasks)
+- [Hooks](/packages/core/hooks)
+- [Configuration Presets](/packages/core/presets)
