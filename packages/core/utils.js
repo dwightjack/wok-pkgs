@@ -162,6 +162,7 @@ function map(fn) {
     }
 
     try {
+      // eslint-disable-next-line require-atomic-updates
       file.contents = Buffer.from(
         await mapFn(file.contents.toString(), file.path, file),
       );
