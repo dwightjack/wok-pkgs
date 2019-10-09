@@ -1,6 +1,6 @@
 # @wok-cli/core
 
-This package includes core functionalities and utilities to setup a build tool chain with gulp.
+This package includes core functionalities and utilities to setup a flexible and reusable build tool chain with gulp.
 
 ## Requirements
 

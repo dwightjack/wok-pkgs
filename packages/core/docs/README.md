@@ -1,6 +1,8 @@
 # @wok-cli/core
 
-This package includes core functionalities and utilities to setup a build tool chain with gulp.
+This package includes core functionalities and utilities to setup a flexible and reusable build tool chain with gulp.
+
+`@wok-cli/core` is built on top of gulp and features project configuration files, CLI arguments, sharable tasks and more.
 
 ## Installation
 
@@ -12,7 +14,7 @@ npm i gulp @wok-cli/core
 
 ## Usage example
 
-Here is a simple copy task with CLI flag support:
+Here is a simple copy task with CLI parameters support:
 
 ```js
 // gulpfile.js
@@ -27,6 +29,8 @@ exports.copy = function copy() {
 };
 ```
 
+The above `copy` task will read every file in `srcPattern` and copy it to a folder provided with the `--dest` cli parameter.
+
 You may run the task like this:
 
 ```bash
@@ -35,9 +39,9 @@ gulp copy --dest=public
 
 ### Reusable tasks
 
-Where wok-cli shines is the ability to let you create sharable and configurable tasks with ease. For example let's extract the previous `copy` task to it's own module.
+Where `@wok-cli/core` shines is the ability to let you create sharable and configurable tasks with ease. For example, let's extract the previous `copy` task to its own module.
 
-We need to expose and _higher order function_ that receives some parameters and returns the configured task.
+We need to expose and _higher-order function_ that receives some parameters and returns the configured task.
 
 ```js
 // tasks/copy.js
@@ -63,3 +67,11 @@ exports.copy = $.task(copyTask, {
   src: srcPattern,
 });
 ```
+
+### Learn More
+
+Explore other features provided by `@wok-cli/core`:
+
+- [Configuration](./configuration.md)
+- /packages/core/cli.md
+- /packages/core/configuration.md
