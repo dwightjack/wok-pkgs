@@ -134,6 +134,8 @@ $.api.globalHooks.tap('scripts', 'minify', minify);
 
 !> **Important**: Consecutive hook functions will receive the accumulator object returned from the previous one. Always remember to return the accumulator inside a hook function!
 
+?> Wok provides an utility function to streamline hook function definition. See [here](https://dwightjack.github.io/wok-pkgs/#/packages/core/create-tasks?id=task-plugins) for details.
+
 ### Global Scoped Hook Drawback
 
 Since global scoped hooks are shared among all tasks, different instances of the same task will share the same hook function.
