@@ -1,4 +1,4 @@
-## imagemin Plugin
+# Imagemin Plugin <sub>1.0.0<sub>
 
 Image optimization plugin for Wok. Implements [gulp-imagemin](https://www.npmjs.com/package/gulp-imagemin).
 

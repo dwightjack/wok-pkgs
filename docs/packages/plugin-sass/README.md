@@ -1,4 +1,4 @@
-## Wok Sass Plugin
+# Wok Sass Plugin <sub>1.0.0<sub>
 
 Sass pre-processing support plugin for Wok. Implements [gulp-sass](https://www.npmjs.com/package/gulp-sass).
 

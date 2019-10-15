@@ -1,4 +1,4 @@
-## Wok Nunjucks renderer
+# Wok Nunjucks renderer <sub>1.0.0<sub>
 
 [Nunjucks](https://mozilla.github.io/nunjucks/) template renderer for [`@wok-cli/task-views`](#TODO).
 
