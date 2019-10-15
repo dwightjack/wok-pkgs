@@ -6,7 +6,7 @@ Image optimization plugin for Wok. Implements [gulp-imagemin](https://www.npmjs.
 | ---------- | ------------------ | ------------ |
 | lazypipe   | partly<sup>1</sup> | optimization |
 
-_1. svg files are always optimized._
+1. _svg files are always optimized._
 
 ## Installation
 

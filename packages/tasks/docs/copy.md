@@ -14,7 +14,7 @@ To maximize the task performances it will copy just those files that have change
 | `dest`     | string             | Destination folder <sup>(1)</sup>          |
 | `hook:(*)` | object             | Hooks configuration parameters (see below) |
 
-_1. Supports environment templates._
+1. _Supports environment templates._
 
 [1]: https://gulpjs.com/docs/en/api/concepts#globs
 

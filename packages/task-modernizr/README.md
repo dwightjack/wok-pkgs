@@ -1,24 +1,26 @@
 # Modernizr Task
 
-Sharable tasks implementing [gulp-modernizr](https://www.npmjs.com/package/gulp-modernizr).
+Sharable tasks implementing [gulp-modernizr](https://www.npmjs.com/package/gulp-modernizr). Parses provided source files and generates a custom build of Modernizr based on the detected features.
 
 ## Installation
 
+This task requires `@wok-cli/core` as peer dependency.
+
 ```
-npm i @wok-cli/task-modernizr --save-dev
+npm i @wok-cli/core @wok-cli/task-modernizr --save-dev
 ```
 
 ## Parameters
 
-| parameter  | type               | default          | note                                                               |
-| ---------- | ------------------ | ---------------- | ------------------------------------------------------------------ |
-| `src`      | string<br>string[] |                  | [Globs][1] source files to parse <sup>(1)</sup>                    |
-| `dest`     | string             |                  | Destination folder <sup>(1)</sup>                                  |
-| `filename` | string             | `'modernizr.js'` | Generated file name                                                |
-| `hook:(*)` | object             |                  | Hooks configuration parameters (see below)                         |
-| `*`        |                    |                  | Any other parameter will be passed to [gulp-modernizr settings][2] |
+| parameter  | type               | default          | note                                                                       |
+| ---------- | ------------------ | ---------------- | -------------------------------------------------------------------------- |
+| `src`      | string<br>string[] |                  | [Globs][1] source files to parse <sup>(1)</sup>                            |
+| `dest`     | string             |                  | Build destination folder <sup>(1)</sup>                                    |
+| `filename` | string             | `'modernizr.js'` | Generated file name                                                        |
+| `hook:(*)` | object             |                  | Hooks configuration parameters (see below)                                 |
+| `*`        |                    |                  | Any other parameter will be passed-through as [gulp-modernizr settings][2] |
 
-_1. Supports environment templates._
+1. _Supports environment templates._
 
 [1]: https://gulpjs.com/docs/en/api/concepts#globs
 [2]: https://www.npmjs.com/package/gulp-modernizr#settings

@@ -6,8 +6,10 @@ By default the task just copies scripts from source to destination. Use one of t
 
 ## Installation
 
+This task requires `@wok-cli/core` as peer dependency.
+
 ```
-npm i @wok-cli/task-scripts --save-dev
+npm i @wok-cli/core @wok-cli/task-scripts --save-dev
 ```
 
 ## Parameters
@@ -19,8 +21,8 @@ npm i @wok-cli/task-scripts --save-dev
 | `sourcemaps` | string<br>boolean  |         | Write sourcemaps. See [here][2] for details<sup>(2)</sup> |
 | `hook:(*)`   | object             |         | Hooks configuration parameters (see below)                |
 
-_1. Supports environment templates._
-_2. Defaults to the value of `env.sourcemaps`._
+1. _Supports environment templates._
+2. _Defaults to the value of `env.sourcemaps`._
 
 [1]: https://gulpjs.com/docs/en/api/concepts#globs
 [2]: https://gulpjs.com/docs/en/api/src#sourcemaps

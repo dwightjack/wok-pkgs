@@ -23,7 +23,7 @@ gulp bump --type patch
 | `src`     | string<br>string[] | `['package.json']` | [Globs][1] source files <sup>(1)</sup> |
 | `dest`    | string             | `'.'`              | Destination folder <sup>(1)</sup>      |
 
-_1. Supports environment templates._
+1. _Supports environment templates._
 
 [1]: https://gulpjs.com/docs/en/api/concepts#globs
 

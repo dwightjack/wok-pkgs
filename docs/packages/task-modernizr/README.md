@@ -18,7 +18,7 @@ npm i @wok-cli/task-modernizr --save-dev
 | `hook:(*)` | object             |                  | Hooks configuration parameters (see below)                         |
 | `*`        |                    |                  | Any other parameter will be passed to [gulp-modernizr settings][2] |
 
-_1. Supports environment templates._
+1. _Supports environment templates._
 
 [1]: https://gulpjs.com/docs/en/api/concepts#globs
 [2]: https://www.npmjs.com/package/gulp-modernizr#settings

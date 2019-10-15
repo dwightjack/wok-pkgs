@@ -19,8 +19,8 @@ npm i @wok-cli/task-styles --save-dev
 | `sourcemaps` | string<br>boolean  |         | Write sourcemaps. See [here][2] for details<sup>(2)</sup> |
 | `hook:(*)`   | object             |         | Hooks configuration parameters (see below)                |
 
-_1. Supports environment templates._
-_2. Defaults to the value of `env.sourcemaps`._
+1. _Supports environment templates._
+2. _Defaults to the value of `env.sourcemaps`._
 
 [1]: https://gulpjs.com/docs/en/api/concepts#globs
 [2]: https://gulpjs.com/docs/en/api/src#sourcemaps

@@ -32,7 +32,7 @@ Configuration path: `useref`.
 | ------------ | ----------------- | ------- | ------------------------------ |
 | `sourcemaps` | boolean<br>string |         | write sourcemaps<sup>(1)</sup> |
 
-_1. Defaults to the value of `env.sourcemaps`._
+1. _Defaults to the value of `env.sourcemaps`._
 
 All other parameters will be used as gulp-useref [configuration options](https://www.npmjs.com/package/gulp-useref#options).
 

@@ -10,8 +10,10 @@ Sharable tasks to apply a unique hash to file names. Implements the following gu
 
 ## Installation
 
+This task requires `@wok-cli/core` as peer dependency.
+
 ```
-npm i @wok-cli/task-rev --save-dev
+npm i @wok-cli/core @wok-cli/task-rev --save-dev
 ```
 
 ## Environmental variables
@@ -29,22 +31,28 @@ This task adds the following [environmental variables](packages/core/configurati
 | `manifest` | string             |         | Manifest file path <sup>(1)</sup>                 |
 | `hook:(*)` | object             |         | Hooks configuration parameters (see below)        |
 
-_1. Supports environment templates._
+1. _Supports environment templates._
 
 [1]: https://gulpjs.com/docs/en/api/concepts#globs
 
 ## Hooks
 
-| name      | type          | description                                                             |
-| --------- | ------------- | ----------------------------------------------------------------------- |
-| `before`  | [lazypipe][1] | executed before file revving                                            |
-| `after`   | [lazypipe][1] | executed after file revving (source files have been deleted)            |
-| `rewrite` | [lazypipe][1] | executed before revved source files is updated by [gulp-rev-rewrite][2] |
+| name      | type          | description                                                              |
+| --------- | ------------- | ------------------------------------------------------------------------ |
+| `before`  | [lazypipe][1] | Executed before file revving                                             |
+| `after`   | [lazypipe][1] | Executed after file revving (source files have been deleted)             |
+| `rewrite` | [lazypipe][1] | Executed before revved source files are updated by [gulp-rev-rewrite][2] |
 
 [1]: https://github.com/OverZealous/lazypipe
 [2]: https://www.npmjs.com/package/gulp-rev-rewrite
 
 ## Example
+
+This example task will perform the following actions:
+
+1. match the files with the provided glob pattern
+2. create a new file with a unique rev hash appended to it's name
+3. remove the original files
 
 ```js
 const $ = require('@wok-cli/core');
