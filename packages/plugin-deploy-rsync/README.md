@@ -1,4 +1,4 @@
-## rsync Deploy Adapter Plugin
+# Rsync Deploy Adapter Plugin
 
 You can use this plugin with the `deploy` task of `@wok-cli/tasks` to add the ability to sync your local and remote folders via rsync.
 

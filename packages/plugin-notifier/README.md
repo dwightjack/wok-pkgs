@@ -1,4 +1,4 @@
-## Wok Notifier Plugin
+# Wok Notifier Plugin
 
 Implements build status notification via [node-notifier](https://www.npmjs.com/package/node-notifier).
 
