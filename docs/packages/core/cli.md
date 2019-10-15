@@ -23,9 +23,9 @@ console.log($.env.production); // logs true
 
 ## Deploy Hosts and Targets
 
-Wok lets you define multiple remote host definitions and choose your host target for deploy at execution time.
+Wok lets you define multiple remote host definitions and choose your deploy host target at execution time.
 
-To define a remote host add it to the `hosts` key in your configuration file (`wok.config.js`).
+To define a remote host, add it to the `hosts` key in your configuration file (`wok.config.js`).
 
 ```js
 module.exports = {
@@ -34,7 +34,7 @@ module.exports = {
   hosts: {
     production: {
       host: 'ftp.mydomain.com',
-      username: 'ftpuser',
+      username: 'productionuser',
       password: 'password',
       path: 'public',
     },
@@ -47,7 +47,7 @@ module.exports = {
 
 Then select it upon task execution via the `--target` option.
 
-You can retrieve the value of the flag from the `$.env` object:
+You can retrieve the value of the flag and the correspondent host object from the `$.env` object:
 
 ```
 gulp --target=production
@@ -57,6 +57,10 @@ gulp --target=production
 // gulpfile.js
 const $ = require('@wok-cli/core');
 console.log($.env.target); // logs 'production'
+
+const host = $.env.hosts[$.env.target];
+
+console.log(host.username); // logs 'productionuser'
 ```
 
 ?> When using `--production` the default value for `$.env.target` is `'production'`.

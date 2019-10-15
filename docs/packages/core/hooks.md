@@ -1,6 +1,6 @@
 # Hooks
 
-Hooks allow you to interact with a pre-defined task and alter its behaviors by injecting _hook functions_ (also called _hook plugins_) into it.
+Hooks allow you to interact with a pre-defined task and alter its behaviors by injecting **hook functions** (also called **hook plugins**) into it.
 
 <!-- TOC -->
 
@@ -26,13 +26,13 @@ Hooks can be categorized by **scope** and **type**.
 
 ### Hook's Scopes
 
-The scope of a hook defines how injected functions interact with the build process. If a hook's scope is **global**, injected functions will be affect every task that executes that hook.
+The scope of a hook defines how injected functions interact with the build process. If a hook's scope is **global**, injected functions will affect every task that executes that hook.
 
-If a hook's scope is **local** then injecting a function into a task will affect only that tasks' instance.
+If a hook's scope is **local** then injecting a function into a task will affect only that task's instance.
 
 ### Hook's Types
 
-A hook acts essentially as a reducer that receives an input value (called _accumulator_), transforms it and then outputs the transformed value. An accumulator could be any JavaScript value, but the most common are:
+A hook acts essentially as a reducer that receives an input value (called **accumulator**), transforms it and then outputs the transformed value. An accumulator could be any JavaScript value, but the most common are:
 
 - [Lazypipe](https://github.com/OverZealous/lazypipe). This is the default type.
 - [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise).
@@ -73,7 +73,7 @@ const scripts = $.task(scriptsTask, {
 exports.scripts = scripts;
 ```
 
-To be able to leverage hooks we must define where to call them inside the task:
+To be able to leverage hooks, we must define where to call them inside the task:
 
 ```diff
 // tasks/scripts.js
@@ -100,7 +100,11 @@ const scripts = $.task(scriptsTask, {
   dest: 'public',
 });
 
-+ $.api.globalHooks.tap('scripts', 'minify', (lazypipe) => lazypipe.pipe(require('gulp-terser')));
++ function minify(lazypipe) {
++   return lazypipe.pipe(require('gulp-terser'));
++ }
+
++ $.api.globalHooks.tap('scripts', 'minify', minify);
 
 exports.scripts = scripts;
 ```
@@ -130,6 +134,8 @@ $.api.globalHooks.tap('scripts', 'minify', minify);
 
 !> **Important**: Consecutive hook functions will receive the accumulator object returned from the previous one. Always remember to return the accumulator inside a hook function!
 
+?> Wok provides an utility function to streamline hook function definition. See [here](https://dwightjack.github.io/wok-pkgs/#/packages/core/create-tasks?id=task-plugins) for details.
+
 ### Global Scoped Hook Drawback
 
 Since global scoped hooks are shared among all tasks, different instances of the same task will share the same hook function.
@@ -151,15 +157,17 @@ const vendorsScripts = $.task(scriptsTask, {
   dest: 'public/vendors',
 });
 
-$.api.globalHooks.tap('scripts', 'minify', (lazypipe) =>
-  lazypipe.pipe(require('gulp-terser')),
-);
+function minify(lazypipe) {
+  return lazypipe.pipe(require('gulp-terser'));
+}
+
+$.api.globalHooks.tap('scripts', 'minify', minify);
 
 exports.scripts = scripts;
 exports.vendors = vendorsScripts;
 ```
 
-Because both `scripts` and `vendorsScripts` share the global `scripts` hook, terser will be executed on both tasks, which sometimes could not be the wanted behavior.
+Because both `scripts` and `vendorsScripts` share the global `scripts` hook, terser will be executed on both tasks, which sometimes could not be what you really want.
 
 ## Working with Local Scoped Hooks
 
@@ -201,8 +209,12 @@ const scripts = $.task(scriptsTask, {
   dest: 'public',
 });
 
-- $.api.globalHooks.tap('scripts', 'minify', (lazypipe) => lazypipe.pipe(require('gulp-terser')));
-+ scripts.tap('default', 'minify', (lazypipe) => lazypipe.pipe(require('gulp-terser')));
+function minify(lazypipe) {
+  return lazypipe.pipe(require('gulp-terser'));
+}
+
+- $.api.globalHooks.tap('scripts', 'minify', minify);
++ scripts.tap('default', 'minify', minify);
 
 exports.scripts = scripts;
 ```
@@ -220,7 +232,7 @@ globalHooks.tap('value', 'multiply', (num) => num * 2);
 
 const number = globalHooks.callWith('value', 10);
 
-// number === 10
+// number === 20
 ```
 
 ## Interact with hooks

@@ -1,8 +1,6 @@
 # Serve Task <sub>1.0.0<sub>
 
-Node.js server as a sharable task
-
-This task uses [BrowserSync](https://www.browsersync.io/)
+Node.js server as a sharable task. Uses [BrowserSync](https://www.browsersync.io/) under the hood.
 
 <!-- TOC -->
 
@@ -21,8 +19,10 @@ This task uses [BrowserSync](https://www.browsersync.io/)
 
 ## Installation
 
+This task requires `@wok-cli/core` as peer dependency.
+
 ```
-npm i @wok-cli/task-serve --save-dev
+npm i @wok-cli/core @wok-cli/task-serve --save-dev
 ```
 
 ## Environmental variables
@@ -45,11 +45,11 @@ This task adds the following [environmental variables](packages/core/configurati
 
 ## Hooks
 
-| name          | type       | description                                                                                   |
-| ------------- | ---------- | --------------------------------------------------------------------------------------------- |
-| `middlewares` | [Map][1]   | A map of BroserSync middlewares <sup>(1)</sup>                                                |
-| `config`      | object     | BroserSync [options object][3]                                                                |
-| `running`     | brosersync | Executed after the server has started. Receives the brosersync server instance as accumulator |
+| name          | type        | description                                                                                    |
+| ------------- | ----------- | ---------------------------------------------------------------------------------------------- |
+| `middlewares` | [Map][1]    | A map of BrowserSync middlewares <sup>(1)</sup>                                                |
+| `config`      | object      | BrowserSync [options object][3]                                                                |
+| `running`     | browsersync | Executed after the server has started. Receives the BrowserSync server instance as accumulator |
 
 1. _By default implements the [compression](https://www.npmjs.com/package/compression) middleware in production_
 

@@ -19,7 +19,7 @@ A Wok configuration object includes methods and properties used to setup Wok tas
     - [`resolve(string)`](#resolvestring)
     - [`pattern(string|string[])`](#patternstringstring)
 - [Extend or Overwrite `$.env` Variables](#extend-or-overwrite-env-variables)
-  - [Example](#example-2)
+  - [Examples](#examples)
   - [Custom config module name and base location](#custom-config-module-name-and-base-location)
   - [Dynamic configuration](#dynamic-configuration)
   - [Local Configuration File](#local-configuration-file)
@@ -49,13 +49,13 @@ const $ = require('@wok-cli/core');
 
 The Wok configuration object inherits and exposes the following functions from gulp:
 
-- [\$.series](https://gulpjs.com/docs/en/api/series)
-- [\$.parallel](https://gulpjs.com/docs/en/api/parallel)
-- [\$.watch](https://gulpjs.com/docs/en/api/watch)
+- [`$.series`](https://gulpjs.com/docs/en/api/series)
+- [`$.parallel`](https://gulpjs.com/docs/en/api/parallel)
+- [`$.watch`](https://gulpjs.com/docs/en/api/watch)
 
 ### `$.task`
 
-An utility function to setup sharable Wok tasks. It will return a gulp-ready task ready to be exposed from your gulpfile.
+A utility function to setup sharable Wok tasks. It will return a gulp-ready task ready to be exposed from your gulpfile.
 
 Accepts the following arguments:
 
@@ -65,6 +65,8 @@ Accepts the following arguments:
 | params | object   | (optional) The task configuration parameters |
 
 #### Example
+
+Let's create a sharable `copy` task function with configurable source and destination folders.
 
 ```js
 //tasks/copy.js
@@ -93,12 +95,12 @@ exports.copy = $.task(copy, {
 
 ### `$.watcher`
 
-An utility method to create a gulp watcher. Accepts the following arguments:
+A utility method to create a gulp watcher. Accepts the following arguments:
 
 | name              | type     | description                                                      |
 | ----------------- | -------- | ---------------------------------------------------------------- |
 | params            | object   |                                                                  |
-| - params.task     | function | Task function (see [`$.task`][#task])                            |
+| - params.task     | function | Task function (see [`$.task`](#task))                            |
 | - params.id       | string   | (optional) Watcher id. Defaults to the task function name        |
 | - params.patterns | string[] | Glob patterns to watch                                           |
 | watchOptions      | object   | (optional) `gulp.watch` [options][1]. Defauts to `{ delay: 50 }` |
@@ -109,10 +111,10 @@ The function will returns a gulp [watcher instance](https://gulpjs.com/docs/en/a
 
 #### Example
 
-The following example will setup a watch task listening on the `src` folder and running `copyTask` on change.
+The following example will setup a watch task listening on the `src` folder and running the previously defined `copy` task on change.
 
 ```js
-const { copy } = require('@wok-cli/core/tasks');
+const copy = require('./tasks/copy.js');
 
 const copyTask = $.task(copy, {
   src: 'src/**',
@@ -133,13 +135,13 @@ The generated watcher will run a global `watcher` hook when the task has complet
 
 The `watcher` hook is called with the following arguments:
 
-| name         | type    | description                               |
-| ------------ | ------- | ----------------------------------------- |
-| accumulator  | Promise | A resolved promise                        |
-| `$.env`      | object  | See [below](#env)                         |
-| `$.api`      | object  | See [below](#api)                         |
-| watchOptions | object  | The watcher options passed to `$.watcher` |
-| taskName     | string  | The name of the task passed to `$watcher` |
+| name         | type    | description                                |
+| ------------ | ------- | ------------------------------------------ |
+| accumulator  | Promise | A resolved promise                         |
+| `$.env`      | object  | See [below](#env)                          |
+| `$.api`      | object  | See [below](#api)                          |
+| watchOptions | object  | The watcher options passed to `$.watcher`  |
+| taskName     | string  | The name of the task passed to `$.watcher` |
 
 To tap into the hook use the `$.api.globalHooks` instance.
 
@@ -149,17 +151,19 @@ To tap into the hook use the `$.api.globalHooks` instance.
 
 `env` exposes a composed APIs including configuration and environmental variables.
 
+Task and plugins can add custom configuration variables. By default Wok exposes the following properties:
+
 | property   | type              | description                                                        |
 | ---------- | ----------------- | ------------------------------------------------------------------ |
-| publicPath | string            | base path for all URLs within your application. Defaults to `'/'`. |
-| production | boolean           | will be true if the `--production` CLI flag is set                 |
-| target     | string            | the value of the `--target` CLI option. <sup>(1)</sup>             |
-| pkg        | object            | `package.json` as an object                                        |
+| publicPath | string            | Base path for all URLs within your application. Defaults to `'/'`. |
+| production | boolean           | `true` for production builds. Defaults to `false`.                 |
+| target     | string            | The value of the `--target` CLI option. <sup>(1)</sup>             |
+| pkg        | object            | The project's `package.json` as an object                          |
 | argv       | object            | CLI arguments parsed by [yargs][1]                                 |
-| buildHash  | string            | An unique hash for each execution. Can be used for logging         |
+| buildHash  | string            | A unique hash for each execution. Can be used for logging.         |
 | sourcemaps | boolean<br>string | Generate sourcemaps. <sup>(2)</sup>                                |
 
-1. _Defaults to `development`. If `--production` is set defaults to `production`._
+1. _Defaults to `development`. If `--production` is set, defaults to `production`._
 1. _By default generates external sourcemaps in the same folder of the source file. Set to `true` to generate inline sourcemaps or to `false` to disable this feature._
 
 [1]: https://github.com/yargs/yargs/blob/master/docs/.md#argv
@@ -178,7 +182,7 @@ A global [`Hooks`](packages/core/hooks) instance.
 
 #### `resolve(string)`
 
-A function receiving a [lodash templates](https://lodash.com/docs/4.17.11#template) and interpolates it in the context of `$.env`.
+A function that receives a [lodash templates](https://lodash.com/docs/4.17.11#template) and interpolates it in the context of `$.env`.
 
 ```js
 // $.env.target === 'development'
@@ -190,7 +194,7 @@ $.api.resolve('The target is: <%= target %>') === 'The target is: development';
 
 The same as `resolve` but accepts also an array of strings.
 
-Always returns an array of strings
+Always returns an array of strings.
 
 ```js
 // $.env.target === 'development'
@@ -202,7 +206,7 @@ $.api.pattern('<%= target %>') === ['development'];
 
 You can overwrite the properties in `$.env` (except for `argv` and `pkg`) by creating a configuration file in the project root folder or adding a `wok` property to your `package.json` file. Wok will read the file contents and merge them into `$.env`. A Wok configuration filename must follow the [cosmiconfig](https://github.com/davidtheclark/cosmiconfig#cosmiconfig) configuration standard.
 
-### Example
+### Examples
 
 As a JavaScript file in the project root folder:
 
@@ -228,23 +232,11 @@ As a property in you project's `package.json`.
 }
 ```
 
-As a function:
-
-```js
-// wok.config.js
-module.exports = (baseConfig) => {
-  return {
-    ...baseConfig,
-    publicPath: baseConfig.production ? '/campaign/' : '/',
-  };
-};
-```
-
 ### Custom config module name and base location
 
 You can customize the config resolution method by generating a custom configuration object passing both a module name and the base folder where to search for the configuration files.
 
-In the following example we tell Wok to search for config files named `mywok` (like `.mywokrc.json` or `mywok.config.js`) starting from the `/path/to-the/project/` folder.
+In the following example, we tell Wok to search for config files named `mywok` (like `.mywokrc.json` or `mywok.config.js`) starting from the `/path/to-the/project/` folder.
 
 ```js
 // gulpfile.js
@@ -276,9 +268,9 @@ module.exports = (env) => {
 If you're using a configuration file like `wok.config.js` or `.wokrc.json`, you can also create a local configuration file with setups just for your local environment.
 
 1. Alongside the main configuration file create a new one with the same name and append `.local` before the extension (for example `wok.config.js` -> `wok.config.local.js`).
-1. Add the new file name to your `.gitignore` to prevent it to be shared with other developers or pushed to CI servers.
+1. Add the new file to your `.gitignore` to prevent it to be shared with other developers or pushed to CI servers.
 
-As for the main configuration file, the `wok.config.local.js` file can export either an object, in which case the local and main configurations will be merged, or a function receiving the main configuration as first argument.
+As for the main configuration file, the `wok.config.local.js` file can export either an object (in which case the local and main configurations will be merged) or a function receiving the main configuration as its first argument.
 
 ```js
 // wok.config.local.js

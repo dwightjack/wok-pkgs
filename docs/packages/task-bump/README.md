@@ -1,20 +1,24 @@
 # Bump Task <sub>1.0.0<sub>
 
-Sharable tasks implementing [gulp-bump](https://www.npmjs.com/package/gulp-bump).
+Sharable task implementing [gulp-bump](https://www.npmjs.com/package/gulp-bump).
 
 ## Installation
 
+This task requires `@wok-cli/core` as peer dependency.
+
 ```
-npm i @wok-cli/task-bump --save-dev
+npm i @wok-cli/core @wok-cli/task-bump --save-dev
 ```
 
 ## CLI arguments
 
-To programmatically specify the type of version bump use the `--type` argument
+To programmatically specify the next version use the `--type` argument:
 
 ```
 gulp bump --type patch
 ```
+
+Accepted values are: `major`, `minor` or `patch`.
 
 ## Parameters
 
@@ -29,7 +33,7 @@ gulp bump --type patch
 
 ## Hooks
 
-This task does not expose any hook
+This task does not expose any hook.
 
 ## Example
 

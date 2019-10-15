@@ -17,7 +17,7 @@ By default this task will delete all files including those starting with a `.`.
 
 ## Hooks
 
-This task does not expose any hook
+This task does not expose any hook.
 
 ## Example
 

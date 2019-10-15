@@ -6,8 +6,10 @@ By default the task implements [gulp-postcss](https://github.com/postcss/gulp-po
 
 ## Installation
 
+This task requires `@wok-cli/core` as peer dependency.
+
 ```
-npm i @wok-cli/task-styles --save-dev
+npm i @wok-cli/core @wok-cli/task-styles --save-dev
 ```
 
 ## Parameters
@@ -29,9 +31,9 @@ npm i @wok-cli/task-styles --save-dev
 
 | name       | type          | description                                          |
 | ---------- | ------------- | ---------------------------------------------------- |
-| `pre`      | [lazypipe][1] | execute pre-processing hooks                         |
-| `post`     | [lazypipe][1] | execute post-processing hooks (by default `postcss`) |
-| `complete` | [lazypipe][1] | executed after styles have been copied               |
+| `pre`      | [lazypipe][1] | Execute pre-processing hooks                         |
+| `post`     | [lazypipe][1] | Execute post-processing hooks (by default `postcss`) |
+| `complete` | [lazypipe][1] | Executed after styles have been copied               |
 
 [1]: https://github.com/OverZealous/lazypipe
 

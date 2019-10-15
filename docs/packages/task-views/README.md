@@ -14,7 +14,7 @@ This task uses [gulp-data](https://www.npmjs.com/package/gulp-data) to read data
 - [Configuring a template engine](#configuring-a-template-engine)
   - [Example](#example-1)
 - [Setup a data source](#setup-a-data-source)
-- [Files Array and File Object](#files-array-and-file-object)
+  - [Files Array and File Object](#files-array-and-file-object)
   - [File based data source](#file-based-data-source)
   - [Pattern based data sources](#pattern-based-data-sources)
 - [Parsing data sources](#parsing-data-sources)
@@ -25,15 +25,17 @@ This task uses [gulp-data](https://www.npmjs.com/package/gulp-data) to read data
 
 ## Installation
 
+This task requires `@wok-cli/core` as peer dependency.
+
 ```
-npm i @wok-cli/task-views --save-dev
+npm i @wok-cli/core @wok-cli/task-views --save-dev
 ```
 
 ## Environmental variables
 
 This task adds the following [environmental variables](packages/core/configuration#env):
 
-- `views`: (object) configuration object with the following properties
+- `views`: (object) configuration object with the following properties:
   - `outputExt`: (string) Rendered file extension (defaults to `.html`)
 
 ## Parameters
@@ -54,15 +56,15 @@ This task adds the following [environmental variables](packages/core/configurati
 
 | name            | type            | description                                                      |
 | --------------- | --------------- | ---------------------------------------------------------------- |
-| `engines`       | Map             | view render engines                                              |
-| `data:fetch`    | array           | collects files from external sources                             |
-| `data:parsers`  | Map             | a map of objects to parse files to objects                       |
-| `data:reducers` | Promise<object> | merges parsed object files into data suitable for [gulp-data][2] |
-| `post`          | [lazypipe][1]   | executed after views are rendered                                |
-| `complete`      | [lazypipe][1]   | executed after views have been copied                            |
+| `engines`       | Map             | View render engines                                              |
+| `data:fetch`    | array           | Collects files from external sources                             |
+| `data:parsers`  | Map             | Map of objects to parse files to objects                         |
+| `data:reducers` | Promise<object> | Merges parsed object files into data suitable for [gulp-data][3] |
+| `post`          | [lazypipe][4]   | Executed after views are rendered                                |
+| `complete`      | [lazypipe][4]   | Executed after files have been written to disk                   |
 
-[1]: https://github.com/OverZealous/lazypipe
-[2]: https://www.npmjs.com/package/gulp-data
+[3]: https://github.com/OverZealous/lazypipe
+[4]: https://www.npmjs.com/package/gulp-data
 
 ## Example
 
@@ -80,7 +82,7 @@ exports.views = viewTask;
 
 ## Configuring a template engine
 
-To add support for a template engine use the `engines` hook and set a _render engine_.
+To add support for a template engine use the `engines` hook and set a **render engine**.
 
 A render engine is a function returning an object with the following properties
 
@@ -96,7 +98,7 @@ The `render` function will receive three arguments:
 - an object with optional data collected from external data sources.
 - the path to the template file
 
-?> the object data exposes a special `PRODUCTION` flag that reflects the `production` property of Wok [`$.env` object](#TODO).
+?> The object data exposes a special `PRODUCTION` flag that reflects the `production` property of Wok [`$.env`](https://dwightjack.github.io/wok-pkgs/#/packages/core/configuration?id=env) object.
 
 ### Example
 
@@ -140,7 +142,7 @@ const viewTask = $.task(views, {
 exports.views = viewTask;
 ```
 
-?> This example uses the `createPlugin` helper function to define a hook plugin. Read more about that function [here](#TODO).
+?> This example uses the `createPlugin` helper function to define a hook plugin. Read more about that function [here](https://dwightjack.github.io/wok-pkgs/#/packages/core/create-tasks?id=task-plugins).
 
 ## Setup a data source
 
@@ -155,7 +157,7 @@ In addition to the usual arguments received by a hook function, a data hook func
 
 [1]: https://gulpjs.com/docs/en/api/vinyl
 
-## Files Array and File Object
+### Files Array and File Object
 
 A file object is a plain object with the following properties
 
@@ -265,15 +267,15 @@ The files array will contain a file object with an id `posts` and a content repr
 
 Once you have collected data files you might need to parse their contents in order to be readable by the view engine.
 
-By default `task-view` parses JSON strings into JavaScript objects. If you need to support another data format you can do so by
+By default, `@wok-cli/task-views` parses JSON strings into JavaScript objects. If you need to support another data format you can do so by
 providing a data parser.
 
-A data parser is basically an object with two properties:
+A data parser is an object with two properties:
 
 | name    | type     | description                                    |
 | ------- | -------- | ---------------------------------------------- |
-| `test`  | RegExp   | a regular expression matching a file extension |
-| `parse` | function | parse function (either sync or async)          |
+| `test`  | RegExp   | A regular expression matching a file extension |
+| `parse` | function | Parse function (either sync or async)          |
 
 The `parse` function will receive three arguments:
 

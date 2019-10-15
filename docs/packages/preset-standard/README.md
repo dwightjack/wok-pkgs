@@ -76,28 +76,28 @@ This preset sets the following environmental options:
 
 ## Folder Structure
 
-The `paths` object defines the expected folder structure as follows.
+The `paths` object defines the expected folders structure as follows:
 
-```
-├─ application
+```sh
+├─ application # sources root folder
 │  ├─ assets
-│  │  ├─ javascripts #JavaScript files
-│  │  ├─ stylesheets #SASS files
-│  ├─ vendors #3rd party files not installed by any package manager
-│  ├─ fixtures #Test data files. May contain JSON, JS, Markdown, etc...
-│  ├─ views #Nunjucks/HTML files
-│  │  ├─ partials #View partials
-│  │  ├─ templates #Nunjucks templates
-│  │  ├─ *.njk #Views
-├─ static #Files to be copied into `public` "as-is" like images, fonts, videos
-├─ public #Build destination folder
+│  │  ├─ javascripts # JavaScript files
+│  │  ├─ stylesheets # SASS files
+│  ├─ vendors # 3rd party files not installed by any package manager
+│  ├─ fixtures # Data files. May contain JSON, JS, Markdown, etc...
+│  ├─ views # Nunjucks/HTML files
+│  │  ├─ partials # View partials
+│  │  ├─ templates # Nunjucks templates
+│  │  ├─ *.njk # Views
+├─ static # Files to be copied into `public` "as-is" like images, fonts, videos
+├─ public # Build destination folder
 ```
 
 ## Exposed tasks
 
 ### bump
 
-Implements [@wok-cli/task-bump](https://github.com/fevrcoding/wok-pkgs/tree/master/packages/task-bump).
+Implements [@wok-cli/task-bump](https://dwightjack.github.io/wok-pkgs/#/packages/task-bump/).
 
 ### clean
 
@@ -105,11 +105,11 @@ Removes all files in the `public` folder.
 
 ### copy
 
-Copies files from the `static` folder into the `public` folder. Image files will be processed using the [@wok-cli/plugin-imagemin](https://github.com/fevrcoding/wok-pkgs/tree/master/packages/plugin-imagemin) module.
+Copies files from the `static` folder into the `public` folder. Image files will be processed using [@wok-cli/plugin-imagemin](https://dwightjack.github.io/wok-pkgs/#/packages/plugin-imagemin/).
 
 ### styles
 
-Processes CSS and SCSS files in `application/assets/stylesheets` and outputs the results in `public/assets/stylesheets`. SCSS files are processed processed using the [@wok-cli/plugin-sass](https://github.com/fevrcoding/wok-pkgs/tree/master/packages/plugin-sass) module.
+Processes CSS and SCSS files in `application/assets/stylesheets` and outputs the results in `public/assets/stylesheets`. SCSS files are processed using [@wok-cli/plugin-sass](https://dwightjack.github.io/wok-pkgs/#/packages/plugin-sass/).
 
 Files will be linted with [gulp-stylelint](https://www.npmjs.com/package/gulp-stylelint) before processing. Set the `lint` [property](#environmental-defaults) to `false` to disable the linter.
 
@@ -117,7 +117,7 @@ Note: `node-sass` [includePaths](https://github.com/sass/node-sass#includepaths)
 
 ### scripts
 
-Processes JavaScript files in `application/assets/javascripts` and outputs the results in `public/assets/javascripts`. Files will be parsed using Babel. See [below](#TODO) for configuration options.
+Processes JavaScript files in `application/assets/javascripts` and outputs the results in `public/assets/javascripts`. Files will be parsed using Babel. See [below](#configuring-babel) for configuration options.
 
 Files will be linted with [gulp-eslint](https://www.npmjs.com/package/gulp-eslint) before processing. Set the `lint` [property](#environmental-defaults) to `false` to disable the linter.
 
@@ -125,7 +125,7 @@ Files will be linted with [gulp-eslint](https://www.npmjs.com/package/gulp-eslin
 
 Generates a custom [Modernizr](https://modernizr.com/) build parsing JavaScript, CSS and SCSS files in the `application/assets/javascripts` and `application/assets/stylesheets` folders. The output build will be saved into the `public/vendors/modernizr` folder.
 
-Implements [@wok-cli/task-modernizr](https://github.com/fevrcoding/wok-pkgs/tree/master/packages/task-modernizr).
+Implements [@wok-cli/task-modernizr](https://dwightjack.github.io/wok-pkgs/#/packages/task-modernizr/).
 
 ### views
 
@@ -133,19 +133,19 @@ Processes view files in `application/views` and outputs the results into `public
 
 This task implements the following modules:
 
-- [@wok-cli/task-views](https://github.com/fevrcoding/wok-pkgs/tree/master/packages/task-views)
-- [@wok-cli/plugin-render-nunjucks](https://github.com/fevrcoding/wok-pkgs/tree/master/packages/plugin-render-nunjucks): Nunjuck templates support.
-- [@wok-cli/plugin-useref](https://github.com/fevrcoding/wok-pkgs/tree/master/packages/plugin-useref): Assets replace and concatenation (production only).
+- [@wok-cli/task-views](https://dwightjack.github.io/wok-pkgs/#/packages/task-views/)
+- [@wok-cli/plugin-render-nunjucks](https://dwightjack.github.io/wok-pkgs/#/packages/plugin-render-nunjucks/): Nunjucks templates support.
+- [@wok-cli/plugin-useref](https://dwightjack.github.io/wok-pkgs/#/packages/plugin-useref/): Assets replace and concatenation (production only).
 
 #### Subfolders
 
-You can create as many sub-folders in `application/views` as your project requires to. Note that `template` is a reserved folder for extendable Nunjucks templates and `partials` should only be used for HTML partials.
+You can create as many sub-folders in `application/views` as your project requires. Note that `template` is a reserved folder for extendable Nunjucks templates and `partials` should only be used for HTML/Nunjucks partials.
 
 Files starting with `_` will be ignored.
 
 #### Nunjucks globals
 
-The task will also parse [JSON view data sources](#TODO) from `application/fixtures/` and expose them to the Nunjucks templates as global objects.
+The task will also parse [JSON view data sources](https://dwightjack.github.io/wok-pkgs/#/packages/task-views/?id=setup-a-data-source) from `application/fixtures/` and expose them to the Nunjucks templates as global objects.
 
 It will also expose two additional global objects:
 
@@ -156,7 +156,7 @@ It will also expose two additional global objects:
 
 Runs a static server on `localhost:8000` serving the `public` and `static` folder.
 
-Implements [@wok-cli/task-server](https://github.com/fevrcoding/wok-pkgs/tree/master/packages/task-server)
+Implements [@wok-cli/task-server](https://dwightjack.github.io/wok-pkgs/#/packages/task-serve/).
 
 ### watch
 
@@ -175,7 +175,7 @@ The default task (executed by running `gulp` on a terminal) will perform the fol
 - `modernizr`
 - `views`
 
-For production builds, assets will be revised using [@wok-cli/task-rev](https://github.com/fevrcoding/wok-pkgs/tree/master/packages/task-rev) and scripts will be minified with [gulp-minify](https://www.npmjs.com/package/gulp-minify).
+For production builds, assets will be revised using [@wok-cli/task-rev](https://dwightjack.github.io/wok-pkgs/#/packages/task-rev/) and scripts will be minified with [gulp-minify](https://www.npmjs.com/package/gulp-minify).
 
 ### serve
 

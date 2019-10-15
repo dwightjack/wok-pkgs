@@ -17,13 +17,15 @@ Sharable tasks to execute ssh commands against a remote target. Uses [ssh2](http
 
 ## Installation
 
+This task requires `@wok-cli/core` as peer dependency.
+
 ```
-npm i @wok-cli/task-ssh --save-dev
+npm i @wok-cli/core @wok-cli/task-ssh --save-dev
 ```
 
 ## SSH Target Host
 
-This task leverages [deploy targets](packages/core/cli#deploy-hosts-and-targets) to let you choose your remote target at execution time.
+This task leverages [deploy targets](packages/core/cli#deploy-hosts-and-targets) to let you choose a remote target at execution time.
 
 ```js
 // wok.config.js
@@ -56,7 +58,7 @@ gulp ssh --target=production
 
 ## Hooks
 
-This task does not expose any hook
+This task does not expose any hook.
 
 ## Example
 
@@ -98,8 +100,8 @@ gulp ssh --target=production --command=list
 
 Commands supports [lodash-like templates](https://lodash.com/docs/4.17.14#template). Avaiable variables are:
 
-- `env`: Configuration `$.env` object
-- `target`: the current host target object as defined in the configuratino file
+- `env`: Configuration [`$.env`](/packages/core/configuration?id=env) object
+- `target`: the current host target object as defined in the configuration file
 - `excludes`: the `excludes` parameter (see [above](#parameters))
 
 ```js
