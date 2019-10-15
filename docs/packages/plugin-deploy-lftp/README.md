@@ -16,13 +16,15 @@ If you have just an ftp connection to your remote host this is the closest you c
 
 ## Installation
 
+This task requires `@wok-cli/core` as peer dependency.
+
 ```
-npm i @wok-cli/plugin-deploy-lftp --save-dev
+npm i @wok-cli/core @wok-cli/plugin-deploy-lftp --save-dev
 ```
 
 ## Usage
 
-First of all update or add you remote host to the `wok.config.js` file and set the deploy strategy to either `'ftp'`, `'sftp'` or `'ftps'` (depending on your remote host's configuration).
+First of all update or add your [remote host](https://dwightjack.github.io/wok-pkgs/#/packages/core/cli?id=deploy-hosts-and-targets) to the `wok.config.js` file and set the deploy strategy to either `'ftp'`, `'sftp'` or `'ftps'` (depending on your remote host's configuration).
 
 ```js
 // wok.config.js

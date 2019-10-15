@@ -31,11 +31,11 @@ npm i @wok-cli/core @wok-cli/task-scripts --save-dev
 
 | name        | type          | description                                                                         |
 | ----------- | ------------- | ----------------------------------------------------------------------------------- |
-| `pre`       | [lazypipe][1] | Executed before `transform` hook                                                    |
-| `transform` | [lazypipe][1] | Use this hook to transform source code with tools like [Babel](https://babeljs.io/) |
-| `post`      | [lazypipe][1] | Executed just before writing the file to disk                                       |
+| `pre`       | [lazypipe][2] | Executed before `transform` hook                                                    |
+| `transform` | [lazypipe][2] | Use this hook to transform source code with tools like [Babel](https://babeljs.io/) |
+| `post`      | [lazypipe][2] | Executed just before writing the file to disk                                       |
 
-[1]: https://github.com/OverZealous/lazypipe
+[2]: https://github.com/OverZealous/lazypipe
 
 ## Example
 

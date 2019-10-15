@@ -29,9 +29,9 @@ npm i @wok-cli/core @wok-cli/task-modernizr --save-dev
 
 | name        | type          | description                                                |
 | ----------- | ------------- | ---------------------------------------------------------- |
-| `generated` | [lazypipe][2] | executed after the modernizr build file has been generated |
+| `generated` | [lazypipe][3] | executed after the modernizr build file has been generated |
 
-[2]: https://github.com/OverZealous/lazypipe
+[3]: https://github.com/OverZealous/lazypipe
 
 ## Example
 

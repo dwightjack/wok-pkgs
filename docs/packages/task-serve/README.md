@@ -47,15 +47,15 @@ This task adds the following [environmental variables](packages/core/configurati
 
 | name          | type        | description                                                                                    |
 | ------------- | ----------- | ---------------------------------------------------------------------------------------------- |
-| `middlewares` | [Map][1]    | A map of BrowserSync middlewares <sup>(1)</sup>                                                |
-| `config`      | object      | BrowserSync [options object][3]                                                                |
+| `middlewares` | [Map][2]    | A map of BrowserSync [middlewares][3] <sup>(1)</sup>                                           |
+| `config`      | object      | BrowserSync [options object][4]                                                                |
 | `running`     | browsersync | Executed after the server has started. Receives the BrowserSync server instance as accumulator |
 
 1. _By default implements the [compression](https://www.npmjs.com/package/compression) middleware in production_
 
-[1]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
-[2]: https://www.browsersync.io/docs/options#option-middleware
-[3]: https://www.browsersync.io/docs/options
+[2]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
+[3]: https://www.browsersync.io/docs/options#option-middleware
+[4]: https://www.browsersync.io/docs/options
 
 ## Example
 

@@ -152,10 +152,10 @@ In addition to the usual arguments received by a hook function, a data hook func
 
 | name      | type     | description                                                     |
 | --------- | -------- | --------------------------------------------------------------- |
-| `file`    | object   | currently processed file as [Vinyl][1] file object              |
+| `file`    | object   | currently processed file as [Vinyl][5] file object              |
 | `pattern` | string[] | Glob patterns resolved from the [`data` parameter](#parameters) |
 
-[1]: https://gulpjs.com/docs/en/api/vinyl
+[5]: https://gulpjs.com/docs/en/api/vinyl
 
 ### Files Array and File Object
 

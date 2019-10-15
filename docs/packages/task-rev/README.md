@@ -39,12 +39,12 @@ This task adds the following [environmental variables](packages/core/configurati
 
 | name      | type          | description                                                              |
 | --------- | ------------- | ------------------------------------------------------------------------ |
-| `before`  | [lazypipe][1] | Executed before file revving                                             |
-| `after`   | [lazypipe][1] | Executed after file revving (source files have been deleted)             |
-| `rewrite` | [lazypipe][1] | Executed before revved source files are updated by [gulp-rev-rewrite][2] |
+| `before`  | [lazypipe][2] | Executed before file revving                                             |
+| `after`   | [lazypipe][2] | Executed after file revving (source files have been deleted)             |
+| `rewrite` | [lazypipe][2] | Executed before revved source files are updated by [gulp-rev-rewrite][3] |
 
-[1]: https://github.com/OverZealous/lazypipe
-[2]: https://www.npmjs.com/package/gulp-rev-rewrite
+[2]: https://github.com/OverZealous/lazypipe
+[3]: https://www.npmjs.com/package/gulp-rev-rewrite
 
 ## Example
 

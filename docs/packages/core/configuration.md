@@ -157,16 +157,17 @@ Task and plugins can add custom configuration variables. By default Wok exposes 
 | ---------- | ----------------- | ------------------------------------------------------------------ |
 | publicPath | string            | Base path for all URLs within your application. Defaults to `'/'`. |
 | production | boolean           | `true` for production builds. Defaults to `false`.                 |
-| target     | string            | The value of the `--target` CLI option. <sup>(1)</sup>             |
+| target     | string            | The value of the [`--target`][2] CLI option. <sup>(1)</sup>        |
 | pkg        | object            | The project's `package.json` as an object                          |
-| argv       | object            | CLI arguments parsed by [yargs][1]                                 |
+| argv       | object            | CLI arguments parsed by [yargs][3]                                 |
 | buildHash  | string            | A unique hash for each execution. Can be used for logging.         |
 | sourcemaps | boolean<br>string | Generate sourcemaps. <sup>(2)</sup>                                |
 
 1. _Defaults to `development`. If `--production` is set, defaults to `production`._
 1. _By default generates external sourcemaps in the same folder of the source file. Set to `true` to generate inline sourcemaps or to `false` to disable this feature._
 
-[1]: https://github.com/yargs/yargs/blob/master/docs/.md#argv
+[2]: /packages/core/cli?id=deploy-hosts-and-targets
+[3]: https://github.com/yargs/yargs/blob/master/docs/.md#argv
 
 ### `$.api`
 
