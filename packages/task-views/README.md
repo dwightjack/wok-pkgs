@@ -6,8 +6,10 @@ This task uses [gulp-data](https://www.npmjs.com/package/gulp-data) to read data
 
 ## Installation
 
+This task requires `@wok-cli/core` as peer dependency.
+
 ```
-npm i @wok-cli/task-views --save-dev
+npm i @wok-cli/core @wok-cli/task-views --save-dev
 ```
 
 ## Documentation

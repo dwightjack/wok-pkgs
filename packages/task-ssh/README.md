@@ -4,8 +4,10 @@ Sharable tasks to execute ssh commands against a remote target. Uses [ssh2](http
 
 ## Installation
 
+This task requires `@wok-cli/core` as peer dependency.
+
 ```
-npm i @wok-cli/task-ssh --save-dev
+npm i @wok-cli/core @wok-cli/task-ssh --save-dev
 ```
 
 ## Documentation

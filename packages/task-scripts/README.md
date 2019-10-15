@@ -22,7 +22,7 @@ npm i @wok-cli/core @wok-cli/task-scripts --save-dev
 | `hook:(*)`   | object             |         | Hooks configuration parameters (see below)                |
 
 1. _Supports environment templates._
-2. _Defaults to the value of `env.sourcemaps`._
+2. _Defaults to the value of `$.env.sourcemaps`._
 
 [1]: https://gulpjs.com/docs/en/api/concepts#globs
 [2]: https://gulpjs.com/docs/en/api/src#sourcemaps
@@ -31,9 +31,9 @@ npm i @wok-cli/core @wok-cli/task-scripts --save-dev
 
 | name        | type          | description                                                                         |
 | ----------- | ------------- | ----------------------------------------------------------------------------------- |
-| `pre`       | [lazypipe][1] | executed before transformation hook                                                 |
-| `transform` | [lazypipe][1] | use this hook to transform source code with tools like [Babel](https://babeljs.io/) |
-| `post`      | [lazypipe][1] | executed after transformation hook                                                  |
+| `pre`       | [lazypipe][1] | Executed before `transform` hook                                                    |
+| `transform` | [lazypipe][1] | Use this hook to transform source code with tools like [Babel](https://babeljs.io/) |
+| `post`      | [lazypipe][1] | Executed just before writing the file to disk                                       |
 
 [1]: https://github.com/OverZealous/lazypipe
 
