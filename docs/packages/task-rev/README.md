@@ -29,7 +29,7 @@ This task adds the following [environmental variables](packages/core/configurati
 | `manifest` | string             |         | Manifest file path <sup>(1)</sup>                 |
 | `hook:(*)` | object             |         | Hooks configuration parameters (see below)        |
 
-1. Supports environment templates.
+_1. Supports environment templates._
 
 [1]: https://gulpjs.com/docs/en/api/concepts#globs
 

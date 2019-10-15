@@ -45,7 +45,7 @@ This task adds the following [environmental variables](packages/core/configurati
 | `data`     | string<br>string[] | `''`    | [Globs][1] for external data sources <sup>(1)</sup> |
 | `hook:(*)` | object             |         | Hooks configuration parameters (see below)          |
 
-1. Supports environment templates.
+_1. Supports environment templates._
 
 [1]: https://gulpjs.com/docs/en/api/concepts#globs
 [2]: https://gulpjs.com/docs/en/api/src#sourcemaps

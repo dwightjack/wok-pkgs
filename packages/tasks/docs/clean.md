@@ -11,7 +11,7 @@ By default this task will delete all files including those starting with a `.`.
 | `pattern` | string<br>string[] | [Globs][1] files to delete <sup>(1)</sup>                                                                        |
 | `*`       |                    | Any other parameter will be passed to `del` as configuration [option](https://www.npmjs.com/package/del#options) |
 
-1. Supports environment templates.
+_1. Supports environment templates._
 
 [1]: https://gulpjs.com/docs/en/api/concepts#globs
 

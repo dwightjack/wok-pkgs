@@ -57,7 +57,7 @@ module.exports = {
 | `src`           | string | source folder <sup>(1)</sup>               |
 | `hook:strategy` | object | Hooks configuration parameters (see below) |
 
-1. Supports environment templates.
+_1. Supports environment templates._
 
 [1]: https://gulpjs.com/docs/en/api/concepts#globs
 

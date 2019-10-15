@@ -39,7 +39,7 @@ This task adds the following [environmental variables](packages/core/configurati
 | `baseDir`  | string<br>string[] | `['public']` | Directories to [serve][1]                  |
 | `hook:(*)` | object             |              | Hooks configuration parameters (see below) |
 
-1. Supports environment templates.
+_1. Supports environment templates._
 
 [1]: https://www.browsersync.io/docs/options#option-server
 
@@ -51,7 +51,7 @@ This task adds the following [environmental variables](packages/core/configurati
 | `config`      | object     | BroserSync [options object][3]                                                                |
 | `running`     | brosersync | Executed after the server has started. Receives the brosersync server instance as accumulator |
 
-1. By default implements the [compression](https://www.npmjs.com/package/compression) middleware in production
+_1. By default implements the [compression](https://www.npmjs.com/package/compression) middleware in production_
 
 [1]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
 [2]: https://www.browsersync.io/docs/options#option-middleware

@@ -12,7 +12,7 @@ A generic purpose task. Use it as base for custom tasks.
 | `cache`    | boolean            | `false` | Run the task on changed files only         |
 | `hook:(*)` | object             |         | Hooks configuration parameters (see below) |
 
-1. Supports environment templates.
+_1. Supports environment templates._
 
 [1]: https://gulpjs.com/docs/en/api/concepts#globs
 

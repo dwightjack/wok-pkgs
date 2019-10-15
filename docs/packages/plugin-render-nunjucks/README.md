@@ -37,8 +37,8 @@ Configuration path: `nunjucks`.
 | `env`     | function |         | Nunjucks [environment customizer][2]        |
 | `...opts` | object   |         | Nunjucks environment options <sup>(2)</sup> |
 
-1. Supports environment templates. It will be used as first argument for [nunjucks.configure](https://mozilla.github.io/nunjucks/api.html#configure).
-2. Any other parameter will be passed as the `opts` argument to [nunjucks.configure](https://mozilla.github.io/nunjucks/api.html#configure).
+_1. Supports environment templates. It will be used as first argument for [nunjucks.configure](https://mozilla.github.io/nunjucks/api.html#configure)._
+_1. Any other parameter will be passed as the `opts` argument to [nunjucks.configure](https://mozilla.github.io/nunjucks/api.html#configure)._
 
 [1]: #setting-global-helpers
 [2]: #environment-customization

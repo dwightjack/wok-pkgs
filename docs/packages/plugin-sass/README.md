@@ -39,7 +39,7 @@ Configuration path: `sass`.
 | `includePaths` | string<br>string[] | `['node_modules']` | include paths <sup>(1)</sup> |
 | `functions`    | function           | [see below][2]     | Sass [custom function][1]    |
 
-1. node-sass [`includePaths`](https://github.com/sass/node-sass#includepaths) options enhanced with support for environment templates.
+_1. node-sass [`includePaths`](https://github.com/sass/node-sass#includepaths) options enhanced with support for environment templates._
 
 All other parameters will be used as node-sass [configuration options](https://github.com/sass/node-sass#options).
 
