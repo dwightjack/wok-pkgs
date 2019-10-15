@@ -17,7 +17,7 @@ _1. Supports environment templates._
 
 ## Hooks
 
-This task does not expose any hook
+This task does not expose any hook.
 
 ## Example
 
