@@ -67,7 +67,9 @@ const $ = require('@wok-cli/core');
 const ssh = require('@wok-cli/task-ssh');
 
 exports.ssh = $.task(ssh, {
-  src: ['public/**/*'],
+  commands: {
+    // ... see below
+  },
 });
 ```
 
@@ -98,7 +100,7 @@ gulp ssh --target=production --command=list
 
 ### Template variables in commands
 
-Commands supports [lodash-like templates](https://lodash.com/docs/4.17.14#template). Avaiable variables are:
+Commands supports [lodash-like templates](https://lodash.com/docs/4.17.14#template). Available variables are:
 
 - `env`: Configuration [`$.env`](/packages/core/configuration?id=env) object
 - `target`: the current target object as defined in the configuration file
@@ -125,7 +127,7 @@ module.exports = {
 
 ### Execution Pre-checks
 
-You can define a test function to run before executing the command. In this case a command property must be defined as an object with two keys:
+You can define a test function to run before executing a command. In this case the `command` must be defined as an object with two keys:
 
 - `test`: test function. Receives the target object and [`$.env`](packages/core/configuration#env) as arguments.
 - `exec`: the command template string.
@@ -138,7 +140,7 @@ module.exports = {
   },
   commands: {
     // list all files in /home/www/public
-    // just if the target has a path property
+    // only if the target has a path property
     list: {
       test: (target) => !!target.path,
       exec: 'ls -la <% target.path %>',

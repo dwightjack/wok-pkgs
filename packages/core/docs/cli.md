@@ -21,7 +21,7 @@ const $ = require('@wok-cli/core');
 console.log($.env.production); // logs true
 ```
 
-## Deploy Hosts and Targets
+## Deploy Targets
 
 Wok lets you define multiple remote targets and choose the one to deploy to at execution time.
 

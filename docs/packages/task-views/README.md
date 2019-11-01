@@ -56,9 +56,9 @@ This task adds the following [environmental variables](packages/core/configurati
 
 | name            | type            | description                                                      |
 | --------------- | --------------- | ---------------------------------------------------------------- |
-| `engines`       | Map             | View render engines                                              |
+| `engines`       | Map             | render engines                                                   |
 | `data:fetch`    | array           | Collects files from external sources                             |
-| `data:parsers`  | Map             | Map of objects to parse files to objects                         |
+| `data:parsers`  | Map             | Files to objects parsers                                         |
 | `data:reducers` | Promise<object> | Merges parsed object files into data suitable for [gulp-data][3] |
 | `post`          | [lazypipe][4]   | Executed after views are rendered                                |
 | `complete`      | [lazypipe][4]   | Executed after files have been written to disk                   |
@@ -94,9 +94,9 @@ A render engine is a function returning an object with the following properties
 
 The `render` function will receive three arguments:
 
-- the template contents as a string
-- an object with optional data collected from external data sources.
-- the path to the template file
+- the template contents as a string.
+- an object with optional data collected from [external data sources](#setup-a-data-source).
+- the path to the template file.
 
 ?> The object data exposes a special `PRODUCTION` flag that reflects the `production` property of Wok [`$.env`](https://dwightjack.github.io/wok-pkgs/#/packages/core/configuration?id=env) object.
 
@@ -186,6 +186,7 @@ const name = 'readJSON';
 module.exports = createPlugin({
   name,
   plugin(files, env, api, params, { file }) {
+    // `file` is a Vinyl file object
     const json = file.path.replace(file.extname, '.json');
 
     if (!fs.existsSync(json)) {
@@ -247,7 +248,7 @@ Here is the changes needed to fetch those posts:
 const $ = require('@wok-cli/core');
 const views = require('@wok-cli/task-views');
 const handlebars = require('./engines/handlebars.js');
-const { fileExtract } = require('@wok-cli/task-views/lib/plugins');
++ const { fileExtract } = require('@wok-cli/task-views/lib/plugins');
 
 const viewTask = $.task(views, {
   src: ['src/**/*.{html,hbs}'],
@@ -268,7 +269,7 @@ The files array will contain a file object with an id `posts` and a content repr
 Once you have collected data files you might need to parse their contents in order to be readable by the view engine.
 
 By default, `@wok-cli/task-views` parses JSON strings into JavaScript objects. If you need to support another data format you can do so by
-providing a data parser.
+providing a **data parser**.
 
 A data parser is an object with two properties:
 
@@ -280,7 +281,7 @@ A data parser is an object with two properties:
 The `parse` function will receive three arguments:
 
 - the file contents as a string
-- the path to the template file
+- the path to the data source file
 - the Wok configuration `env` object
 
 ?> If a suitable parser is not found, the raw content as a string will be passed to the view engine.
