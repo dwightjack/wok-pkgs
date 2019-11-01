@@ -1,5 +1,10 @@
 const Hooks = require('./lib/hooks');
-const { resolvePath, resolvePatterns, loadProjectConfig } = require('./utils');
+const {
+  resolvePath,
+  resolvePatterns,
+  loadProjectConfig,
+  logger,
+} = require('./utils');
 
 /**
  * Creates a Wok configuration object reading the project config and environment.
@@ -41,6 +46,13 @@ function config(gulp, params = {}) {
    * @property {*} Other properties defined into the `wok.config.js` object.
    */
   const env = loadProjectConfig(configName, cwd, baseEnv);
+
+  if (env.hosts) {
+    logger.warn(
+      'The environment key "hosts" is deprecated. Please use "targets" instead.',
+    );
+    env.targets = env.hosts;
+  }
 
   const globalHooks = new Hooks();
 

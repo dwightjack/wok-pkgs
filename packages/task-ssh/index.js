@@ -22,7 +22,7 @@ module.exports = (gulp, params, env) => {
     const { command } = Object.assign({}, params, env.argv);
     if (target === false) {
       throw new Error(
-        `[ssh]: Unable to retrieve an host for target "${env.target}"`,
+        `[ssh]: Unable to retrieve the configuration for target "${env.target}"`,
       );
     }
 

@@ -1,7 +1,7 @@
 module.exports = (baseConfig) => {
   const config = require('@wok-cli/preset-standard/config')(baseConfig);
 
-  const hosts = {
+  const targets = {
     staging: {
       host: '192.168.1.69',
       username: 'ftpuser',
@@ -48,7 +48,7 @@ module.exports = (baseConfig) => {
 
   return {
     ...config,
-    hosts,
+    targets,
     commands,
   };
 };

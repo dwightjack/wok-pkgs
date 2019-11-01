@@ -5,7 +5,7 @@ const { logger } = require('@wok-cli/core/utils');
  *
  * @private
  * @param {string} command Command to execute
- * @param {object} target Target host
+ * @param {object} target Target configuration
  * @param {string} target.host Remote hostname
  * @param {string} target.username Login username
  * @param {string} target.password Login password

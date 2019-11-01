@@ -4,15 +4,15 @@ Base task for project deployment. Enhance it with plugins and hook functions to 
 
 ## Deploy Hosts and Targets
 
-This task leverages [deploy targets](packages/core/cli#deploy-hosts-and-targets) to let you choose your deploy target and method at execution time.
+This task leverages [deploy targets](packages/core/cli#deploy-targets) to let you choose your deploy target and method at execution time.
 
-To define a deploy strategy for a remote host add a `deployStrategy` key in your configuration file (`wok.config.js`).
+To define a deploy strategy for a remote target add a `deployStrategy` key in your configuration file (`wok.config.js`).
 
 ```diff
 module.exports = {
   // .... other configs
 
-  hosts: {
+  targets: {
     production: {
       host: 'ftp.mydomain.com',
       username: 'ftpuser',
@@ -30,7 +30,7 @@ Then select it upon task execution via the `--target` option:
 gulp deploy --target=production
 ```
 
-The task will use the selected host object as connection settings. `deployStrategy` defines the deploy method for that host. If not defined it will default to the value of the `deployStrategy` key in the config object:
+The task will use the selected target object as connection settings. `deployStrategy` defines the deploy method for that target. If not defined it will default to the value of the `deployStrategy` key in the config object:
 
 ```diff
 module.exports = {
@@ -38,7 +38,7 @@ module.exports = {
 + //default to rsync as deploy method
 + deployStrategy: 'rsync',
 
-  hosts: {
+  targets: {
     production: {
       host: 'ftp.mydomain.com',
       username: 'ftpuser',
@@ -69,8 +69,8 @@ module.exports = {
 
 Each `strategy` hook function will receive as 4th argument an object containing, apart from the passed in parameters, the following keys:
 
-- `strategy`: the resolved deploy strategy for the target host
-- `target`: the target host object
+- `strategy`: the resolved deploy strategy for the target target
+- `target`: the target object
 
 ## Example
 
@@ -84,7 +84,7 @@ const deployTask = $.task(deploy, {
 
 deployTask.tap('strategy', 'rsync', (promise, env, api, params) => {
   if (!params.strategy === 'rsync') {
-    // this host does not support rsync skip!
+    // this target does not support rsync skip!
     return promise;
   }
   return promise.then(() => {

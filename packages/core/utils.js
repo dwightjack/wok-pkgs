@@ -232,25 +232,25 @@ function runif(cond, task) {
 }
 
 /**
- * Returns a target host object based on the `--target` CLI flag and the `hosts` object set in the config.
+ * Returns a remote target object based on the `--target` CLI flag and the `targets` object set in the config.
  *
  * Returns `false` if a target is not found.
  *
  * @param {object} env Environment object
  * @param {string} env.target Current target
- * @param {object<string,object>} env.hosts Configured hosts
+ * @param {object<string,object>} env.targets Configured targets
  * @returns {object|false}
  */
-function getEnvTarget({ target, hosts }) {
-  const targets = Object.keys(hosts).filter((host) => !!hosts[host].host);
-  if (!target || targets.includes(target) === false) {
+function getEnvTarget({ target, targets }) {
+  const hosts = Object.keys(targets).filter((host) => !!targets[host].host);
+  if (!target || hosts.includes(target) === false) {
     logger.error(
       'ERROR: Remote target unavailable. Specify it via `--target` argument. Allowed targets are: ' +
-        targets.join(', '),
+        hosts.join(', '),
     );
     return false;
   }
-  return hosts[target];
+  return targets[target];
 }
 
 /**

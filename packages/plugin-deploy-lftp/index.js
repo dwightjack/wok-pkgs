@@ -11,7 +11,7 @@ const { createPlugin, logger } = require('@wok-cli/core/utils');
  * @param {object} params Plugin parameters. Any property not listed here below will be merged into to the FTPS configuration object.
  * @param {string} params.src Source files to upload
  * @param {string} params.strategy Target deploy strategy
- * @param {object} params.target A deploy target host object <#TODO: add link>
+ * @param {object} params.target A deploy target object <#TODO: add link>
  * @returns {Promise}
  */
 function lftpPlugin(promise, env, api, { src, strategy, target, ...options }) {

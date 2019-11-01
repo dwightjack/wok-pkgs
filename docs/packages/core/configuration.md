@@ -166,7 +166,7 @@ Task and plugins can add custom configuration variables. By default Wok exposes 
 1. _Defaults to `development`. If `--production` is set, defaults to `production`._
 1. _By default generates external sourcemaps in the same folder of the source file. Set to `true` to generate inline sourcemaps or to `false` to disable this feature._
 
-[2]: /packages/core/cli?id=deploy-hosts-and-targets
+[2]: /packages/core/cli?id=deploy-targets
 [3]: https://github.com/yargs/yargs/blob/master/docs/.md#argv
 
 ### `$.api`

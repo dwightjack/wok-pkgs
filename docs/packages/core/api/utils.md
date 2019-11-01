@@ -168,7 +168,7 @@ Returns **[function][9]**
 
 ## getEnvTarget(env)
 
-Returns a target host object based on the `--target` CLI flag and the `hosts` object set in the config.
+Returns a remote target object based on the `--target` CLI flag and the `targets` object set in the config.
 
 Returns `false` if a target is not found.
 
@@ -176,7 +176,7 @@ Returns `false` if a target is not found.
 
 -   `env` **[object][2]** Environment object
     -   `env.target` **[string][3]** Current target
-    -   `env.hosts` **[object][2]&lt;[string][3], [object][2]>** Configured hosts
+    -   `env.targets` **[object][2]&lt;[string][3], [object][2]>** Configured targets
 
 Returns **([object][2] \| `false`)** 
 

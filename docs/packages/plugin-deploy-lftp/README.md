@@ -24,14 +24,14 @@ npm i @wok-cli/core @wok-cli/plugin-deploy-lftp --save-dev
 
 ## Usage
 
-First of all update or add your [remote host](https://dwightjack.github.io/wok-pkgs/#/packages/core/cli?id=deploy-hosts-and-targets) to the `wok.config.js` file and set the deploy strategy to either `'ftp'`, `'sftp'` or `'ftps'` (depending on your remote host's configuration).
+First of all update or add your [remote target](https://dwightjack.github.io/wok-pkgs/#/packages/core/cli?id=deploy-targets) to the `wok.config.js` file and set the deploy strategy to either `'ftp'`, `'sftp'` or `'ftps'` (depending on your remote host's configuration).
 
 ```js
 // wok.config.js
 module.exports = {
   // .... other configs
 
-  hosts: {
+  targets: {
     ftpserver: {
       host: 'ftp.mydomain.com',
       username: 'ftpuser',
@@ -45,8 +45,8 @@ module.exports = {
 
 **Notes:**
 
-- `hosts.production.path` will be used as the remote base directory for upload.
-- `@wok-cli/plugin-deploy-lftp` will ignore any target host with other `deployStrategy`.
+- `targets.ftpserver.path` will be used as the remote base directory for upload.
+- `@wok-cli/plugin-deploy-lftp` will ignore any target with other `deployStrategy`.
 
 Then configure the plugin as a strategy for `@wok/tasks`'s deploy task:
 
@@ -80,7 +80,7 @@ module.exports = {
   // .... other configs
 
 + deployStrategy: 'ftp',
-  hosts: {
+  targets: {
     ftpserver: {
       host: 'ftp.mydomain.com',
       username: 'ftpuser',

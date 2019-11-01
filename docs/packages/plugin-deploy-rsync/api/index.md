@@ -15,7 +15,7 @@ Use this plugin with the deploy task of @wok-cli/tasks.
     -   `params.src` **[string][3]** Source files to upload
     -   `params.exclude` **[Array][4]&lt;[string][3]>** Array of strings to exclude from syncing (optional, default `[]`)
     -   `params.strategy` **[string][3]** Target deploy strategy
-    -   `params.target` **[object][2]** A deploy target host object &lt;#TODO: add link>
+    -   `params.target` **[object][2]** A deploy target object &lt;#TODO: add link>
     -   `params.options` **...any** 
 
 Returns **[Promise][1]** 

@@ -18,7 +18,7 @@ module.exports = function(gulp, { src = '', ...params }, env, api) {
     const target = getEnvTarget(env);
     if (target === false) {
       throw new Error(
-        `[deploy]: Unable to retrieve an host for target ${env.target}`,
+        `[deploy]: Unable to retrieve the configuration for target ${env.target}`,
       );
     }
 

@@ -5,7 +5,7 @@ Sharable tasks to execute ssh commands against a remote target. Uses [ssh2](http
 <!-- TOC -->
 
 - [Installation](#installation)
-- [SSH Target Host](#ssh-target-host)
+- [SSH Deploy Target](#ssh-deploy-target)
 - [Parameters](#parameters)
 - [Hooks](#hooks)
 - [Example](#example)
@@ -23,16 +23,16 @@ This task requires `@wok-cli/core` as peer dependency.
 npm i @wok-cli/core @wok-cli/task-ssh --save-dev
 ```
 
-## SSH Target Host
+## SSH Deploy Target
 
-This task leverages [deploy targets](packages/core/cli#deploy-hosts-and-targets) to let you choose a remote target at execution time.
+This task leverages [deploy targets](packages/core/cli#deploy-targets) to let you choose a remote target at execution time.
 
 ```js
 // wok.config.js
 module.exports = {
   // .... other configs
 
-  hosts: {
+  targets: {
     production: {
       host: '192.168.1.1',
       username: 'sshuser',
@@ -73,14 +73,14 @@ exports.ssh = $.task(ssh, {
 
 ## Commands
 
-Commands are a set of operations (usually a bash compatible set of instructions) to be executed on the remote host.
+Commands are a set of operations (usually a bash compatible set of instructions) to be executed on the remote target.
 
 They can be defined via the `commands` parameter of the sharable task or in a `commands` key of your `wok.config.js` file.
 
 ```js
 // wok.config.js
 module.exports = {
-  hosts: {
+  targets: {
     // ...
   },
   commands: {
@@ -101,13 +101,13 @@ gulp ssh --target=production --command=list
 Commands supports [lodash-like templates](https://lodash.com/docs/4.17.14#template). Avaiable variables are:
 
 - `env`: Configuration [`$.env`](/packages/core/configuration?id=env) object
-- `target`: the current host target object as defined in the configuration file
+- `target`: the current target object as defined in the configuration file
 - `excludes`: the `excludes` parameter (see [above](#parameters))
 
 ```js
 // wok.config.js
 module.exports = {
-  hosts: {
+  targets: {
     production: {
       host: '192.168.1.1',
       username: 'sshuser',
@@ -127,20 +127,20 @@ module.exports = {
 
 You can define a test function to run before executing the command. In this case a command property must be defined as an object with two keys:
 
-- `test`: test function. Receives the target host object and [`$.env`](packages/core/configuration#env) as arguments.
+- `test`: test function. Receives the target object and [`$.env`](packages/core/configuration#env) as arguments.
 - `exec`: the command template string.
 
 ```js
 // wok.config.js
 module.exports = {
-  hosts: {
+  targets: {
     // ...
   },
   commands: {
     // list all files in /home/www/public
-    // just if the target host has a path property
+    // just if the target has a path property
     list: {
-      test: (target) => !!host.path,
+      test: (target) => !!target.path,
       exec: 'ls -la <% target.path %>',
     },
   },

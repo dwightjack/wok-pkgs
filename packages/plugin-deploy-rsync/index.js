@@ -12,7 +12,7 @@ const { createPlugin, logger } = require('@wok-cli/core/utils');
  * @param {string} params.src Source files to upload
  * @param {string[]} params.exclude Array of strings to exclude from syncing
  * @param {string} params.strategy Target deploy strategy
- * @param {object} params.target A deploy target host object <#TODO: add link>
+ * @param {object} params.target A deploy target object <#TODO: add link>
  * @returns {Promise}
  */
 function rsyncPlugin(
