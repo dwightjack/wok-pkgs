@@ -20,8 +20,9 @@
     "lint": "eslint \"**/*.js\""
   },
   "devDependencies": {
-    "cpy": "^7.3.0",
-    "documentation": "^11.0.1",
+    "cpy": "^8.0.0",
+    "del": "^5.1.0",
+    "documentation": "^12.1.4",
     "eslint": "^6.7.2",
     "eslint-config-prettier": "^6.7.0",
     "eslint-plugin-node": "^10.0.0",
@@ -32,8 +33,7 @@
     "lerna": "^3.19.0",
     "lint-staged": "^9.5.0",
     "make-dir": "^3.0.0",
-    "prettier": "^1.19.1",
-    "rimraf": "^2.6.3"
+    "prettier": "^1.19.1"
   },
   "prettier": {
     "trailingComma": "all",

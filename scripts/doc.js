@@ -4,7 +4,7 @@ const fs = require('fs');
 const { promisify } = require('util');
 const mkdir = require('make-dir');
 const glob = require('fast-glob');
-const rimraf = require('rimraf');
+const del = require('del');
 const cpy = require('cpy');
 const Handlebars = require('handlebars');
 
@@ -83,7 +83,7 @@ function printParams(params) {
       return;
     }
 
-    rimraf.sync(dest);
+    await del(dest);
 
     await mkdir(dest);
     await mkdir(destApi);
