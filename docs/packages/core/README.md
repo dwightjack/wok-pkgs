@@ -20,12 +20,12 @@ Here is a simple copy task with CLI parameters support:
 // gulpfile.js
 const $ = require('@wok-cli/core');
 
-const { env } = $;
+const { env, api } = $;
 
 const srcPattern = 'src/**';
 
 exports.copy = function copy() {
-  return gulp.src(srcPattern).pipe(gulp.dest(env.argv.dest));
+  return api.src(srcPattern).pipe(api.dest(env.argv.dest));
 };
 ```
 
