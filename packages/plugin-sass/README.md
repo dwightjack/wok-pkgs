@@ -1,6 +1,6 @@
 # Wok Sass Plugin
 
-Sass pre-processing support plugin for Wok. Implements [gulp-sass](https://www.npmjs.com/package/gulp-sass).
+Sass pre-processing support plugin for Wok. Implements [gulp-sass](https://www.npmjs.com/package/gulp-sass) and [Dart Sass](https://sass-lang.com/dart-sass).
 
 | Hook types | Production only | Purpose         |
 | ---------- | --------------- | --------------- |
@@ -8,7 +8,6 @@ Sass pre-processing support plugin for Wok. Implements [gulp-sass](https://www.n
 
 <!-- TOC -->
 
-- [Wok Sass Plugin](#wok-sass-plugin)
 - [Installation](#installation)
 - [Parameters](#parameters)
 - [Usage](#usage)

@@ -1,7 +1,7 @@
-$demo: 1rem;
+@use 'vars';
 
 html {
-  font-size: $demo;
+  font-size: vars.$font-size;
 }
 
 @import 'modules/base.scss';

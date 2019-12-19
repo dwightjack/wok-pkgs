@@ -3,7 +3,7 @@ module.exports = function sassFunctions({ production, target, publicPath }) {
   const fs = require('fs');
   const sizeOf = require('image-size');
   const datauri = require('datauri').sync;
-  const { types } = require('node-sass');
+  const { types } = require('sass');
 
   function getFilePath(filepath) {
     const imagePath = resolve(process.cwd(), filepath.getValue());

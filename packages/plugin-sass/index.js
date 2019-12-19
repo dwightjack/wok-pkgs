@@ -14,6 +14,7 @@ const { createPlugin } = require('@wok-cli/core/utils');
  */
 function sass(lazypipe, env, api, opts) {
   const { includePaths = ['node_modules'], functions, ...options } = opts;
+  const gSass = require('gulp-sass');
 
   const sassFunctions = [functions, fns].reduce((acc, fn) => {
     if (!fn) {
@@ -22,7 +23,9 @@ function sass(lazypipe, env, api, opts) {
     return Object.assign(acc, typeof fn === 'function' ? fn(env, api) : fn);
   }, {});
 
-  return lazypipe.pipe(require('gulp-sass'), {
+  gSass.compiler = require('sass');
+
+  return lazypipe.pipe(gSass, {
     precision: 10,
     includePaths: api.pattern(includePaths),
     outputStyle: 'expanded',
