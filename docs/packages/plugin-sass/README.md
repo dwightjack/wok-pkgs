@@ -23,10 +23,10 @@ Sass pre-processing support plugin for Wok. Implements [gulp-sass](https://www.n
 
 ## Installation
 
-This plugin requires `@wok-cli/core` and `node-sass` as peer dependencies.
+This plugin requires `@wok-cli/core` and `sass` as peer dependencies.
 
 ```
-npm i @wok-cli/core node-sass @wok-cli/plugin-sass --save-dev
+npm i @wok-cli/core sass @wok-cli/plugin-sass --save-dev
 ```
 
 ## Parameters
@@ -38,7 +38,7 @@ Configuration path: `sass`.
 | `includePaths` | string<br>string[] | `['node_modules']` | include paths <sup>(1)</sup> |
 | `functions`    | function           | [see below][2]     | Sass [custom function][1]    |
 
-1. _node-sass [`includePaths`](https://github.com/sass/node-sass#includepaths) options enhanced with support for environment templates._
+1. _sass [`includePaths`](https://github.com/sass/node-sass#includepaths) options enhanced with support for environment templates._
 
 All other parameters will be used as node-sass [configuration options](https://github.com/sass/node-sass#options).
 

@@ -113,7 +113,7 @@ Processes CSS and SCSS files in `application/assets/stylesheets` and outputs the
 
 Files will be linted with [gulp-stylelint](https://www.npmjs.com/package/gulp-stylelint) before processing. Set the `lint` [property](#environmental-defaults) to `false` to disable the linter.
 
-Note: `node-sass` [includePaths](https://github.com/sass/node-sass#includepaths) options is set by default to: `['application/vendors', 'node_modules']`.
+Note: `sass` [includePaths](https://github.com/sass/node-sass#includepaths) options is set by default to: `['application/vendors', 'node_modules']`.
 
 ### scripts
 
