@@ -20,7 +20,7 @@ function config(gulp, params = {}) {
   const { cwd = process.cwd(), configName = 'wok' } = params;
   const { packageJson } = readPkgUp.sync({ cwd });
 
-  const { argv } = require('yargs');
+  const argv = require('yargs-parser')(process.argv.slice(2));
   const { production = false } = argv;
   const { target = production ? 'production' : null } = argv;
   const { src, dest, parallel, series, watch } = gulp;

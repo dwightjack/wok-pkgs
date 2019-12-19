@@ -270,8 +270,9 @@ function loadProjectConfig(configName, cwd = process.cwd(), baseEnv = {}) {
     typeof obj === 'function' ? obj(base) : merge(base, obj);
 
   try {
-    const cosmiconfig = require('cosmiconfig')(configName);
-    const result = cosmiconfig.searchSync(cwd);
+    const { cosmiconfigSync } = require('cosmiconfig');
+    const explorer = cosmiconfigSync(configName);
+    const result = explorer.search(cwd);
 
     if (result === null) {
       return {};
@@ -294,7 +295,7 @@ function loadProjectConfig(configName, cwd = process.cwd(), baseEnv = {}) {
       return enhance(baseEnv, config);
     }
 
-    const { config: localConfig = {} } = cosmiconfig.loadSync(localFilepath);
+    const { config: localConfig = {} } = explorer.load(localFilepath);
 
     return [config, localConfig].reduce(enhance, baseEnv);
   } catch (e) {
