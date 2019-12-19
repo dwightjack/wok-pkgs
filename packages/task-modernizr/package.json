@@ -8,10 +8,10 @@
   "author": "Marco Solazzi <marco.solazzi@gmail.com>",
   "license": "MIT",
   "engines": {
-    "node": ">=8.12.0"
+    "node": ">=10.0.0"
   },
   "dependencies": {
-    "gulp-modernizr": "^3.2.1"
+    "gulp-modernizr": "^3.4.0"
   },
   "peerDependencies": {
     "@wok-cli/core": "^1.0.0"

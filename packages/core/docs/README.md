@@ -6,7 +6,7 @@ This package includes core functionalities and utilities to setup a flexible and
 
 ## Installation
 
-This modules requires node.js v8.12.0 or newer and [gulp 4+](https://gulpjs.com/).
+This modules requires node.js v10.0.0 or newer and [gulp 4+](https://gulpjs.com/).
 
 ```
 npm i gulp @wok-cli/core
