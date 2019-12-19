@@ -1,10 +1,6 @@
 .DS_Store
 *.log
 test
+docs
 examples
-.editorconfig
-.eslintignore
-.eslintrc.js
-karma*.conf.js
-rollup.*
 tmp

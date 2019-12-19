@@ -1,7 +1,4 @@
-dist
-es
-umd
 tmp
-node_modules
 examples/**/public
 examples/**/dist
+node_modules
