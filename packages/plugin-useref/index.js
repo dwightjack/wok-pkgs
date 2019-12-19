@@ -44,13 +44,7 @@ function userefPlugin(lazypipe, env, api, opts) {
   if (sourcemaps) {
     return lazypipe
       .pipe(() =>
-        useref(
-          userefOpts,
-          pipeChain().pipe(
-            gulpMaps.init,
-            { loadMaps: true },
-          ),
-        ),
+        useref(userefOpts, pipeChain().pipe(gulpMaps.init, { loadMaps: true })),
       )
       .pipe(
         gulpMaps.write,
@@ -59,10 +53,7 @@ function userefPlugin(lazypipe, env, api, opts) {
       );
   }
 
-  return lazypipe.pipe(
-    useref,
-    userefOpts,
-  );
+  return lazypipe.pipe(useref, userefOpts);
 }
 
 module.exports = createPlugin({

@@ -2,11 +2,7 @@ const { noopStream, createPlugin } = require('@wok-cli/core/utils');
 
 const babel = createPlugin({
   name: 'babel',
-  plugin: (stream, env) =>
-    stream.pipe(
-      require('gulp-babel'),
-      env.babel,
-    ),
+  plugin: (stream, env) => stream.pipe(require('gulp-babel'), env.babel),
 });
 
 const eslint = createPlugin({
@@ -15,10 +11,7 @@ const eslint = createPlugin({
   plugin(stream, env) {
     const glint = require('gulp-eslint');
     return stream
-      .pipe(
-        glint,
-        env.eslint,
-      )
+      .pipe(glint, env.eslint)
       .pipe(glint.format)
       .pipe(env.production ? glint.failAfterError : noopStream);
   },

@@ -147,48 +147,42 @@ module.exports = (config) => {
       return stream;
     })
     .end()
-    .compose(
-      'watch',
-      ({ styles, scripts, server, views }, _, params) => {
-        return function watch(done) {
-          const reload = server.reload();
+    .compose('watch', ({ styles, scripts, server, views }, _, params) => {
+      return function watch(done) {
+        const reload = server.reload();
 
-          [
-            {
-              patterns: preset.params('styles').get('src'),
-              task: styles,
-            },
-            {
-              patterns: preset.params('scripts').get('src'),
-              task: config.series(scripts, reload),
-            },
-            {
-              patterns: [
-                '<%= paths.src.views %>/**/*.*',
-                '<%= paths.src.fixtures %>/**/*.*',
-              ],
-              task: config.series(views, reload),
-            },
-            {
-              id: 'static',
-              patterns: ['<%= paths.static %>/**/*'],
-              task: reload,
-            },
-          ].map((cfg) => config.watcher(cfg, params));
-          done();
-        };
-      },
-    )
-    .compose(
-      'serve',
-      ({ default: def, server, watch }) => {
-        function setup() {
-          env.$$isServe = true;
-          return Promise.resolve();
-        }
-        return config.series(setup, def, config.parallel(server, watch));
-      },
-    );
+        [
+          {
+            patterns: preset.params('styles').get('src'),
+            task: styles,
+          },
+          {
+            patterns: preset.params('scripts').get('src'),
+            task: config.series(scripts, reload),
+          },
+          {
+            patterns: [
+              '<%= paths.src.views %>/**/*.*',
+              '<%= paths.src.fixtures %>/**/*.*',
+            ],
+            task: config.series(views, reload),
+          },
+          {
+            id: 'static',
+            patterns: ['<%= paths.static %>/**/*'],
+            task: reload,
+          },
+        ].map((cfg) => config.watcher(cfg, params));
+        done();
+      };
+    })
+    .compose('serve', ({ default: def, server, watch }) => {
+      function setup() {
+        env.$$isServe = true;
+        return Promise.resolve();
+      }
+      return config.series(setup, def, config.parallel(server, watch));
+    });
 
   if (env.production) {
     preset

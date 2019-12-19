@@ -28,10 +28,7 @@ function postcss(stream, { production }, api, opts) {
   }
 
   const plugins = Array.isArray(opts) ? opts : defaultPlugins();
-  return stream.pipe(
-    require('gulp-postcss'),
-    plugins,
-  );
+  return stream.pipe(require('gulp-postcss'), plugins);
 }
 
 module.exports = createPlugin({

@@ -22,16 +22,13 @@ function sass(lazypipe, env, api, opts) {
     return Object.assign(acc, typeof fn === 'function' ? fn(env, api) : fn);
   }, {});
 
-  return lazypipe.pipe(
-    require('gulp-sass'),
-    {
-      precision: 10,
-      includePaths: api.pattern(includePaths),
-      outputStyle: 'expanded',
-      functions: sassFunctions,
-      ...options,
-    },
-  );
+  return lazypipe.pipe(require('gulp-sass'), {
+    precision: 10,
+    includePaths: api.pattern(includePaths),
+    outputStyle: 'expanded',
+    functions: sassFunctions,
+    ...options,
+  });
 }
 
 module.exports = createPlugin({

@@ -36,10 +36,7 @@ function imageMinPlugin(
 
   return lazypipe
     .pipe(() => f)
-    .pipe(
-      imagemin,
-      plugins,
-    )
+    .pipe(imagemin, plugins)
     .pipe(() => f.restore);
 }
 
