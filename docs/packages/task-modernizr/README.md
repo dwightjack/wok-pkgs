@@ -1,4 +1,4 @@
-# Modernizr Task <sub>1.0.0<sub>
+# Modernizr Task <sub>1.0.1<sub>
 
 Sharable tasks implementing [gulp-modernizr](https://www.npmjs.com/package/gulp-modernizr). Parses provided source files and generates a custom build of Modernizr based on the detected features.
 

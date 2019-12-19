@@ -1,4 +1,4 @@
-# SSH Task <sub>1.0.0<sub>
+# SSH Task <sub>1.0.1<sub>
 
 Sharable tasks to execute ssh commands against a remote target. Uses [ssh2](https://github.com/mscdex/ssh2) under the hood.
 

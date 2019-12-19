@@ -1,4 +1,4 @@
-# @wok-cli/stylelint-config-wok <sub>1.0.0<sub>
+# @wok-cli/stylelint-config-wok <sub>1.0.1<sub>
 
 Shared stylelint config for Wok-based templates. Based on [stylelint-config-standard](https://github.com/stylelint/stylelint-config-standard) and [stylelint-scss](https://github.com/kristerkari/stylelint-scss).
 

@@ -1,4 +1,4 @@
-# View Task <sub>1.0.0<sub>
+# View Task <sub>1.0.1<sub>
 
 Sharable tasks for rendering HTML files with external data sources.
 

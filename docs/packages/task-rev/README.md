@@ -1,4 +1,4 @@
-# Rev Task <sub>1.0.0<sub>
+# Rev Task <sub>1.0.1<sub>
 
 Sharable tasks to apply a unique hash to file names. Implements the following gulp plugins:
 

@@ -1,4 +1,4 @@
-# Bump Task <sub>1.0.0<sub>
+# Bump Task <sub>1.0.1<sub>
 
 Sharable task implementing [gulp-bump](https://www.npmjs.com/package/gulp-bump).
 

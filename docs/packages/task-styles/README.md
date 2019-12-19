@@ -1,4 +1,4 @@
-# Styles Task <sub>1.0.0<sub>
+# Styles Task <sub>1.0.1<sub>
 
 Sharable tasks for CSS stylesheets.
 
