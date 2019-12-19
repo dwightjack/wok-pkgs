@@ -140,21 +140,20 @@ module.exports = (config) => {
       },
     )
     .get('styles')
-    .hook('complete', 'reload', (stream, env) => {
-      if (env.$$isServe && env.livereload !== false) {
-        return stream.pipe(serve.stream({ match: '**/*.css' }));
-      }
-      return stream;
-    })
     .end()
     .compose('watch', ({ styles, scripts, server, views }, _, params) => {
       return function watch(done) {
         const reload = server.reload();
+        const stream = server.stream({ match: '**/*.css' });
+
+        function styleWatch() {
+          return styles().pipe(stream());
+        }
 
         [
           {
             patterns: preset.params('styles').get('src'),
-            task: styles,
+            task: styleWatch,
           },
           {
             patterns: preset.params('scripts').get('src'),
