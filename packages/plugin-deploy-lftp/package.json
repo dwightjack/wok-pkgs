@@ -4,7 +4,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A @wok-cli/tasks/deploy plugin to upload files with lftp.",
   "main": "index.js",
   "repository": "git@github.com:fevrcoding/wok-pkgs.git",
