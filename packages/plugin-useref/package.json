@@ -1,6 +1,9 @@
 {
   "name": "@wok-cli/plugin-useref",
   "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "version": "1.0.0",
   "description": "gulp-useref implementation for Wok",
   "main": "index.js",

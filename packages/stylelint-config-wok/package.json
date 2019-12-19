@@ -1,6 +1,9 @@
 {
   "name": "@wok-cli/stylelint-config-wok",
   "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "version": "1.0.0",
   "description": "Stylelint shared config for Wok-based templates",
   "main": "index.js",

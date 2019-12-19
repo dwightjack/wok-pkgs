@@ -1,6 +1,9 @@
 {
   "name": "@wok-cli/task-bump",
   "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "version": "1.0.0",
   "description": "A sharable Wok task to bump a file version with semver",
   "main": "index.js",

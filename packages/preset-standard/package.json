@@ -1,6 +1,9 @@
 {
   "name": "@wok-cli/preset-standard",
   "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "version": "1.0.0",
   "description": "Standard preset for WOK",
   "main": "index.js",

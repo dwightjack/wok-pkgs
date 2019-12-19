@@ -2,6 +2,9 @@
   "name": "@wok-cli/task-styles",
   "description": "Basic CSS sharable task for Wok",
   "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "version": "1.0.0",
   "main": "index.js",
   "repository": "git@github.com:fevrcoding/wok-pkgs.git",

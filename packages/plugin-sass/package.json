@@ -1,6 +1,9 @@
 {
   "name": "@wok-cli/plugin-sass",
   "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "version": "1.0.0",
   "description": "Wok plugin for the Sass pre-processor",
   "main": "index.js",

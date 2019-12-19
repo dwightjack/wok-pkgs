@@ -1,6 +1,9 @@
 {
   "name": "@wok-cli/eslint-config-wok",
   "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "version": "1.0.0",
   "description": "ESLint shared config for Wok-based templates",
   "main": "index.js",

@@ -1,6 +1,9 @@
 {
   "name": "@wok-cli/plugin-deploy-lftp",
   "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "version": "1.0.0",
   "description": "A @wok-cli/tasks/deploy plugin to upload files with lftp.",
   "main": "index.js",

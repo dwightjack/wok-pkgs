@@ -1,6 +1,9 @@
 {
   "name": "@wok-cli/task-scripts",
   "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "version": "1.0.0",
   "description": "A general sharable wok task to manage scripts",
   "main": "index.js",

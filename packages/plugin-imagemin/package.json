@@ -1,6 +1,9 @@
 {
   "name": "@wok-cli/plugin-imagemin",
   "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "version": "1.0.0",
   "description": "Image optimization plugin for Wok",
   "main": "index.js",

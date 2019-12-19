@@ -1,6 +1,9 @@
 {
   "name": "@wok-cli/tasks",
   "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "version": "1.0.0",
   "description": "A collection of general purpose sharable tasks for Wok",
   "main": "index.js",

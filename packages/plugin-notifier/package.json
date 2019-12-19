@@ -1,6 +1,9 @@
 {
   "name": "@wok-cli/plugin-notifier",
   "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "version": "1.0.0",
   "description": "Build status notifier for Wok",
   "main": "index.js",
