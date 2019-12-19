@@ -1,0 +1,14 @@
+{
+  "workbench.colorCustomizations": {
+    "sideBar.foreground": "#b4bace",
+    "tab.inactiveForeground": "#818592",
+    "editor.foreground": "#fff",
+    "editorError.foreground": "#ec4646"
+  },
+  "[js]": {
+    "editor.formatOnSave": false
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  }
+}
