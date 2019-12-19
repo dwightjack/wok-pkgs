@@ -1,3 +1,0 @@
-{
-  "extends": "@wok-cli/eslint-config-wok/node-prettier"
-}

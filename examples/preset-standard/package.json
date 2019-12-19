@@ -33,5 +33,13 @@
     "last 1 iOS version",
     "last 1 Safari version",
     "not ie < 11"
-  ]
+  ],
+  "eslintConfig": {
+    "extends": "@wok-cli/eslint-config-wok/node-prettier"
+  },
+  "stylelint": {
+    "extends": [
+      "@wok-cli/stylelint-config-wok"
+    ]
+  }
 }

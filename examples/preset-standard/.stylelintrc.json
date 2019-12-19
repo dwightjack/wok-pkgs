@@ -1,3 +1,0 @@
-{
-  "extends": ["@wok-cli/stylelint-config-wok"]
-}
