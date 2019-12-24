@@ -20,12 +20,12 @@ module.exports.json = createPlugin({
  */
 const fileExtract = createPlugin({
   name: 'fileExtract',
-  plugin(files, env, api, params, { pattern }) {
+  plugin(files = [], env, api, params, { pattern }) {
     if (!pattern) {
       return files;
     }
 
-    return [...files, dataReader(pattern, env)];
+    return files.concat(dataReader(pattern, env));
   },
 });
 

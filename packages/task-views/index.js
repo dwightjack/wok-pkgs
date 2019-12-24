@@ -47,8 +47,8 @@ module.exports = function(
         pattern: data && api.pattern(data),
       },
     );
-
-    const files = [].concat(await Promise.all(fetchers));
+    const fetchResults = await Promise.all(fetchers);
+    const files = [].concat(...fetchResults);
 
     return $hooks.callWith(
       'data:reducers',
