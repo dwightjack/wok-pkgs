@@ -15,6 +15,7 @@
  * @param {object} api Wok API object
  * @returns {function} Gulp tasks
  */
+
 module.exports = function(
   gulp,
   { pattern = '', dest = '', manifest, ...opts },
@@ -30,6 +31,7 @@ module.exports = function(
   function revFiles() {
     const gRev = require('gulp-rev');
     const del = require('gulp-rev-delete-original');
+
     let stream = gulp
       .src(src, { base: dist })
       .pipe($hooks.call('before', opts['hooks:before']))
@@ -49,9 +51,17 @@ module.exports = function(
   function revRewrite() {
     const rewrite = require('gulp-rev-rewrite');
     const manStream = man && gulp.src(man);
+    const filter = require('gulp-filter');
+    const binaryExt = require('binary-extensions');
+
+    const isNotBinary = filter(
+      (file) =>
+        binaryExt.includes(file.extname.slice(1).toLowerCase()) === false,
+    );
 
     return gulp
       .src(`${dist}/**/*.*`)
+      .pipe(isNotBinary)
       .pipe($hooks.call('rewrite', opts['hooks:rewrite']))
       .pipe(rewrite(manStream ? { manifest: manStream } : {}))
       .pipe(gulp.dest(dist));
