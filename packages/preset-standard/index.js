@@ -104,7 +104,10 @@ module.exports = (config) => {
     })
     .end()
     .set('$minifyJS', minifyJS, {
-      pattern: ['<%= paths.dist.root %>/<%= paths.scripts %>/**/*.js'],
+      pattern: [
+        '<%= paths.dist.root %>/<%= paths.scripts %>/**/*.js',
+        '<%= paths.dist.root %>/<%= paths.dist.vendors %>/modernizr/*.js',
+      ],
     })
     .set('$cleanup', clean, {
       pattern: ['<%= paths.tmp %>'],
