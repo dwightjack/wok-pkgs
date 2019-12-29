@@ -8,6 +8,7 @@ module.exports = function webpackTask(
   const Config = require('webpack-chain');
   const $hooks = this.getHooks();
   const ctx = api.resolve(context);
+
   function createConfig() {
     const config = new Config();
 
@@ -60,8 +61,13 @@ module.exports = function webpackTask(
 
   return Object.assign(compile, {
     createCompiler,
-    middleware(stats = 'minimal') {
-      return require('webpack-dev-middleware')(createCompiler(), {
+    middleware({ stats = 'minimal', done: onDone } = {}) {
+      const compiler = createCompiler();
+
+      if (typeof onDone === 'function') {
+        compiler.hooks.done.tap('wp:gulp:done', onDone);
+      }
+      return require('webpack-dev-middleware')(compiler, {
         publicPath,
         stats,
       });

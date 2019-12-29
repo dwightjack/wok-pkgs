@@ -29,8 +29,18 @@ const copy = task(cpyTask, {
   src: 'src/index.html',
 });
 
-server.tap('middlewares', 'webpack', (middlewares) => {
-  return middlewares.set('webpack-dev', webpack.middleware());
+server.tap('middlewares', 'webpack', (middlewares, env, api, params, bs) => {
+  return middlewares.set(
+    'webpack-dev',
+    webpack.middleware({
+      done(stats) {
+        if (stats.hasErrors()) {
+          return;
+        }
+        bs.reload();
+      },
+    }),
+  );
 });
 
 exports.default = series(copy, webpack);
