@@ -1,13 +1,8 @@
 const { task, series } = require('@wok-cli/core');
 const serveTask = require('@wok-cli/task-serve');
 const webpackTask = require('./tasks/webpack');
+const cpyTask = require('./tasks/copy');
 const DEST = 'public';
-
-function cpyTask(gulp, { src }) {
-  return function copy() {
-    return gulp.src(src).pipe(gulp.dest(DEST));
-  };
-}
 
 const server = task(serveTask, {
   baseDir: [DEST],
@@ -18,29 +13,29 @@ const webpack = task(webpackTask, {
   outputFolder: DEST,
 });
 
-// serve.tap('middlewares', 'myMiddleware', (middlewares) => {
-//   function myMiddleware(req, res, next) {
-//     // handle request or call next()
-//   }
-//   return middlewares.set('myMiddleware', myMiddleware);
-// });
-
 const copy = task(cpyTask, {
   src: 'src/index.html',
+  dest: DEST,
 });
 
-server.tap('middlewares', 'webpack', (middlewares, env, api, params, bs) => {
-  return middlewares.set(
-    'webpack-dev',
-    webpack.middleware({
-      done(stats) {
-        if (stats.hasErrors()) {
-          return;
-        }
-        bs.reload();
-      },
-    }),
-  );
+server.tap('middlewares', 'webpack', (
+  middlewares /*, env, api, params, bs*/,
+) => {
+  const [dev, hmr] = webpack.middlewareHMR();
+  middlewares.set('webpack-dev', dev);
+  middlewares.set('webpack-hmr', hmr);
+  return middlewares;
+  // return middlewares.set(
+  //   'webpack-dev',
+  //   webpack.middleware({
+  //     done(stats) {
+  //       if (stats.hasErrors()) {
+  //         return;
+  //       }
+  //       bs.reload();
+  //     },
+  //   }),
+  // );
 });
 
 exports.default = series(copy, webpack);

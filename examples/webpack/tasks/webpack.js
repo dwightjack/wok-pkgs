@@ -20,9 +20,11 @@ module.exports = function webpackTask(
     config
       .mode(production ? 'production' : 'development')
       .context(ctx)
-      .output.filename(`[name].bundle.js`)
-      .publicPath(publicPath)
-      .path(resolve(ctx, api.resolve(outputFolder)))
+      .output.merge({
+        filename: `[name].bundle.js`,
+        publicPath,
+        path: resolve(ctx, api.resolve(outputFolder)),
+      })
       .end()
       .module.rule('js')
       .test(/\.m?js$/)
@@ -38,9 +40,9 @@ module.exports = function webpackTask(
     return config;
   }
 
-  function createCompiler() {
+  function createCompiler(config = createConfig()) {
     const webpack = require('webpack');
-    const chainCfg = $hooks.callWith('config:chain', createConfig());
+    const chainCfg = $hooks.callWith('config:chain', config);
 
     const webpackCfg = $hooks.callWith('config', chainCfg.toConfig());
 
@@ -48,7 +50,7 @@ module.exports = function webpackTask(
   }
 
   function compile(done) {
-    const compiler = createCompiler('normal');
+    const compiler = createCompiler();
     compiler.run((err, stats) => {
       if (err || stats.hasErrors()) {
         done(err || stats.toString('minimal'));
@@ -67,10 +69,33 @@ module.exports = function webpackTask(
       if (typeof onDone === 'function') {
         compiler.hooks.done.tap('wp:gulp:done', onDone);
       }
+
       return require('webpack-dev-middleware')(compiler, {
         publicPath,
         stats,
       });
+    },
+    middlewareHMR({ stats = 'minimal', done: onDone } = {}) {
+      const { HotModuleReplacementPlugin } = require('webpack');
+      const config = createConfig();
+      config.plugin('hmr').use(HotModuleReplacementPlugin);
+      config.entryPoints.store.forEach((entry) => {
+        entry.add('webpack-hot-middleware/client');
+      });
+
+      const compiler = createCompiler(config);
+
+      if (typeof onDone === 'function') {
+        compiler.hooks.done.tap('wp:gulp:done', onDone);
+      }
+
+      return [
+        require('webpack-dev-middleware')(compiler, {
+          publicPath,
+          stats,
+        }),
+        require('webpack-hot-middleware')(compiler),
+      ];
     },
     watch(done) {
       const compiler = createCompiler();

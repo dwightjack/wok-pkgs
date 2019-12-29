@@ -1,3 +1,10 @@
-const app = document.getElementById('app');
+import app from './app';
 
-app.textContent = 'Hello World!';
+app();
+
+if (module.hot) {
+  module.hot.accept('./app.js', () => {
+    // eslint-disable-next-line global-require
+    require('./app').default();
+  });
+}
