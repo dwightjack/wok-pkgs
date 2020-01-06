@@ -52,10 +52,13 @@ module.exports = (gulp, params, env) => {
     };
 
     if (commandTmpl.test) {
-      if (!commandTmpl.test(target, env)) {
-        throw new Error(
-          `[ssh]: Command pre-execution test failed for "${command}" on target "${env.target}"`,
-        );
+      const check = commandTmpl.test(target, env);
+      if (!check || typeof check === 'string') {
+        const errorMsg =
+          typeof check === 'string'
+            ? check
+            : `Command pre-execution test failed for "${command}" on target "${env.target}"`;
+        throw new Error(`[ssh]: ${errorMsg}`);
       }
       return exec(resolveTemplate(commandTmpl.exec, vars), target);
     }
