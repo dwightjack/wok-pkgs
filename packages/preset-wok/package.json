@@ -1,0 +1,26 @@
+{
+  "name": "@wok-cli/preset-wok",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "version": "1.0.0",
+  "description": "Standard preset for WOK template",
+  "main": "index.js",
+  "repository": "git@github.com:dwightjack/wok-pkgs.git",
+  "author": "Marco Solazzi <marco.solazzi@gmail.com>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=10.0.0"
+  },
+  "dependencies": {
+    "@wok-cli/core": "^1.0.0",
+    "@wok-cli/plugin-deploy-lftp": "^1.0.0",
+    "@wok-cli/plugin-deploy-rsync": "^1.0.0",
+    "@wok-cli/plugin-notifier": "^1.0.0",
+    "@wok-cli/preset-standard": "^1.0.0",
+    "@wok-cli/task-ssh": "^1.0.0",
+    "@wok-cli/tasks": "^1.0.0",
+    "gulp": "*"
+  }
+}
