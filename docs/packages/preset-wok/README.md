@@ -1,4 +1,4 @@
-# @wok-cli/preset-wok <sub>1.0.1<sub>
+# @wok-cli/preset-wok <sub>1.0.2<sub>
 
 A preset for the Wok boilerplate. Extends [`@wok-cli/preset-standard`](/packages/preset-standard/).
 
