@@ -1,5 +1,6 @@
 module.exports = ($) => {
   const { deploy } = require('@wok-cli/tasks');
+  const { getEnvTarget, runif } = require('@wok-cli/core/utils');
   const ssh = require('@wok-cli/task-ssh');
   const rsync = require('@wok-cli/plugin-deploy-rsync');
   const lftp = require('@wok-cli/plugin-deploy-lftp');
@@ -26,7 +27,16 @@ module.exports = ($) => {
     .hook('strategy', 'lftp', lftp)
     .end()
     .set('deploy')
-    .compose((tasks) => $.series(tasks.default, tasks.$backup, tasks.$sync));
+    .compose((tasks) => {
+      const target = getEnvTarget($.env);
+      const { deployStrategy = $.env.deployStrategy } = target;
+
+      return $.series(
+        tasks.default,
+        runif(() => deployStrategy && deployStrategy !== 'ftp', tasks.$backup),
+        tasks.$sync,
+      );
+    });
 
   return preset;
 };
