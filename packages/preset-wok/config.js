@@ -3,7 +3,7 @@ module.exports = (baseConfig) => {
 
   const test = (target, env) =>
     (target.backup && target.path) ||
-    `"backup" or "path" properties not defined on target "${env.target}".`;
+    `both "backup" and "path" properties must be defined on target "${env.target}".`;
 
   // SSH commands
   const commands = {
