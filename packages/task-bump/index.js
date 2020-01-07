@@ -21,6 +21,7 @@ module.exports = (gulp, { src = ['package.json'], dest = './' }, env, api) => {
 
     //if --type is set and valid, use it
     if (semver.inc(pkg.version, type) === null) {
+      // eslint-disable-next-line require-atomic-updates
       type = await prompts([
         {
           name: 'type',
