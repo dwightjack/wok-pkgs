@@ -28,14 +28,13 @@ module.exports = ($) => {
     .end()
     .set('deploy')
     .compose((tasks) => {
-      const target = getEnvTarget($.env);
-      const { deployStrategy = $.env.deployStrategy } = target;
+      function test() {
+        const target = getEnvTarget($.env);
+        const { deployStrategy = $.env.deployStrategy } = target;
+        return deployStrategy && deployStrategy !== 'ftp';
+      }
 
-      return $.series(
-        tasks.default,
-        runif(() => deployStrategy && deployStrategy !== 'ftp', tasks.$backup),
-        tasks.$sync,
-      );
+      return $.series(tasks.default, runif(test, tasks.$backup), tasks.$sync);
     });
 
   return preset;
