@@ -4,7 +4,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A sharable Wok task to build a custom modernizr file from your sources",
   "main": "index.js",
   "repository": "git@github.com:dwightjack/wok-pkgs.git",
