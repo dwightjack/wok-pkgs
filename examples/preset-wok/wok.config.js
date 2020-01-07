@@ -3,7 +3,7 @@ module.exports = (baseConfig) => {
 
   const targets = {
     staging: {
-      host: '192.168.1.69',
+      host: '192.168.1.57',
       username: 'ftpuser',
       password: 'ftpuser',
       path: '/home/ftpuser/ftp/ssh_files',
@@ -11,12 +11,11 @@ module.exports = (baseConfig) => {
       backup: '/home/ftpuser/ftp/backups',
     },
     production: {
-      host: '192.168.1.69',
+      host: '192.168.1.57',
       username: 'ftpuser',
       password: 'ftpuser',
       path: 'files',
       deployStrategy: 'ftp',
-      backup: false,
     },
   };
 
