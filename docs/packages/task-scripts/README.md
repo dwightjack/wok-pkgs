@@ -1,4 +1,4 @@
-# Scripts Task <sub>1.0.1<sub>
+# Scripts Task <sub>1.0.2<sub>
 
 Sharable tasks for scripts.
 

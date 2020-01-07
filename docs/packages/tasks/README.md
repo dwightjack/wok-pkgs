@@ -1,4 +1,4 @@
-# @wok-cli/tasks <sub>1.0.1<sub>
+# @wok-cli/tasks <sub>1.0.2<sub>
 
 This package includes a collection of general purpose sharable tasks.
 

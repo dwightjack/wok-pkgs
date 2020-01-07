@@ -1,4 +1,4 @@
-# LFTP Deploy Adapter Plugin <sub>1.0.1<sub>
+# LFTP Deploy Adapter Plugin <sub>1.0.2<sub>
 
 You can use this plugin with the `deploy` task of `@wok-cli/tasks` to add the ability to upload and sync your files via FTP, SFTP, FTPS.
 

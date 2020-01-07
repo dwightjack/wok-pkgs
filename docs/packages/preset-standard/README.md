@@ -1,4 +1,4 @@
-# @wok-cli/preset-standard <sub>1.0.1<sub>
+# @wok-cli/preset-standard <sub>1.0.5<sub>
 
 A standard preset with pre-configured common tasks for Wok.
 

@@ -1,4 +1,4 @@
-# Serve Task <sub>1.0.1<sub>
+# Serve Task <sub>1.0.2<sub>
 
 Node.js server as a sharable task. Uses [BrowserSync](https://www.browsersync.io/) under the hood.
 

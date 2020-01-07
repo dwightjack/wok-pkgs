@@ -1,4 +1,4 @@
-# gulp-useref for Wok <sub>1.0.1<sub>
+# gulp-useref for Wok <sub>1.0.2<sub>
 
 This plugin implements [gulp-useref](https://www.npmjs.com/package/gulp-useref).
 

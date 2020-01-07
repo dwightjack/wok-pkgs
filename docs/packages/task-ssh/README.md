@@ -1,4 +1,4 @@
-# SSH Task <sub>1.0.1<sub>
+# SSH Task <sub>1.0.2<sub>
 
 Sharable tasks to execute ssh commands against a remote target. Uses [ssh2](https://github.com/mscdex/ssh2) under the hood.
 
@@ -131,6 +131,8 @@ You can define a test function to run before executing a command. In this case t
 
 - `test`: test function. Receives the target object and [`$.env`](packages/core/configuration#env) as arguments.
 - `exec`: the command template string.
+
+The command will then be executed only if the `test` function returns `true`. If the `test` function returns a string the command will NOT be executed and the string will be used as a custom error message.
 
 ```js
 // wok.config.js

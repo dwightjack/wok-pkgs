@@ -1,4 +1,4 @@
-# @wok-cli/eslint-config-wok <sub>1.0.1<sub>
+# @wok-cli/eslint-config-wok <sub>1.0.2<sub>
 
 Shared ESLint config for Wok-based templates.
 
