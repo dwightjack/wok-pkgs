@@ -26,7 +26,6 @@ module.exports = function webpackTask(
   const { resolve } = require('path');
   const { logger } = require('@wok-cli/core/utils');
   const Config = require('webpack-chain');
-  const { noopMw } = require('./lib/utils');
   const $hooks = this.getHooks();
   const ctx = api.resolve(context);
 
@@ -120,25 +119,25 @@ module.exports = function webpackTask(
         $hooks.callWith('completed:middleware', stats);
       });
 
-      const mw = require('webpack-dev-middleware')(compiler, {
-        publicPath,
-        stats,
-      });
+      const mws = [
+        require('webpack-dev-middleware')(compiler, {
+          publicPath,
+          stats,
+        }),
+      ];
 
       if (hot) {
-        return Object.defineProperty(mw, 'hmr', {
-          get() {
-            return require('webpack-hot-middleware')(compiler);
-          },
-        });
+        mws.push(require('webpack-hot-middleware')(compiler));
       }
 
-      return Object.defineProperty(mw, 'hmr', {
-        value: noopMw,
-      });
+      return mws;
     },
     asServerMiddleware(server, options = {}) {
       server.tap('middlewares', 'webpack', (middlewares, env) => {
+        if (env.production) {
+          return middlewares;
+        }
+
         if (options.hot !== true) {
           const reloader = server.reload();
           $hooks.tap('completed:middleware', 'reload', (stats) => {
@@ -148,11 +147,11 @@ module.exports = function webpackTask(
           });
         }
 
-        const mw = this.middleware(options);
-        middlewares.set('webpack-dev', mw);
+        const [dev, hmr] = this.middleware(options);
+        middlewares.set('webpack-dev', dev);
 
         if (env.livereload !== false && options.hot) {
-          middlewares.set('webpack-hmr', mw.hmr);
+          middlewares.set('webpack-hmr', hmr);
         }
 
         return middlewares;
