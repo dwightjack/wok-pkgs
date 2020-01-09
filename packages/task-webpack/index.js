@@ -29,14 +29,17 @@ module.exports = function webpackTask(
   const $hooks = this.getHooks();
   const ctx = api.resolve(context);
 
-  $hooks.tap('completed', 'log', (stats) => {
+  function logHook(stats) {
     if (stats.hasErrors()) {
       logger.error(stats.toString('minimal'));
     } else {
       console.log(stats.toString('normal'));
     }
     return stats;
-  });
+  }
+
+  $hooks.tap('completed', 'log', logHook);
+  $hooks.tap('completed:watch', 'log', logHook);
 
   function createConfig() {
     const config = new Config();
@@ -92,7 +95,6 @@ module.exports = function webpackTask(
       let first = false;
       compiler.watch({}, (err, stats) => {
         $hooks.callWith('completed', stats);
-        $hooks.callWith('completed:watch', stats);
         if (err) {
           logger.error(err);
         }
@@ -132,14 +134,14 @@ module.exports = function webpackTask(
 
       return mws;
     },
-    asServerMiddleware(server, options = {}) {
-      server.tap('middlewares', 'webpack', (middlewares, env) => {
+    asServeMiddleware(serve, options = {}) {
+      serve.tap('middlewares', 'webpack', (middlewares, env) => {
         if (env.production) {
           return middlewares;
         }
 
         if (options.hot !== true) {
-          const reloader = server.reload();
+          const reloader = serve.reload();
           $hooks.tap('completed:middleware', 'reload', (stats) => {
             if (!stats.hasErrors()) {
               reloader();
@@ -147,12 +149,7 @@ module.exports = function webpackTask(
           });
         }
 
-        const [dev, hmr] = this.middleware(options);
-        middlewares.set('webpack-dev', dev);
-
-        if (env.livereload !== false && options.hot) {
-          middlewares.set('webpack-hmr', hmr);
-        }
+        middlewares.set('webpack-dev', this.middleware(options));
 
         return middlewares;
       });

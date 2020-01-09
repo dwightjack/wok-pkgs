@@ -33,7 +33,7 @@ module.exports = function myPreset($) {
     })
     .set('serve')
     .compose(({ copy, webpack, server }) => {
-      webpack.asServerMiddleware(server);
+      webpack.asServeMiddleware(server);
 
       return $.series(copy, server);
     });

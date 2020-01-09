@@ -2,6 +2,22 @@
 
 Sharable tasks for Webpack.
 
+<!-- TOC -->
+
+- [Installation](#installation)
+- [Parameters](#parameters)
+- [Hooks](#hooks)
+- [Usage](#usage)
+- [Example](#example)
+- [Watching for changes](#watching-for-changes)
+  - [Reloading the page](#reloading-the-page)
+- [Usage with `webpack-dev-middleware`](#usage-with-webpack-dev-middleware)
+  - [Live Reload and Hot Module Replacement](#live-reload-and-hot-module-replacement)
+  - [Shorthand signature](#shorthand-signature)
+- [Usage with [`gulp-babel`](https://www.npmjs.com/package/gulp-babel)](#usage-with-gulp-babelhttpswwwnpmjscompackagegulp-babel)
+
+<!-- /TOC -->
+
 ## Installation
 
 This task requires `@wok-cli/core` and `webpack@^4.0.0` as peer dependency.
@@ -183,6 +199,30 @@ server.tap('middlewares', 'webpack', (middlewares) => {
 });
 
 export.serve = $.series(serve)
+```
+
+### Shorthand signature
+
+For your convenience the task exposes an utility method `asServeMiddleware` to quickly integrate it with `@wok-cli/task-serve`:
+
+```js
+// ...
+const webpack = task(webpackTask, {
+  entry: { main: './src/main.js' },
+  outputFolder: 'public',
+});
+
+const serve = $.task(serveTask, {
+  baseDir: ['public'],
+});
+
+// run `webpack-dev-middleware`
+// and reload on changes
+webpack.asServeMiddleware(serve);
+
+// run `webpack-dev-middleware`
+// and trigger HMR on changes
+webpack.asServeMiddleware(serve, { hot: true });
 ```
 
 ## Usage with [`gulp-babel`](https://www.npmjs.com/package/gulp-babel)
