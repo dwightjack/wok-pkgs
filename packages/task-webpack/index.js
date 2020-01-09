@@ -26,9 +26,18 @@ module.exports = function webpackTask(
   const { resolve } = require('path');
   const { logger } = require('@wok-cli/core/utils');
   const Config = require('webpack-chain');
-  const { noopMw, noop } = require('./lib/utils');
+  const { noopMw } = require('./lib/utils');
   const $hooks = this.getHooks();
   const ctx = api.resolve(context);
+
+  $hooks.tap('completed', 'log', (stats) => {
+    if (stats.hasErrors()) {
+      logger.error(stats.toString('minimal'));
+    } else {
+      console.log(stats.toString('normal'));
+    }
+    return stats;
+  });
 
   function createConfig() {
     const config = new Config();
@@ -68,11 +77,11 @@ module.exports = function webpackTask(
   function compile(done) {
     const compiler = createCompiler();
     compiler.run((err, stats) => {
+      $hooks.callWith('completed', stats);
       if (err || stats.hasErrors()) {
-        done(err || stats.toString('minimal'));
+        done(err || 'Compilation Error');
         return;
       }
-      console.log(stats.toString('normal'));
       done();
     });
   }
@@ -83,10 +92,10 @@ module.exports = function webpackTask(
       const compiler = createCompiler();
       let first = false;
       compiler.watch({}, (err, stats) => {
-        if (err || stats.hasErrors()) {
-          logger.error(err || stats.toString('minimal'));
-        } else {
-          console.log(stats.toString('normal'));
+        $hooks.callWith('completed', stats);
+        $hooks.callWith('completed:watch', stats);
+        if (err) {
+          logger.error(err);
         }
         if (!first) {
           first = true;
@@ -94,7 +103,7 @@ module.exports = function webpackTask(
         }
       });
     },
-    middleware({ stats = 'minimal', done: onDone, hot = false } = {}) {
+    middleware({ stats = 'minimal', hot = false } = {}) {
       const config = createConfig();
 
       if (hot) {
@@ -107,9 +116,9 @@ module.exports = function webpackTask(
 
       const compiler = createCompiler(config);
 
-      if (typeof onDone === 'function') {
-        compiler.hooks.done.tap('wp:gulp:done', onDone);
-      }
+      compiler.hooks.done.tap('wp:gulp:done', (stats) => {
+        $hooks.callWith('completed:middleware', stats);
+      });
 
       const mw = require('webpack-dev-middleware')(compiler, {
         publicPath,
@@ -129,30 +138,25 @@ module.exports = function webpackTask(
       });
     },
     asServerMiddleware(server, options = {}) {
-      server.tap(
-        'middlewares',
-        'webpack',
-        (middlewares, env, api, params, bs) => {
-          if (env.livereload !== false && options.hot !== true) {
-            const { done = noop } = options;
-            options.done = (stats) => {
-              if (!stats.hasErrors()) {
-                bs.reload();
-              }
-              done(stats);
-            };
-          }
+      server.tap('middlewares', 'webpack', (middlewares, env) => {
+        if (options.hot !== true) {
+          const reloader = server.reload();
+          $hooks.tap('completed:middleware', 'reload', (stats) => {
+            if (!stats.hasErrors()) {
+              reloader();
+            }
+          });
+        }
 
-          const mw = this.middleware(options);
-          middlewares.set('webpack-dev', mw);
+        const mw = this.middleware(options);
+        middlewares.set('webpack-dev', mw);
 
-          if (env.livereload !== false && options.hot) {
-            middlewares.set('webpack-hmr', mw.hmr);
-          }
+        if (env.livereload !== false && options.hot) {
+          middlewares.set('webpack-hmr', mw.hmr);
+        }
 
-          return middlewares;
-        },
-      );
+        return middlewares;
+      });
     },
   });
 };

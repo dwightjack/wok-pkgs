@@ -2,52 +2,116 @@
 
 Sharable tasks for Webpack.
 
-By default the task just copies scripts from source to destination. Use one of the [hooks](#hooks) to transform the source code.
-
 ## Installation
 
-This task requires `@wok-cli/core` as peer dependency.
+This task requires `@wok-cli/core` and `webpack@^4.0.0` as peer dependency.
 
 ```
-npm i @wok-cli/core @wok-cli/task-scripts --save-dev
+npm i @wok-cli/core webpack@^4.0.0 @wok-cli/task-scripts --save-dev
 ```
 
 ## Parameters
 
-| parameter    | type               | default | note                                                      |
-| ------------ | ------------------ | ------- | --------------------------------------------------------- |
-| `src`        | string<br>string[] |         | [Globs][1] source files <sup>(1)</sup>                    |
-| `dest`       | string             |         | Destination folder <sup>(1)</sup>                         |
-| `sourcemaps` | string<br>boolean  |         | Write sourcemaps. See [here][2] for details<sup>(2)</sup> |
-| `hook:(*)`   | object             |         | Hooks configuration parameters (see below)                |
+| parameter      | type   | default         | note                                            |
+| -------------- | ------ | --------------- | ----------------------------------------------- |
+| `entry`        | object |                 | Webpack [entry][1] configuration <sup>(1)</sup> |
+| `outputFolder` | string |                 | Bundle [output folder][2] <sup>(1)</sup>        |
+| `context`      | string | `process.cwd()` | Compiler [context folder][3]<sup>(1)</sup>      |
 
 1. _Supports environment templates._
-2. _Defaults to the value of `$.env.sourcemaps`._
 
-[1]: https://gulpjs.com/docs/en/api/concepts#globs
-[2]: https://gulpjs.com/docs/en/api/src#sourcemaps
+[1]: https://webpack.js.org/configuration/entry-context/#entry
+[2]: https://webpack.js.org/configuration/output/#outputpath
+[3]: https://webpack.js.org/configuration/entry-context/#context
 
 ## Hooks
 
-| name        | type          | description                                                                         |
-| ----------- | ------------- | ----------------------------------------------------------------------------------- |
-| `pre`       | [lazypipe][2] | Executed before `transform` hook                                                    |
-| `transform` | [lazypipe][2] | Use this hook to transform source code with tools like [Babel](https://babeljs.io/) |
-| `post`      | [lazypipe][2] | Executed just before writing the file to disk                                       |
+| name                   | type               | description                                         |
+| ---------------------- | ------------------ | --------------------------------------------------- |
+| `config:chain`         | [webpack-chain][4] | The default webpack chain instance                  |
+| `config`               | object             | The resolved webpack configuration object           |
+| `completed`            | [stats][5]         | Run when a compilation ends (single and watch mode) |
+| `completed:watch`      | [stats][5]         | Run when a compilation ends (watch mode only)       |
+| `completed:middleware` | [stats][5]         | Run when a compilation ends (middleware mode only)  |
 
-[2]: https://github.com/OverZealous/lazypipe
+[4]: https://github.com/neutrinojs/webpack-chain
+[5]: https://webpack.js.org/api/stats/
+
+## Usage
+
+By default the task will output sourcemaps in development. Each entry will be stored in the `outputFolder` with the following pattern: `[name].bundle.js`.
 
 ## Example
 
 ```js
 const $ = require('@wok-cli/core');
-const scripts = require('@wok-cli/task-scripts');
+const webpackTask = require('@wok-cli/task-webpack');
 
-exports.scripts = $.task(scripts, {
-  src: ['src/assets/js/**/*.js'],
-  dest: 'public/assets/js',
+const webpack = task(webpackTask, {
+  entry: { main: './src/main.js' },
+  outputFolder: 'public',
 });
+
+exports.webpack = webpack;
 ```
+
+By running the `gulp webpack` task, webpack will bundle `./src/main.js` and save it as `./public/main.bundle.js`.
+
+## Watching for changes
+
+The returned task has a `watch` sub-task that triggers the webpack watcher instead of a single compilation.
+
+```js
+const $ = require('@wok-cli/core');
+const serveTask = require('@wok-cli/task-serve');
+const webpackTask = require('@wok-cli/task-webpack');
+
+const webpack = task(webpackTask, {
+  entry: { main: './src/main.js' },
+  outputFolder: 'public',
+});
+
+// watch and compile files
+exports.watch = webpack.watch;
+```
+
+### Reloading the page
+
+To reload the page after each successful compilation you can leverage the `completed:watch` hook. For example here is how you can trigger a reload with the `@wok-cli/server` task:
+
+```js
+const $ = require('@wok-cli/core');
+const serveTask = require('@wok-cli/task-serve');
+const webpackTask = require('@wok-cli/task-webpack');
+
+const webpack = task(webpackTask, {
+  entry: { main: './src/main.js' },
+  outputFolder: 'public',
+});
+
+const serve = $.task(serveTask, {
+  baseDir: ['public'],
+});
+
+const reload = serve.reload();
+
+webpack.tap('complete:watch', 'reload', (stats) => {
+  if (!stats.hasErrors()) {
+    reload();
+  }
+  return stats;
+});
+
+export.serve = $.series(serve, webpack.watch)
+```
+
+Running `gulp serve` will run a local server watching for file changes and reloading the page after each compilation.
+
+## Usage with `webpack-dev-middleware`
+
+[`webpack-dev-middleware`](https://github.com/webpack/webpack-dev-middleware) lets you run the compiler process as an Express middleware.
+
+This can save
 
 ## Usage with [`gulp-babel`](https://www.npmjs.com/package/gulp-babel)
 
