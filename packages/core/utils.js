@@ -279,7 +279,7 @@ function loadProjectConfig(configName, cwd = process.cwd(), baseEnv = {}) {
     const result = explorer.search(cwd);
 
     if (result === null) {
-      return {};
+      return baseEnv;
     }
 
     const { config = {}, filepath } = result;
