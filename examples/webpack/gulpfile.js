@@ -1,6 +1,6 @@
 const { task, series } = require('@wok-cli/core');
 const serveTask = require('@wok-cli/task-serve');
-const webpackTask = require('./tasks/webpack');
+const webpackTask = require('@wok-cli/task-webpack');
 const cpyTask = require('./tasks/copy');
 const DEST = 'public';
 
@@ -13,30 +13,41 @@ const webpack = task(webpackTask, {
   outputFolder: DEST,
 });
 
+webpack.tap('config:chain', 'babel', (config) => {
+  config.module
+    .rule('js')
+    .test(/\.m?js$/)
+    .use('babel')
+    .loader('babel-loader');
+  return config;
+});
+
 const copy = task(cpyTask, {
   src: 'src/index.html',
   dest: DEST,
 });
 
-server.tap('middlewares', 'webpack', (
-  middlewares /*, env, api, params, bs*/,
-) => {
-  const [dev, hmr] = webpack.middlewareHMR();
-  middlewares.set('webpack-dev', dev);
-  middlewares.set('webpack-hmr', hmr);
-  return middlewares;
-  // return middlewares.set(
-  //   'webpack-dev',
-  //   webpack.middleware({
-  //     done(stats) {
-  //       if (stats.hasErrors()) {
-  //         return;
-  //       }
-  //       bs.reload();
-  //     },
-  //   }),
-  // );
-});
+webpack.asServerMiddleware(server);
+
+// server.tap('middlewares', 'webpack', (
+//   middlewares /*, env, api, params, bs*/,
+// ) => {
+//   const mw = webpack.middleware({ hot: true });
+//   middlewares.set('webpack-dev', mw);
+//   middlewares.set('webpack-reload', mw.hmr);
+//   // middlewares.set(
+//   //   'webpack-dev',
+//   //   webpack.middleware({
+//   //     done(stats) {
+//   //       if (stats.hasErrors()) {
+//   //         return;
+//   //       }
+//   //       bs.reload();
+//   //     },
+//   //   }),
+//   // );
+//   return middlewares;
+// });
 
 exports.default = series(copy, webpack);
 

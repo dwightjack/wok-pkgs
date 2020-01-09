@@ -2,7 +2,7 @@ const { createPreset } = require('@wok-cli/core/preset');
 
 module.exports = function myPreset($) {
   const serveTask = require('@wok-cli/task-serve');
-  const webpackTask = require('./webpack');
+  const webpackTask = require('@wok-cli/task-webpack');
   const cpyTask = require('./copy');
   const preset = createPreset($);
   const DEST = 'public';
@@ -12,33 +12,29 @@ module.exports = function myPreset($) {
       src: 'src/index.html',
       dest: DEST,
     })
-    .set('webpack', webpackTask, {
+    .set('webpack')
+    .task(webpackTask)
+    .params({
       entry: { main: './src/main.js' },
       outputFolder: DEST,
     })
+    .hook('config:chain', 'babel', (config) => {
+      config.module
+        .rule('js')
+        .test(/\.m?js$/)
+        .use('babel')
+        .loader('babel-loader');
+      return config;
+    })
+    .end()
     .set('server', serveTask, { baseDir: [DEST] })
     .default(({ copy, webpack }) => {
       return $.series(copy, webpack);
     })
     .set('serve')
     .compose(({ copy, webpack, server }) => {
-      server.tap(
-        'middlewares',
-        'webpack',
-        (middlewares, env, api, params, bs) => {
-          return middlewares.set(
-            'webpack-dev',
-            webpack.middleware({
-              done(stats) {
-                if (stats.hasErrors()) {
-                  return;
-                }
-                bs.reload();
-              },
-            }),
-          );
-        },
-      );
+      webpack.asServerMiddleware(server);
+
       return $.series(copy, server);
     });
 

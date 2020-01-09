@@ -8,12 +8,10 @@
   "dependencies": {
     "@wok-cli/core": "*",
     "@wok-cli/task-serve": "^1.0.1",
+    "@wok-cli/task-webpack": "^1.0.0",
     "babel-loader": "^8.0.6",
     "gulp": "^4.0.0",
-    "webpack": "^4.41.5",
-    "webpack-chain": "^6.3.0",
-    "webpack-dev-middleware": "^3.7.2",
-    "webpack-hot-middleware": "^2.25.0"
+    "webpack": "^4.41.5"
   },
   "devDependencies": {
     "@wok-cli/eslint-config-wok": "^1.0.0",
