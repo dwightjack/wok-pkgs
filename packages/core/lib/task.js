@@ -77,7 +77,7 @@ module.exports = class Task extends Config {
    * @returns {Hooks|Map|Task}
    * @example
    * task.hooks() instanceof Hooks === true
-   * tasks.hooks('demo').count() === 0
+   * tasks.hooks('demo').size === 0
    * tasks.hooks('demo', ['add', (n) => n + 1]); // returns tasks
    * tasks.hooks().callWith('demo', 1) === 2
    */
@@ -91,7 +91,7 @@ module.exports = class Task extends Config {
       return hooks;
     }
 
-    if (id) {
+    if (id && !hooks.has(id)) {
       hooks.set(id);
     }
     if (pairs === undefined) {
