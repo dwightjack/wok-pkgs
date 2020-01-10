@@ -61,9 +61,9 @@ This task adds the following [environmental variables](packages/core/configurati
 
 ```js
 const $ = require('@wok-cli/core');
-const serve = require('@wok-cli/task-serve');
+const serveTask = require('@wok-cli/task-serve');
 
-exports.serve = $.task(serve, {
+exports.serve = $.task(serveTask, {
   baseDir: ['public'],
 });
 ```
@@ -72,9 +72,9 @@ exports.serve = $.task(serve, {
 
 ```js
 const $ = require('@wok-cli/core');
-const serve = require('@wok-cli/task-serve');
+const serveTask = require('@wok-cli/task-serve');
 
-const serve = $.task(serve, {
+const serve = $.task(serveTask, {
   baseDir: ['public'],
 });
 
@@ -94,9 +94,9 @@ The following example disables the [`open`](https://www.browsersync.io/docs/opti
 
 ```js
 const $ = require('@wok-cli/core');
-const serve = require('@wok-cli/task-serve');
+const serveTask = require('@wok-cli/task-serve');
 
-const serve = $.task(serve, {
+const serve = $.task(serveTask, {
   baseDir: ['public'],
 });
 
@@ -118,11 +118,11 @@ The task exposes two utility methods to generate live reload gulp tasks:
 
 ```js
 const $ = require('@wok-cli/core');
-const serve = require('@wok-cli/task-serve');
+const serveTask = require('@wok-cli/task-serve');
 
 // ...
 
-const serve = $.task(serve, {
+const serve = $.task(serveTask, {
   baseDir: ['public'],
 });
 
@@ -141,11 +141,11 @@ The technique is useful, for example, to live reload CSS files.
 
 ```js
 const $ = require('@wok-cli/core');
-const serve = require('@wok-cli/task-serve');
+const serveTask = require('@wok-cli/task-serve');
 
 // ...
 
-const serve = $.task(serve, {
+const serve = $.task(serveTask, {
   baseDir: ['public'],
 });
 

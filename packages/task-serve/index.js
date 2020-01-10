@@ -93,9 +93,9 @@ module.exports = function(gulp, params, env, api) {
       };
     }
     const bs = getServer(env.buildHash);
-    return function livereload(done) {
+    return function livereload() {
       bs.reload(arg);
-      done();
+      return Promise.resolve();
     };
   };
   serve.stream = (options) => {

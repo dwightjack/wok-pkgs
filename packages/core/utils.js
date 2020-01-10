@@ -224,7 +224,11 @@ function createPlugin({ name, plugin, productionOnly = false, test, params }) {
 function runif(cond, task) {
   return Object.defineProperty(
     function(...args) {
-      return cond() === true ? task(...args) : Promise.resolve();
+      if (cond() === true) {
+        return task(...args);
+      }
+      logger.msg(`skipping ${task.name}...`);
+      return Promise.resolve();
     },
     'name',
     { value: task.name },
@@ -275,7 +279,7 @@ function loadProjectConfig(configName, cwd = process.cwd(), baseEnv = {}) {
     const result = explorer.search(cwd);
 
     if (result === null) {
-      return {};
+      return baseEnv;
     }
 
     const { config = {}, filepath } = result;
