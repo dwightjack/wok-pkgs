@@ -27,7 +27,7 @@ const copy = task(cpyTask, {
   dest: DEST,
 });
 
-webpack.asServeMiddleware(server);
+webpack.asServeMiddleware(server, { hot: true });
 
 // server.tap('middlewares', 'webpack', (
 //   middlewares /*, env, api, params, bs*/,

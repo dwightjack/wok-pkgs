@@ -14,7 +14,7 @@ Sharable tasks for Webpack.
 - [Usage with `webpack-dev-middleware`](#usage-with-webpack-dev-middleware)
   - [Live Reload and Hot Module Replacement](#live-reload-and-hot-module-replacement)
   - [Shorthand signature](#shorthand-signature)
-- [Usage with [`gulp-babel`](https://www.npmjs.com/package/gulp-babel)](#usage-with-gulp-babelhttpswwwnpmjscompackagegulp-babel)
+- [Babel integration](#babel-integration)
 
 <!-- /TOC -->
 
@@ -42,20 +42,20 @@ npm i @wok-cli/core webpack@^4.0.0 @wok-cli/task-scripts --save-dev
 
 ## Hooks
 
-| name                   | type                   | description                                         |
-| ---------------------- | ---------------------- | --------------------------------------------------- |
-| `config:chain`         | [webpack-chain][chain] | The default webpack chain instance                  |
-| `config`               | object                 | The resolved webpack configuration object           |
-| `completed`            | [stats][stats]         | Run when a compilation ends (single and watch mode) |
-| `completed:watch`      | [stats][stats]         | Run when a compilation ends (watch mode only)       |
-| `completed:middleware` | [stats][stats]         | Run when a compilation ends (middleware mode only)  |
+| name                   | type                   | description                                 |
+| ---------------------- | ---------------------- | ------------------------------------------- |
+| `config:chain`         | [webpack-chain][chain] | The default webpack chain instance          |
+| `config`               | object                 | The resolved webpack configuration object   |
+| `completed`            | [stats][stats]         | Run when compilation ends (single mode)     |
+| `completed:watch`      | [stats][stats]         | Run when compilation ends (watch mode)      |
+| `completed:middleware` | [stats][stats]         | Run when compilation ends (middleware mode) |
 
 [chain]: https://github.com/neutrinojs/webpack-chain
 [stats]: https://webpack.js.org/api/stats/
 
 ## Usage
 
-By default the task will output sourcemaps in development. Each entry will be stored in the `outputFolder` with the following pattern: `[name].bundle.js`.
+By default, the task will output sourcemaps in development. Each entry will be stored in the `outputFolder` with the following pattern: `[name].bundle.js`.
 
 ## Example
 
@@ -63,7 +63,7 @@ By default the task will output sourcemaps in development. Each entry will be st
 const $ = require('@wok-cli/core');
 const webpackTask = require('@wok-cli/task-webpack');
 
-const webpack = task(webpackTask, {
+const webpack = $.task(webpackTask, {
   entry: { main: './src/main.js' },
   outputFolder: 'public',
 });
@@ -82,7 +82,7 @@ const $ = require('@wok-cli/core');
 const serveTask = require('@wok-cli/task-serve');
 const webpackTask = require('@wok-cli/task-webpack');
 
-const webpack = task(webpackTask, {
+const webpack = $.task(webpackTask, {
   entry: { main: './src/main.js' },
   outputFolder: 'public',
 });
@@ -100,7 +100,7 @@ const $ = require('@wok-cli/core');
 const serveTask = require('@wok-cli/task-serve');
 const webpackTask = require('@wok-cli/task-webpack');
 
-const webpack = task(webpackTask, {
+const webpack = $.task(webpackTask, {
   entry: { main: './src/main.js' },
   outputFolder: 'public',
 });
@@ -125,7 +125,7 @@ Running `gulp serve` will run a local server watching for file changes and reloa
 
 ## Usage with `webpack-dev-middleware`
 
-To setup a webpack development middlewareyou can use the `middleware` method. This will return an instance of `webpack-dev-middleware` to be used in any express-like application.
+To setup a webpack development middleware, you can use the `middleware` method. This will return an instance of `webpack-dev-middleware` to be used in any express-like application.
 
 For example here is an example implementation with the `@wok-cli/server` task that uses `webpack-dev-middleware` in development mode:
 
@@ -134,7 +134,7 @@ const $ = require('@wok-cli/core');
 const serveTask = require('@wok-cli/task-serve');
 const webpackTask = require('@wok-cli/task-webpack');
 
-const webpack = task(webpackTask, {
+const webpack = $.task(webpackTask, {
   entry: { main: './src/main.js' },
   outputFolder: 'public',
 });
@@ -186,7 +186,7 @@ server.tap('middlewares', 'webpack', (middlewares) => {
 export.serve = $.series(serve)
 ```
 
-Another popular reload option is [Hot Module Replacement](https://webpack.js.org/concepts/hot-module-replacement/). You can enable it by passing an option object with `hot: true` to the `middleware` method:
+Another popular reload option is [Hot Module Replacement](https://webpack.js.org/concepts/hot-module-replacement/). You can enable it by passing an options object with `hot: true` to the `middleware` method:
 
 ```js
 // ...
@@ -203,11 +203,11 @@ export.serve = $.series(serve)
 
 ### Shorthand signature
 
-For your convenience the task exposes an utility method `asServeMiddleware` to quickly integrate it with `@wok-cli/task-serve`:
+For your convenience, the task exposes an utility method `asServeMiddleware` to quickly integrate it with `@wok-cli/task-serve`:
 
 ```js
 // ...
-const webpack = task(webpackTask, {
+const webpack = $.task(webpackTask, {
   entry: { main: './src/main.js' },
   outputFolder: 'public',
 });
@@ -225,23 +225,23 @@ webpack.asServeMiddleware(serve);
 webpack.asServeMiddleware(serve, { hot: true });
 ```
 
-## Usage with [`gulp-babel`](https://www.npmjs.com/package/gulp-babel)
+## Babel integration
+
+To setup [`babel-loader`](https://github.com/babel/babel-loader) use the `config:chain` hook:
 
 ```js
-const $ = require('@wok-cli/core');
-const scripts = require('@wok-cli/task-scripts');
-const babel = require('gulp-babel');
-
-const scriptsTask = $.task(scripts, {
-  src: ['src/assets/js/**/*.js'],
-  dest: 'public/assets/js',
+// ...
+const webpack = $.task(webpackTask, {
+  entry: { main: './src/main.js' },
+  outputFolder: 'public',
 });
 
-scriptsTask.tap('transform', 'babel', (lazypipe) => {
-  return lazypipe.pipe(babel, {
-    // babel configuration here...
-  });
+webpack.tap('config:chain', 'babel', (config) => {
+  config.module
+    .rule('js')
+    .test(/\.m?js$/)
+    .use('babel')
+    .loader('babel-loader');
+  return config;
 });
-
-exports.scripts = scriptsTask;
 ```

@@ -121,18 +121,17 @@ module.exports = function webpackTask(
         $hooks.callWith('completed:middleware', stats);
       });
 
-      const mws = [
-        require('webpack-dev-middleware')(compiler, {
-          publicPath,
-          stats,
-        }),
-      ];
+      const devMw = require('webpack-dev-middleware')(compiler, {
+        publicPath,
+        stats,
+      });
 
-      if (hot) {
-        mws.push(require('webpack-hot-middleware')(compiler));
+      if (!hot) {
+        return devMw;
       }
 
-      return mws;
+      const { compose } = require('compose-middleware');
+      return compose(devMw, require('webpack-hot-middleware')(compiler));
     },
     asServeMiddleware(serve, options = {}) {
       serve.tap('middlewares', 'webpack', (middlewares, env) => {
