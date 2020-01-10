@@ -200,13 +200,19 @@ module.exports = class PresetConfig extends Config {
       const params = taskCfg.has('params')
         ? taskCfg.get('params').serialize()
         : {};
+      const hooks = taskCfg.get('hooks');
 
       if (taskFn && taskCfg.$isComposed) {
-        composed.push({ name, fn: taskFn, params, $private: taskCfg.$private });
+        composed.push({
+          name,
+          fn: taskFn.bind({ getHooks: () => hooks }),
+          params,
+          $private: taskCfg.$private,
+        });
         return;
       }
 
-      const computedTask = task(taskFn, params, taskCfg.get('hooks'));
+      const computedTask = task(taskFn, params, hooks);
 
       Object.defineProperty(computedTask, 'name', {
         value: name,
