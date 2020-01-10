@@ -164,6 +164,23 @@ Watches files in `application` and `static` for changes, processes them and relo
 
 CSS files trigger a live-reload (file injection) instead of a full reload.
 
+You can customize the running watchers by tapping into the `watchers` hook. Hook functions receive an array as first argument. The array can contain:
+
+- a configuration object suitable for [`$.watcher`](/packages/core/configuration?id=watcher)
+- a custom function
+
+Hook function also receive an object as 4th argument with the following properties:
+
+| parameter | value  | description                                                                       |
+| --------- | ------ | --------------------------------------------------------------------------------- |
+| tasks     | object | An object containing all the previously defined tasks (both normal and composed). |
+| params    | object | The watch task params                                                             |
+| reload    | task   | [Reload task][reload]                                                             |
+| stream    | task   | [Reload stream task][stream]                                                      |
+
+[reload]: /packages/task-serve/?id=full-page-reload
+[stream]: https://dwightjack.github.io/wok-pkgs/#/packages/task-serve/?id=content-injection
+
 ### default
 
 The default task (executed by running `gulp` on a terminal) will perform the following tasks:

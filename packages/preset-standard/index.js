@@ -155,7 +155,14 @@ module.exports = (config) => {
           reload,
           stream,
         });
-        watchers.forEach((w) => config.watcher(w, params));
+
+        watchers.forEach((w) => {
+          if (typeof w === 'function') {
+            w(params);
+            return;
+          }
+          config.watcher(w, params);
+        });
         done();
       };
     })
