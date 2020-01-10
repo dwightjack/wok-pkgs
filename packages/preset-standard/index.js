@@ -142,39 +142,20 @@ module.exports = (config) => {
         );
       },
     )
-    .get('styles')
-    .end()
-    .compose('watch', ({ styles, scripts, server, views }, _, params) => {
+    .compose('watch', function(tasks, _, params) {
+      const $hooks = this.getHooks();
+      const { server } = tasks;
       return function watch(done) {
         const reload = server.reload();
         const stream = server.stream({ match: '**/*.css' });
 
-        function styleWatch() {
-          return styles().pipe(stream());
-        }
-
-        [
-          {
-            patterns: preset.params('styles').get('src'),
-            task: styleWatch,
-          },
-          {
-            patterns: preset.params('scripts').get('src'),
-            task: config.series(scripts, reload),
-          },
-          {
-            patterns: [
-              '<%= paths.src.views %>/**/*.*',
-              '<%= paths.src.fixtures %>/**/*.*',
-            ],
-            task: config.series(views, reload),
-          },
-          {
-            id: 'static',
-            patterns: ['<%= paths.static %>/**/*'],
-            task: reload,
-          },
-        ].map((cfg) => config.watcher(cfg, params));
+        const watchers = $hooks.callWith('watchers', [], {
+          tasks,
+          params,
+          reload,
+          stream,
+        });
+        watchers.forEach((w) => config.watcher(w, params));
         done();
       };
     })
@@ -184,6 +165,46 @@ module.exports = (config) => {
         return Promise.resolve();
       }
       return config.series(setup, def, config.parallel(server, watch));
+    });
+
+  // set watchers
+  preset
+    .get('watch')
+    .hooks('watchers')
+    .set('styles', (watchers, env, api, { tasks, stream }) => {
+      function styleWatch() {
+        return tasks.styles().pipe(stream());
+      }
+      watchers.push({
+        patterns: preset.params('styles').get('src'),
+        task: styleWatch,
+      });
+      return watchers;
+    })
+    .set('scripts', (watchers, env, api, { tasks, reload }) => {
+      watchers.push({
+        patterns: preset.params('scripts').get('src'),
+        task: config.series(tasks.scripts, reload),
+      });
+      return watchers;
+    })
+    .set('views', (watchers, env, api, { tasks, reload }) => {
+      watchers.push({
+        patterns: [
+          '<%= paths.src.views %>/**/*.*',
+          '<%= paths.src.fixtures %>/**/*.*',
+        ],
+        task: config.series(tasks.views, reload),
+      });
+      return watchers;
+    })
+    .set('static', (watchers, env, api, { reload }) => {
+      watchers.push({
+        id: 'static',
+        patterns: ['<%= paths.static %>/**/*'],
+        task: reload,
+      });
+      return watchers;
     });
 
   if (env.production) {
