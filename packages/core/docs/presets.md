@@ -12,6 +12,7 @@ Presets let you setup pre-defined tasks, parameters and hooks with a chainable A
   - [Hooks Shorthand Notation](#hooks-shorthand-notation)
   - [Global Hooks](#global-hooks)
 - [Composed Tasks](#composed-tasks)
+  - [Composed Tasks Hooks](#composed-tasks-hooks)
 - [Private Tasks](#private-tasks)
 - [Default Task](#default-task)
 - [Resolve callbacks](#resolve-callbacks)
@@ -158,10 +159,33 @@ The `compose` method receives the following arguments:
 | name   | type   | description                                                                       |
 | ------ | ------ | --------------------------------------------------------------------------------- |
 | tasks  | object | An object containing all the previously defined tasks (both normal and composed). |
-| config | object | The [Wok configuration object][1].                                                |
+| config | object | The [Wok configuration object][wok-config].                                       |
 | params | object | The task parameters set via the `params` method.                                  |
 
-[1]: packages/core/configuration
+[wok-config]: packages/core/configuration
+
+### Composed Tasks Hooks
+
+Like sharable tasks, composed tasks have configurable hooks.
+
+```js
+preset
+  .set('build')
+  .compose(function build(tasks) {
+    const $hooks = this.getHooks();
+
+    // a task that logs a series of messages...
+    function msgTask(done) {
+      $hooks.callWith('logs', []).forEach((msg) => console.log(msg));
+      done();
+    }
+
+    return gulp.series(msgTask, tasks.clean, tasks.copy);
+  })
+  .hook('logs', 'hello', (logs) => [...logs, 'Hello World']);
+```
+
+**Note:** remember to declare the composed task with a function statement to access the correct `this` context.
 
 ## Private Tasks
 
@@ -184,12 +208,12 @@ preset
   .set('build')
     .compose((tasks) => {
       return gulp.series(
-        tasks.$greet, 
-        tasks.clean, 
+        tasks.$greet,
+        tasks.clean,
         tasks.copy
       );
     });
-```
+````
 
 The user will be greeted when running `gulp build` but won't be able to run `gulp $greet` directly.
 
