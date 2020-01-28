@@ -137,7 +137,7 @@ function config(gulp, params = {}) {
     });
   }
 
-  return {
+  const cfg = {
     env,
     api,
     watcher,
@@ -167,6 +167,20 @@ function config(gulp, params = {}) {
      */
     watch,
   };
+
+  /**
+   * Shorthand method to load a set of presets in the context of the current configuration
+   *
+   * @memberof WokConfig
+   * @param {string[]} [presets] List of paths to presets
+   * @return {PresetConfig}
+   */
+  cfg.preset = function(presets) {
+    const { createPreset } = require('./preset');
+    return createPreset(cfg).use(presets);
+  };
+
+  return cfg;
 }
 
 /**

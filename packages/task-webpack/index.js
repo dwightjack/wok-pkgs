@@ -20,7 +20,7 @@
 module.exports = function webpackTask(
   gulp,
   { entry = {}, outputFolder = '', context = process.cwd() },
-  { production, publicPath },
+  { production, publicPath, hot = false },
   api,
 ) {
   const { resolve } = require('path');
@@ -104,7 +104,7 @@ module.exports = function webpackTask(
         }
       });
     },
-    middleware({ stats = 'minimal', hot = false } = {}) {
+    middleware({ stats = 'minimal' } = {}) {
       const config = createConfig();
 
       if (hot) {
@@ -139,7 +139,7 @@ module.exports = function webpackTask(
           return middlewares;
         }
 
-        if (options.hot !== true) {
+        if (hot !== true) {
           const reloader = serve.reload();
           $hooks.tap('completed:middleware', 'reload', (stats) => {
             if (!stats.hasErrors()) {

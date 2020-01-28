@@ -5,7 +5,6 @@ const scripts = require('@wok-cli/task-scripts');
 const modernizr = require('@wok-cli/task-modernizr');
 const views = require('@wok-cli/task-views');
 const { fileExtract } = require('@wok-cli/task-views/lib/plugins');
-const { createPreset } = require('@wok-cli/core/preset');
 const { runif } = require('@wok-cli/core/utils');
 const imagemin = require('@wok-cli/plugin-imagemin');
 const sass = require('@wok-cli/plugin-sass');
@@ -14,10 +13,7 @@ const serve = require('@wok-cli/task-serve');
 const { babel, eslint, stylelint } = require('./lib/hooks');
 const { minifyJS } = require('./lib/tasks');
 
-// passed-in config object
-module.exports = (config) => {
-  const preset = createPreset(config);
-
+module.exports = (preset, config) => {
   const { env } = config;
 
   preset
@@ -225,6 +221,4 @@ module.exports = (config) => {
 
     preset.params('server').set('baseDir', ['<%= paths.dist.root %>']);
   }
-
-  return preset;
 };

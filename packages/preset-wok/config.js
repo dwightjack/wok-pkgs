@@ -1,15 +1,13 @@
-module.exports = (baseConfig) => {
-  const config = require('@wok-cli/preset-standard/config')(baseConfig);
-
-  function test(target, env) {
-    if (target.backup && target.path) {
-      return true;
-    }
-    return `both "backup" and "path" properties must be defined on target "${env.target}".`;
+function test(target, env) {
+  if (target.backup && target.path) {
+    return true;
   }
+  return `both "backup" and "path" properties must be defined on target "${env.target}".`;
+}
 
-  // SSH commands
-  const commands = {
+module.exports = {
+  extends: ['@wok-cli/preset-standard/config'],
+  commands: {
     backup: {
       test,
       exec:
@@ -38,10 +36,5 @@ module.exports = (baseConfig) => {
         'done;' +
         'fi;',
     },
-  };
-
-  return {
-    ...config,
-    commands,
-  };
+  },
 };

@@ -1,12 +1,9 @@
-module.exports = ($) => {
+module.exports = (preset, $) => {
   const { deploy } = require('@wok-cli/tasks');
   const { getEnvTarget, runif } = require('@wok-cli/core/utils');
   const ssh = require('@wok-cli/task-ssh');
   const rsync = require('@wok-cli/plugin-deploy-rsync');
   const lftp = require('@wok-cli/plugin-deploy-lftp');
-  const standard = require('@wok-cli/preset-standard');
-
-  const preset = standard($);
 
   preset
     .globalHook('watcher', 'notifier', require('@wok-cli/plugin-notifier'))
@@ -36,6 +33,4 @@ module.exports = ($) => {
 
       return $.series(tasks.default, runif(test, tasks.$backup), tasks.$sync);
     });
-
-  return preset;
 };

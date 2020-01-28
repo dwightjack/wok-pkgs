@@ -257,6 +257,20 @@ function getEnvTarget({ target, targets }) {
   return targets[target];
 }
 
+function mergeConfig(base, config) {
+  const type = typeof config;
+  if (type === 'string') {
+    config = require(config);
+  }
+  let merged = type === 'function' ? config(base) : merge(base, config);
+  if (Array.isArray(merged.extends)) {
+    for (let ext of merged.extends) {
+      merged = mergeConfig(merged, ext);
+    }
+  }
+  return merged;
+}
+
 /**
  * Loads a configuration file. Will also try to load any `.local.js` file
  * and merge it with the default configuration.
@@ -270,9 +284,6 @@ function getEnvTarget({ target, targets }) {
  * @returns {object}
  */
 function loadProjectConfig(configName, cwd = process.cwd(), baseEnv = {}) {
-  const enhance = (base, obj) =>
-    typeof obj === 'function' ? obj(base) : merge(base, obj);
-
   try {
     const { cosmiconfigSync } = require('cosmiconfig');
     const explorer = cosmiconfigSync(configName);
@@ -283,25 +294,23 @@ function loadProjectConfig(configName, cwd = process.cwd(), baseEnv = {}) {
     }
 
     const { config = {}, filepath } = result;
+
+    if (filepath.endsWith('package.json')) {
+      return mergeConfig(baseEnv, config);
+    }
+
     const localFilepath = filepath.replace(
       /(\.json|\.js|\.ya?ml|)$/,
       '.local$1',
     );
 
-    if (filepath.endsWith('package.json')) {
-      if (typeof config === 'string') {
-        return enhance(baseEnv, require(config));
-      }
-      return enhance(baseEnv, config);
-    }
-
     if (!fs.existsSync(localFilepath)) {
-      return enhance(baseEnv, config);
+      return mergeConfig(baseEnv, config);
     }
 
     const { config: localConfig = {} } = explorer.load(localFilepath);
 
-    return [config, localConfig].reduce(enhance, baseEnv);
+    return mergeConfig(mergeConfig(baseEnv, config), localConfig);
   } catch (e) {
     logger.error(e);
     return baseEnv;

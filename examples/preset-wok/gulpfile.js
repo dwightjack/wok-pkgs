@@ -1,4 +1,6 @@
 const $ = require('@wok-cli/core');
-const preset = require('@wok-cli/preset-wok');
 
-module.exports = preset($).resolve();
+module.exports = $.preset([
+  '@wok-cli/preset-standard',
+  '@wok-cli/preset-wok',
+]).resolve();

@@ -47,6 +47,21 @@ module.exports = class PresetConfig extends Config {
   }
 
   /**
+   * Loads multiple presets.
+   *
+   * @param {string[]} presets List of paths to presets
+   * @returns {PresetConfig}
+   */
+  use(presets = []) {
+    const config = this.config();
+    for (let p of presets) {
+      require(p)(this, config);
+    }
+
+    return this;
+  }
+
+  /**
    * Enqueues a function to be executed after the `resolve()` method has completed.
    *
    * @param {function} fn Function to enqueue. Receives the resolved tasks object and the internal config as arguments.

@@ -6,6 +6,7 @@ Sharable tasks for Webpack.
 
 - [Installation](#installation)
 - [Parameters](#parameters)
+- [Environmental variables](#environmental-variables)
 - [Hooks](#hooks)
 - [Usage](#usage)
 - [Example](#example)
@@ -39,6 +40,12 @@ npm i @wok-cli/core webpack@^4.0.0 @wok-cli/task-scripts --save-dev
 [entry]: https://webpack.js.org/configuration/entry-context/#entry
 [output]: https://webpack.js.org/configuration/output/#outputpath
 [ctx]: https://webpack.js.org/configuration/entry-context/#context
+
+## Environmental variables
+
+This task adds the following [environmental variables](packages/core/configuration#env):
+
+- `hot`: (boolean) Set to `true` to enable HMR during development.
 
 ## Hooks
 
