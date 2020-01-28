@@ -17,12 +17,14 @@ const {
  */
 function config(gulp, params = {}) {
   const readPkgUp = require('read-pkg-up');
-  const { cwd = process.cwd(), configName = 'wok' } = params;
-  const { packageJson } = readPkgUp.sync({ cwd });
-
   const argv = require('yargs-parser')(process.argv.slice(2));
-  const { production = false } = argv;
-  const { target = production ? 'production' : null } = argv;
+  const {
+    cwd = process.cwd(),
+    configName = 'wok',
+    production = false,
+    target = production ? 'production' : null,
+  } = Object.assign(params, argv);
+  const { packageJson } = readPkgUp.sync({ cwd });
   const { src, dest, parallel, series, watch } = gulp;
 
   const baseEnv = {
@@ -32,6 +34,8 @@ function config(gulp, params = {}) {
     buildHash: `buildhash${Date.now()}`,
     publicPath: '/',
     pkg: packageJson,
+    cwd,
+    configName,
     argv,
   };
   /**
@@ -46,6 +50,8 @@ function config(gulp, params = {}) {
    * @property {*} Other properties defined into the `wok.config.js` object.
    */
   const env = loadProjectConfig(configName, cwd, baseEnv);
+
+  console.log(env);
 
   if (env.hosts) {
     logger.warn(

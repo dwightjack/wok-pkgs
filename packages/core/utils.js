@@ -265,18 +265,19 @@ function mergeConfig(base, config) {
     config = config(base);
   }
 
+  if (!config.extends) {
+    return config;
+  }
+
   const { extends: parents, ...rest } = config;
+  const merged = {};
 
   if (Array.isArray(parents)) {
-    if (!base.$extending) {
-      Object.defineProperty(base, '$extending', { value: [] });
-    }
-    base.$extending.push(parents);
     for (let parent of parents) {
-      base = mergeConfig(base, parent);
+      merge(merged, mergeConfig(base, parent));
     }
   }
-  return merge(base, rest);
+  return merge(merged, rest);
 }
 
 /**
@@ -302,23 +303,22 @@ function loadProjectConfig(configName, cwd = process.cwd(), baseEnv = {}) {
     }
 
     const { config = {}, filepath } = result;
-
-    if (filepath.endsWith('package.json')) {
-      return mergeConfig(baseEnv, config);
-    }
-
     const localFilepath = filepath.replace(
       /(\.json|\.js|\.ya?ml|)$/,
       '.local$1',
     );
 
-    if (!fs.existsSync(localFilepath)) {
-      return mergeConfig(baseEnv, config);
+    if (filepath.endsWith('package.json') || !fs.existsSync(localFilepath)) {
+      return merge(baseEnv, mergeConfig(baseEnv, config));
     }
 
     const { config: localConfig = {} } = explorer.load(localFilepath);
 
-    return mergeConfig(mergeConfig(baseEnv, config), localConfig);
+    return merge(
+      baseEnv,
+      mergeConfig(baseEnv, config),
+      mergeConfig(baseEnv, localConfig),
+    );
   } catch (e) {
     logger.error(e);
     return baseEnv;
