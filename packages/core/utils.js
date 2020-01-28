@@ -258,17 +258,25 @@ function getEnvTarget({ target, targets }) {
 }
 
 function mergeConfig(base, config) {
-  const type = typeof config;
-  if (type === 'string') {
+  if (typeof config === 'string') {
     config = require(config);
   }
-  let merged = type === 'function' ? config(base) : merge(base, config);
-  if (Array.isArray(merged.extends)) {
-    for (let ext of merged.extends) {
-      merged = mergeConfig(merged, ext);
+  if (typeof config === 'function') {
+    config = config(base);
+  }
+
+  const { extends: parents, ...rest } = config;
+
+  if (Array.isArray(parents)) {
+    if (!base.$extending) {
+      Object.defineProperty(base, '$extending', { value: [] });
+    }
+    base.$extending.push(parents);
+    for (let parent of parents) {
+      base = mergeConfig(base, parent);
     }
   }
-  return merged;
+  return merge(base, rest);
 }
 
 /**
