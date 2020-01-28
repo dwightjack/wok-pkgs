@@ -1,0 +1,24 @@
+{
+  "name": "@wok-cli/preset-standard-webpack",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "version": "1.0.2",
+  "description": "Use webpack with @wok-cli/preset-standard",
+  "main": "index.js",
+  "repository": "git@github.com:dwightjack/wok-pkgs.git",
+  "author": "Marco Solazzi <marco.solazzi@gmail.com>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=10.0.0"
+  },
+  "dependencies": {
+    "@wok-cli/task-webpack": "^1.0.0",
+    "webpack": "^4.0.0",
+    "babel-loader": "^8.0.0"
+  },
+  "peerDependencies": {
+    "@wok-cli/preset-standard": "^1.0.0"
+  }
+}
