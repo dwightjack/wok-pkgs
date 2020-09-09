@@ -23,7 +23,7 @@
     "plugin-error": "^1.0.1",
     "read-pkg-up": "^7.0.1",
     "through2": "^3.0.1",
-    "yargs-parser": "^16.1.0"
+    "yargs-parser": "^18.1.2"
   },
   "peerDependencies": {
     "gulp": "^4.0.0"
